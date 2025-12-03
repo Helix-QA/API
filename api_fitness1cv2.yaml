@@ -1,0 +1,2425 @@
+openapi: 3.0.3
+info:
+  title: API 1С:Фитнес клуб 4.0 V2
+  version: 1.0.0
+  description: Документация API для 1С:Fitness, редакция 4.0 v2
+servers:
+  - url: https://polls.apiblueprint.org/
+paths:
+  /hs/api/v2/client_by_id/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                      client_id:
+                        type: string
+                      name:
+                        type: string
+                      second_name:
+                        type: string
+                      last_name:
+                        type: string
+                      birthday:
+                        nullable: true
+                      sex:
+                        type: number
+                      cards:
+                        type: array
+                        items: {}
+                      email:
+                        type: string
+                      phone:
+                        type: string
+                      edit_allowed:
+                        type: boolean
+                      anonymous:
+                        type: boolean
+                      passport:
+                        type: object
+                        properties:
+                          series:
+                            type: string
+                          id:
+                            type: string
+                          issued_by:
+                            type: string
+                          issue_date:
+                            type: string
+                          department_code:
+                            type: string
+                          citizenship:
+                            type: string
+                          country_code:
+                            type: number
+                      address:
+                        type: string
+              example:
+                result: true
+                data:
+                  status: active
+                  client_id: b1879ba4-53b0-11ea-89b6-2c4d546557dd
+                  name: Stas
+                  second_name: ''
+                  last_name: Bast
+                  birthday: null
+                  sex: 1
+                  cards: []
+                  email: bast@mail.ru
+                  phone: '791229112'
+                  edit_allowed: false
+                  anonymous: false
+                  passport:
+                    series: '4474168'
+                    id: '12'
+                    issued_by: ''
+                    issue_date: '2021-02-10T00:00:00'
+                    department_code: ''
+                    citizenship: ''
+                    country_code: 643
+                  address: Россия, г. Москва
+      summary: Получить данные о клиенте по идентификатору
+      operationId: Получить данные о клиенте по идентификатору
+      description: ''
+      tags:
+        - Информация о клиентах
+      parameters:
+        - name: client_id
+          in: query
+          description: Идентификатор клиента
+          required: true
+          schema:
+            type: string
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+  /hs/api/v2/client_by_phone/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                      client_id:
+                        type: string
+                      name:
+                        type: string
+                      second_name:
+                        type: string
+                      last_name:
+                        type: string
+                      birthday:
+                        nullable: true
+                      sex:
+                        type: number
+                      cards:
+                        type: array
+                        items: {}
+                      email:
+                        type: string
+                      phone:
+                        type: string
+                      edit_allowed:
+                        type: boolean
+                      anonymous:
+                        type: boolean
+                      passport:
+                        type: object
+                        properties:
+                          series:
+                            type: string
+                          id:
+                            type: string
+                          issued_by:
+                            type: string
+                          issue_date:
+                            type: string
+                          department_code:
+                            type: string
+                          citizenship:
+                            type: string
+                          country_code:
+                            type: number
+                      address:
+                        type: string
+              example:
+                result: true
+                data:
+                  status: active
+                  client_id: b1879ba4-53b0-11ea-89b6-2c4d546557dd
+                  name: Stas
+                  second_name: ''
+                  last_name: Bast
+                  birthday: null
+                  sex: 1
+                  cards: []
+                  email: bast@mail.ru
+                  phone: '791229112'
+                  edit_allowed: false
+                  anonymous: false
+                  passport:
+                    series: '4474168'
+                    id: '12'
+                    issued_by: ''
+                    issue_date: '2021-02-10T00:00:00'
+                    department_code: ''
+                    citizenship: ''
+                    country_code: 643
+                  address: Россия, г. Москва
+      summary: Получить данные о клиенте по номеру телефона
+      operationId: Получить данные о клиенте по номеру телефона
+      description: ''
+      tags:
+        - Информация о клиентах
+      parameters:
+        - name: phone
+          in: query
+          description: Номер телефона
+          required: true
+          schema:
+            type: string
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+  /hs/api/v2/client_by_card/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                      client_id:
+                        type: string
+                      name:
+                        type: string
+                      second_name:
+                        type: string
+                      last_name:
+                        type: string
+                      birthday:
+                        nullable: true
+                      sex:
+                        type: number
+                      cards:
+                        type: array
+                        items: {}
+                      email:
+                        type: string
+                      phone:
+                        type: string
+                      edit_allowed:
+                        type: boolean
+                      anonymous:
+                        type: boolean
+                      passport:
+                        type: object
+                        properties:
+                          series:
+                            type: string
+                          id:
+                            type: string
+                          issued_by:
+                            type: string
+                          issue_date:
+                            type: string
+                          department_code:
+                            type: string
+                          citizenship:
+                            type: string
+                          country_code:
+                            type: number
+                      address:
+                        type: string
+              example:
+                result: true
+                data:
+                  status: active
+                  client_id: b1879ba4-53b0-11ea-89b6-2c4d546557dd
+                  name: Stas
+                  second_name: ''
+                  last_name: Bast
+                  birthday: null
+                  sex: 1
+                  cards: []
+                  email: bast@mail.ru
+                  phone: '791229112'
+                  edit_allowed: false
+                  anonymous: false
+                  passport:
+                    series: '4474168'
+                    id: '12'
+                    issued_by: ''
+                    issue_date: '2021-02-10T00:00:00'
+                    department_code: ''
+                    citizenship: ''
+                    country_code: 643
+                  address: Россия, г. Москва
+      summary: Получить данные о клиенте по номеру карты
+      operationId: Получить данные о клиенте по номеру карты
+      description: ''
+      tags:
+        - Информация о клиентах
+      parameters:
+        - name: card
+          in: query
+          description: Номер карты
+          required: true
+          schema:
+            type: string
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+  /hs/api/v2/confirm_phone/:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      result:
+                        type: boolean
+                      data:
+                        type: object
+                        properties:
+                          auth_type:
+                            type: string
+                  - type: object
+                    properties:
+                      result:
+                        type: boolean
+                      data:
+                        type: object
+                        properties:
+                          pass_token:
+                            type: string
+              examples:
+                example1:
+                  value:
+                    result: true
+                    data:
+                      auth_type: sms
+                example2:
+                  value:
+                    result: true
+                    data:
+                      pass_token: 580392e6-ba49-4280-ac67-fcd6f2180121
+      summary: Подтверждение номера телефона
+      operationId: Подтверждение номера телефона
+      description: ''
+      tags:
+        - Информация о клиентах
+      parameters:
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+      requestBody:
+        content:
+          application/json:
+            examples:
+              example1:
+                value:
+                  phone: '79876543210'
+                  auth_type: sms
+              example2:
+                value:
+                  phone: '79876543210'
+                  confirmation_code: '9876'
+            schema:
+              type: object
+              required:
+                - phone
+              properties:
+                phone:
+                  type: string
+                  example: '79876543210'
+                  description: Номер телефона клиента. Должен передаваться в формате
+                confirmation_code:
+                  type: string
+                  example: '2438'
+                  description: Код подтверждения
+  /hs/api/v2/relatives/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+              example:
+                result: true
+                data:
+                  - id: 2ab4c8d3-8572-11ea-89bd-8e0e3475aa79
+                    name: Джереми
+      summary: Получить родственников клиента
+      operationId: Получить родственников клиента
+      description: ''
+      tags:
+        - Информация о клиентах
+      parameters:
+        - name: client_id
+          in: query
+          description: Идентификатор клиента
+          required: true
+          schema:
+            type: string
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+  /hs/api/v2/client:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  data:
+                    nullable: true
+                  client_id:
+                    type: string
+              example:
+                result: true
+                data: null
+                client_id: d1726061-bae9-11e6-aa5d-3085a98f71a0
+      summary: Изменить данные по клиенту
+      operationId: Изменить данные по клиенту
+      description: ''
+      tags:
+        - Информация о клиентах
+      parameters:
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+      requestBody:
+        content:
+          application/json:
+            example:
+              client_id: d1726061-bae9-11e6-aa5d-3085a98f71a0
+              phone: '79246706705'
+              name: Иван
+              second_name: Николаевич
+              last_name: Сидоров
+              birthday: '1994-02-25'
+              sex: 1
+              promocode: ''
+            schema:
+              type: object
+              required:
+                - phone
+                - name
+                - second_name
+                - last_name
+                - birthday
+                - sex
+              properties:
+                client_id:
+                  type: string
+                  description: >-
+                    Идентификатор клиента (если он не указан, то функция создаст
+                    нового клиента в 1с).
+                phone:
+                  type: string
+                  example: '79246706705'
+                  description: Телефон клиента
+                name:
+                  type: string
+                  example: Иван
+                  description: Имя
+                second_name:
+                  type: string
+                  example: Николаевич
+                  description: Отчество
+                last_name:
+                  type: string
+                  example: Сидоров
+                  description: Фамилия
+                birthday:
+                  type: string
+                  description: Дата рождения (yyyy-mm-dd)
+                sex:
+                  type: string
+                  example: '1'
+                  description: 1 - мужской, 2 - женский, null - Не определен
+                email:
+                  type: string
+                  description: Электронный адрес
+                promocode:
+                  type: string
+                  description: Промокод
+                passport:
+                  $ref: '#/components/schemas/passport'
+                  description: Пасспорт
+  /hs/api/v2/client_photo:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  data:
+                    nullable: true
+              example:
+                result: true
+                data: null
+      summary: Загрузить фото клиента
+      operationId: Загрузить фото клиента
+      description: ''
+      tags:
+        - Информация о клиентах
+      parameters:
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+      requestBody:
+        content:
+          application/json:
+            example:
+              client_id: e9d3ca5f-ee9d-11e6-859b-3085a98f71a0
+              photo: base64...
+            schema:
+              type: object
+              required:
+                - client_id
+                - photo
+              properties:
+                client_id:
+                  type: string
+                  description: Идентификатор клиента
+                photo:
+                  type: string
+                  description: Фото клиента base64
+  /hs/api/v2/client_card:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  data:
+                    nullable: true
+              example:
+                result: true
+                data: null
+      summary: Создать карту клиента
+      operationId: Создать карту клиента
+      description: ''
+      tags:
+        - Информация о клиентах
+      parameters:
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+      requestBody:
+        content:
+          application/json:
+            example:
+              client_id: e9d3ca5f-ee9d-11e6-859b-3085a98f71a0
+              card_code: '16435179453156'
+            schema:
+              type: object
+              required:
+                - client_id
+                - card_code
+              properties:
+                client_id:
+                  type: string
+                  description: Идентификатор клиента
+                card_code:
+                  type: string
+                  description: Код карты
+                internal_card_code:
+                  type: string
+                  description: Внутренний код карты
+    delete:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  data:
+                    nullable: true
+              example:
+                result: true
+                data: null
+        '400':
+          description: Bad Request
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  error:
+                    type: number
+                  error_message:
+                    type: string
+              example:
+                result: false
+                error: 1104
+                error_message: 'Отвязка невозможна: карта не привязана к клиенту.'
+      summary: Отвязать привязанную карту
+      operationId: Отвязать привязанную карту
+      description: ''
+      tags:
+        - Информация о клиентах
+      parameters:
+        - name: client_id
+          in: query
+          description: Идентификатор клиента
+          required: true
+          schema:
+            type: string
+        - name: card_code
+          in: query
+          description: Код карты
+          required: true
+          schema:
+            type: string
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+  /hs/api/v2/relative_types:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        title:
+                          type: string
+                      required:
+                        - id
+                        - title
+              example:
+                result: true
+                data:
+                  - id: 1a00a7b6-3d1b-11ea-96b5-38d547b31ac0
+                    title: Бабушка
+                  - id: 1a00a7b7-3d1b-11ea-96b5-38d547b31ac0
+                    title: Брат
+                  - id: 1a00a7b8-3d1b-11ea-96b5-38d547b31ac0
+                    title: Внук
+                  - id: 1a00a7b9-3d1b-11ea-96b5-38d547b31ac0
+                    title: Внучка
+                  - id: 1a00a7ba-3d1b-11ea-96b5-38d547b31ac0
+                    title: Дедушка
+                  - id: 1a00a7bb-3d1b-11ea-96b5-38d547b31ac0
+                    title: Дочь
+                  - id: 1a00a7bc-3d1b-11ea-96b5-38d547b31ac0
+                    title: Дядя
+                  - id: 1a00a7bd-3d1b-11ea-96b5-38d547b31ac0
+                    title: Жена
+      summary: Получить степени родства
+      operationId: Получить степени родства
+      description: ''
+      tags:
+        - Информация о клиентах
+      parameters:
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+  /hs/api/v2/relative:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  data:
+                    nullable: true
+              example:
+                result: true
+                data: null
+      summary: Добавить родственника клиента
+      operationId: Добавить родственника клиента
+      description: ''
+      tags:
+        - Информация о клиентах
+      parameters:
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+      requestBody:
+        content:
+          application/json:
+            example:
+              client_id: e9d3ca5f-ee9d-11e6-859b-3085a98f71a0
+              relative_type_id: e9d3ca5f-ee9d-11e6-859b-3085a98f7132
+              relative_phone: '79246706705'
+            schema:
+              type: object
+              required:
+                - client_id
+                - relative_type_id
+                - relative_phone
+              properties:
+                client_id:
+                  type: string
+                  description: Идентификатор клиента
+                relative_type_id:
+                  type: string
+                  description: Идентификатор степени родства
+                relative_phone:
+                  type: string
+                  description: Номер телефона родственника
+                relative_last_name:
+                  type: string
+                  description: Фамилия родственника
+                relative_name:
+                  type: string
+                  description: Имя родственника
+                relative_second_name:
+                  type: string
+                  description: Отчество родственника
+  /hs/api/v2/tickets/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        id:
+                          type: string
+                        type:
+                          type: string
+                        status:
+                          type: string
+                        end_date:
+                          type: string
+                          nullable: true
+                        status_date:
+                          nullable: true
+                        count:
+                          type: number
+                          nullable: true
+                      required:
+                        - title
+                        - id
+                        - type
+                        - status
+                        - end_date
+                        - status_date
+                        - count
+              example:
+                result: true
+                data:
+                  - title: Членство 5 групп 1
+                    id: 5c4052be-f215-4c59-80c3-4104ecc8f958
+                    type: membership
+                    status: active
+                    end_date: '2020-12-12'
+                    status_date: null
+                    count: 1
+                  - title: Членство с групповыми услугами
+                    id: 9e61f851-b6f3-42a6-88d5-5103eb8a7e75
+                    type: membership
+                    status: not_active
+                    end_date: null
+                    status_date: null
+                    count: 5
+                  - title: Секция групповой бокс без цикла
+                    id: cc08f94a-f4ea-49f6-8e31-72e8419d57aa
+                    type: package
+                    status: active
+                    end_date: '2021-01-17'
+                    status_date: null
+                    count: null
+      summary: Получить список членств, пакетов услуг, разовых услуг
+      operationId: Получить список членств, пакетов услуг, разовых услуг
+      description: ''
+      tags:
+        - Членства, пакеты услуг, разовые услуги
+      parameters:
+        - name: client_id
+          in: query
+          description: Идентификатор клиента
+          required: true
+          schema:
+            type: string
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+  /hs/api/v2/tickets_detail/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      title:
+                        type: string
+                      ticket_id:
+                        type: string
+                      type:
+                        type: string
+                      status:
+                        type: string
+                      active_date:
+                        type: string
+                      end_date:
+                        type: string
+                      start_status_date:
+                        type: string
+                      end_status_date:
+                        nullable: true
+                      total_frozen:
+                        type: number
+                      balance_frozen:
+                        type: number
+                      min_frozen_count:
+                        type: number
+                      total_guest_visit:
+                        type: number
+                      balance_guest_visit:
+                        type: number
+                      service_list:
+                        type: array
+                        items: {}
+              example:
+                result: true
+                data:
+                  title: Месячное членство
+                  ticket_id: 173309ed-a9c4-4617-ac7f-d3e6b7eb76ba
+                  type: membership
+                  status: closed
+                  active_date: '2020-04-27'
+                  end_date: '2020-04-29'
+                  start_status_date: '2020-04-30'
+                  end_status_date: null
+                  total_frozen: 0
+                  balance_frozen: 0
+                  min_frozen_count: 0
+                  total_guest_visit: 0
+                  balance_guest_visit: 0
+                  service_list: []
+      summary: Получить описание членства, пакета услуг
+      operationId: Получить описание членства, пакета услуг
+      description: ''
+      tags:
+        - Членства, пакеты услуг, разовые услуги
+      parameters:
+        - name: ticket_id
+          in: query
+          description: Идентификатор членства, пакета услуг
+          required: true
+          schema:
+            type: string
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+  /hs/api/v2/freezing:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+              example:
+                result: true
+      summary: Заморозить членство, пакет услуг
+      operationId: Заморозить членство, пакет услуг
+      description: ''
+      tags:
+        - Членства, пакеты услуг, разовые услуги
+      parameters:
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+      requestBody:
+        content:
+          application/json:
+            examples:
+              example1:
+                value:
+                  ticket_id: ''
+                  Date: ''
+                  Count: 5
+              example2:
+                value:
+                  ticket_id: d481a32d-9ee4-4903-b4bb-34fd50b6a694
+                  Date: '2020-11-17'
+                  Count: 5
+            schema:
+              type: object
+              required:
+                - ticket_id
+                - Date
+                - Count
+              properties:
+                ticket_id:
+                  type: string
+                  description: Идентификатор членства или пакета услуг
+                Date:
+                  type: string
+                  description: Дата заморозки (yyyy-mm-dd)
+                Count:
+                  type: number
+                  example: 5
+                  description: Количество дней
+  /hs/api/v2/unfreezing:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      title:
+                        type: string
+              example:
+                result: true
+                data:
+                  title: defrost
+      summary: Разморозить членство, пакет услуг
+      operationId: Разморозить членство, пакет услуг
+      description: ''
+      tags:
+        - Членства, пакеты услуг, разовые услуги
+      parameters:
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+      requestBody:
+        content:
+          application/json:
+            examples:
+              example1:
+                value:
+                  ticket_id: ''
+                  Date: ''
+              example2:
+                value:
+                  ticket_id: d481a32d-9ee4-4903-b4bb-34fd50b6a694
+                  Date: '2020-11-17'
+            schema:
+              type: object
+              required:
+                - ticket_id
+                - Date
+              properties:
+                ticket_id:
+                  type: string
+                  description: Идентификатор членства или пакета услуг
+                Date:
+                  type: string
+                  description: Дата разморозки (yyyy-mm-dd)
+  /hs/api/v2/deposit_list/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        balance:
+                          type: number
+                        type:
+                          type: string
+                        organization:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            tin:
+                              type: string
+              example:
+                result: true
+                data:
+                  - id: dab478c7-9507-11ea-89c2-900f90b7611a
+                    name: ФИТ
+                    balance: 0
+                    type: deposit
+                    organization:
+                      id: 1a00a735-3d1b-11ea-96b5-38d547b31ac0
+                      tin: '1234567891'
+      summary: Получить список лицевых счетов
+      operationId: Получить список лицевых счетов
+      description: ''
+      tags:
+        - Лицевые счета
+      parameters:
+        - name: client_id
+          in: query
+          description: Идентификатор клиента
+          required: true
+          schema:
+            type: string
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+  /hs/api/v2/deposit_detail/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        date:
+                          type: string
+                        operation:
+                          type: string
+                        cost:
+                          type: number
+                        organization:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            tin:
+                              type: string
+                      required:
+                        - id
+                        - date
+                        - operation
+                        - cost
+                        - organization
+              example:
+                result: true
+                data:
+                  - id: 0216dae7-09ff-42ba-8543-8f6857907eeb
+                    date: 2020-07-16 11:27
+                    operation: Персональное требующее основание для записи
+                    cost: -500
+                    organization:
+                      id: 1a00a735-3d1b-11ea-96b5-38d547b31ac0
+                      tin: '1234567891'
+                  - id: 218c4107-c73d-11ea-89d4-2c4d546557dd
+                    date: 2020-07-16 11:19
+                    operation: Пополнение
+                    cost: 100000
+                    organization:
+                      id: 1a00a735-3d1b-11ea-96b5-38d547b31ac0
+                      tin: '1234567891'
+                  - id: a8215838-921f-48d2-99cf-bc04004462c1
+                    date: 2020-05-06 17:37
+                    operation: 'Салон 30мин '
+                    cost: -50
+                    organization:
+                      id: 1a00a735-3d1b-11ea-96b5-38d547b31ac0
+                      tin: '1234567891'
+      summary: Получить расшифровку движений средств на лицевом или бонусном счете
+      operationId: Получить расшифровку движений средств на лицевом или бонусном счете
+      description: ''
+      tags:
+        - Лицевые счета
+      parameters:
+        - name: deposit_id
+          in: query
+          description: Идентификатор лицевого или бонусного счета
+          required: true
+          schema:
+            type: string
+        - name: count
+          in: query
+          description: Количество выбираемых строк
+          required: true
+          example: '5'
+          schema:
+            type: number
+        - name: count_number
+          in: query
+          description: Номер порции запроса (номер листа)
+          required: true
+          example: '1'
+          schema:
+            type: number
+        - name: date
+          in: query
+          description: >-
+            Дата и время среза операций по лицевом счету (yyyy-mm-dd HH:MM:ss).
+            Если не указана, то будет использоваться текущая дата сеанса
+          schema:
+            type: string
+        - name: sales_only
+          in: query
+          description: >-
+            Флаг, только продажи (если true, то вернет все отрицательные
+            движения по лицевому счету)
+          example: 'false'
+          schema:
+            type: boolean
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+  /hs/api/v2/refill_deposit:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Parameters:
+                    type: object
+                    properties:
+                      result:
+                        type: boolean
+                  Error:
+                    nullable: true
+                  ErrorMessage:
+                    nullable: true
+              example:
+                Parameters:
+                  result: true
+                Error: null
+                ErrorMessage: null
+      summary: Пополнить лицевой счет клиента
+      operationId: Пополнить лицевой счет клиента
+      description: ''
+      tags:
+        - Лицевые счета
+      parameters:
+        - name: terminalid
+          in: header
+          description: e.g. 246431 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 246431 - Идентификатор терминала
+      requestBody:
+        content:
+          application/json:
+            example:
+              client_id: 627d82c3-97aa-11e7-b142-0050568b93ed
+              deposit_id: 791bfff3-c847-11e7-893a-2c4d546557dd
+              transaction_id: drh4d3r5h41d58drh
+              cost: '1700'
+              payment_type: 0
+            schema:
+              type: object
+              required:
+                - deposit_id
+                - client_id
+                - transaction_id
+                - cost
+                - payment_type
+              properties:
+                deposit_id:
+                  type: string
+                  description: Идентификатор лицевого счета
+                client_id:
+                  type: string
+                  description: Идентификатор клиента
+                transaction_id:
+                  type: string
+                  description: Идентификатор платежа
+                cost:
+                  type: number
+                  description: Сумма платежа
+                payment_type:
+                  type: number
+                  description: Вид оплаты. 0 - наличные, 1 - платёжная карта
+                itn:
+                  type: string
+                  description: ИНН
+  /hs/api/v2/price_list/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Parameters:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        ID:
+                          type: string
+                        Title:
+                          type: string
+                        Type:
+                          type: string
+                        Parent:
+                          type: object
+                          properties:
+                            Title:
+                              type: string
+                            ID:
+                              type: string
+                        Price:
+                          type: string
+                        Description:
+                          type: string
+                        Services:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              ID:
+                                type: string
+                              Title:
+                                type: string
+                            required:
+                              - ID
+                              - Title
+                        Department:
+                          type: string
+                        Comment:
+                          type: string
+                        PriceTypes:
+                          type: boolean
+                        Tax:
+                          type: number
+                        CalculationSubject:
+                          type: string
+              example:
+                Parameters:
+                  - ID: 9ad49672-a043-11e7-ab37-000c2938171c
+                    Title: Пенсионная M12 (30) РАССРОЧКА
+                    Type: Membership
+                    Parent:
+                      Title: Членства
+                      ID: a62afac9-97b2-11e7-b142-0050568b93ed
+                    Price: '17900'
+                    Description: '&nbsp;'
+                    Services:
+                      - ID: 99b31f40-97b2-11e7-b142-0050568b93ed
+                        Title: ЕД 1 ПТ
+                      - ID: 99b31f3c-97b2-11e7-b142-0050568b93ed
+                        Title: ТЗ 1 ПТ
+                      - ID: b4af6162-a780-11e7-ab37-000c2938171c
+                        Title: АКВА 1 ПТ
+                      - ID: 99b31f3e-97b2-11e7-b142-0050568b93ed
+                        Title: ГП 1 ПТ
+                      - ID: 6756afb4-97b2-11e7-b142-0050568b93ed
+                        Title: Инструктаж в Тренажерном зале
+                    Department: Отдел продаж КАСКАД
+                    Comment: '10000057170'
+                    PriceTypes: false
+                    Tax: 6
+                    CalculationSubject: ТОВАР
+      summary: Получить прайс клиента
+      operationId: Получить прайс клиента
+      description: ''
+      tags:
+        - Каталог
+      parameters:
+        - name: client_id
+          in: query
+          description: Идентификатор клиента
+          required: true
+          schema:
+            type: string
+        - name: terminalid
+          in: header
+          description: e.g. 246431 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 246431 - Идентификатор терминала
+  /hs/api/v2/group_price_list/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Parameters:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        ID:
+                          type: string
+                        Title:
+                          type: string
+                        Type:
+                          type: string
+                        Parent:
+                          type: object
+                          properties:
+                            Title:
+                              type: string
+                            ID:
+                              type: string
+                        Price:
+                          type: string
+                          nullable: true
+                        Description:
+                          type: string
+                          nullable: true
+                        Restriction:
+                          nullable: true
+                        Services:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              ID:
+                                type: string
+                              Title:
+                                type: string
+                            required:
+                              - ID
+                              - Title
+                        MayBePayment:
+                          nullable: true
+                        Department:
+                          type: string
+                          nullable: true
+                        Comment:
+                          type: string
+                          nullable: true
+                        PriceTypes:
+                          type: boolean
+                          nullable: true
+                        Tax:
+                          type: number
+                          nullable: true
+                        CalculationSubject:
+                          type: string
+                          nullable: true
+                      required:
+                        - ID
+                        - Title
+                        - Type
+                        - Parent
+                        - Price
+                        - Description
+                        - Services
+                        - Department
+                        - Comment
+                        - PriceTypes
+                        - Tax
+                        - CalculationSubject
+              example:
+                Parameters:
+                  - ID: 2bcd63a3-a5e5-11ec-b145-f02f7488d897
+                    Title: Услуги
+                    Type: Group
+                    Parent: null
+                    Price: null
+                    Description: null
+                    Restriction: null
+                    Services: null
+                    MayBePayment: null
+                    Department: null
+                    Comment: null
+                    PriceTypes: null
+                    Tax: null
+                    CalculationSubject: null
+                  - ID: 9ad49672-a043-11e7-ab37-000c2938171c
+                    Title: Пенсионная M12 (30) РАССРОЧКА
+                    Type: Membership
+                    Parent:
+                      Title: Членства
+                      ID: a62afac9-97b2-11e7-b142-0050568b93ed
+                    Price: '17900'
+                    Description: '&nbsp;'
+                    Services:
+                      - ID: 99b31f40-97b2-11e7-b142-0050568b93ed
+                        Title: ЕД 1 ПТ
+                      - ID: 99b31f3c-97b2-11e7-b142-0050568b93ed
+                        Title: ТЗ 1 ПТ
+                      - ID: b4af6162-a780-11e7-ab37-000c2938171c
+                        Title: АКВА 1 ПТ
+                      - ID: 99b31f3e-97b2-11e7-b142-0050568b93ed
+                        Title: ГП 1 ПТ
+                      - ID: 6756afb4-97b2-11e7-b142-0050568b93ed
+                        Title: Инструктаж в Тренажерном зале
+                    Department: Отдел продаж КАСКАД
+                    Comment: '10000057170'
+                    PriceTypes: false
+                    Tax: 6
+                    CalculationSubject: ТОВАР
+      summary: Получить прайс клиента
+      operationId: Получить прайс клиента
+      description: ''
+      tags:
+        - Каталог
+      parameters:
+        - name: client_id
+          in: query
+          description: Идентификатор клиента
+          required: true
+          schema:
+            type: string
+        - name: group_id
+          in: query
+          description: Идентификатор группы номенклатуры
+          schema:
+            type: string
+        - name: terminalid
+          in: header
+          description: e.g. 246431 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 246431 - Идентификатор терминала
+  /hs/api/v2/item_price/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        price_type:
+                          type: string
+                        price:
+                          type: string
+                      required:
+                        - id
+                        - name
+                        - price_type
+                        - price
+              example:
+                result: true
+                data:
+                  - id: db3f275a-bb00-11e7-9bcd-3085a98f71a0
+                    name: Иванов Сергей Анатольевич
+                    price_type: Розничная цена
+                    price: '7900'
+                  - id: 5cbc31a2-f8c9-11e1-bd50-3860779088bc
+                    name: Хромов Николай Сергеевич
+                    price_type: Бренд тренер
+                    price: '9000'
+      summary: Получить цены номенклатуры
+      operationId: Получить цены номенклатуры
+      description: ''
+      tags:
+        - Каталог
+      parameters:
+        - name: item_id
+          in: query
+          description: Идентификатор номенклатуры
+          required: true
+          schema:
+            type: string
+        - name: terminalid
+          in: header
+          description: e.g. 246431 - Идентификатор терминала - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 246431 - Идентификатор терминала - Идентификатор терминала
+  /hs/api/v2/cart_cost/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Parameters:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        purchase_id:
+                          type: string
+                        count:
+                          type: number
+                        price:
+                          type: number
+                        discount_sum:
+                          type: number
+                        payment_amount:
+                          type: number
+                        tax:
+                          type: number
+                        calculation_subject:
+                          type: string
+                        itn:
+                          type: string
+                  may_be_payment:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        title:
+                          type: string
+                        balance:
+                          type: number
+                  Error:
+                    nullable: true
+                  ErrorMessage:
+                    nullable: true
+              example:
+                Parameters:
+                  - purchase_id: 06cd5a71-5301-11ea-89b6-2c4d546557dd
+                    count: 1
+                    price: 700
+                    discount_sum: 70
+                    payment_amount: 630
+                    tax: 6
+                    calculation_subject: УСЛУГА
+                    itn: '1231231231'
+                may_be_payment:
+                  - id: c8b05999-7fde-11ea-89bb-2c4d546557dd
+                    title: Основной
+                    balance: 630
+                Error: null
+                ErrorMessage: null
+      summary: Получить стоимость корзины
+      operationId: Получить стоимость корзины
+      description: ''
+      tags:
+        - Каталог
+      parameters:
+        - name: client_id
+          in: query
+          description: Идентификатор клиента
+          required: true
+          schema:
+            type: string
+        - name: cart
+          in: query
+          description: >
+            Строка Json с массивом структур, содержащих параметры "purchase_id"
+            (идентификатор номенклатуры), "count" (количество номенклатур) и
+            "employee_id" (идентификатор сотрудника для получения вида цен
+            сотрудника).
+
+            Пример такой строки:
+
+            {"cart_array":[{"purchase_id":"9ad49672-a043-11e7-ab37-000c2938171c",
+            "count":2},{"purchase_id":"8bac3895-9e13-11e7-9966-0050568bd50c",
+            "count":1}]}
+          required: true
+          schema:
+            type: string
+        - name: terminalid
+          in: header
+          description: e.g. 246431 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 246431 - Идентификатор терминала
+  /hs/api/v2/payment:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Parameters:
+                    type: object
+                    properties:
+                      Result:
+                        type: boolean
+                  Error:
+                    nullable: true
+                  ErrorMessage:
+                    nullable: true
+              example:
+                Parameters:
+                  Result: true
+                Error: null
+                ErrorMessage: null
+      summary: Оплатить покупки
+      operationId: Оплатить покупки
+      description: ''
+      tags:
+        - Каталог
+      parameters:
+        - name: apikey
+          in: header
+          description: e.g. 147556
+          required: false
+          schema:
+            type: string
+          example: '147556'
+        - name: terminalid
+          in: header
+          description: e.g. 246431 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 246431 - Идентификатор терминала
+      requestBody:
+        content:
+          application/json:
+            example:
+              client_id: 268f481e-36b5-11e9-899a-2c4d546557dd
+              transaction_id: 1211
+              cart:
+                - purchase_id: a62afb1e-97b2-11e7-b142-0050568b93ed
+                  count: 1
+              payment_list:
+                - type: cash
+                  amount: 11000
+                - type: card
+                  amount: 8000
+                - type: deposit
+                  id: ea18da46-98cf-11e9-89a3-2c4d546557dd
+                  amount: 2000
+            schema:
+              type: object
+              required:
+                - client_id
+                - transaction_id
+                - cart
+                - payment_list
+              properties:
+                client_id:
+                  type: string
+                  description: Идентификатор клиента
+                transaction_id:
+                  type: string
+                  description: Идентификатор транзакции
+                cart:
+                  $ref: '#/components/schemas/cart'
+                  description: Массив структур оплачиваемых номенклатур
+                payment_list:
+                  $ref: '#/components/schemas/PaymentList'
+                  description: Массив структур оплат
+                itn:
+                  type: string
+                  description: ИНН
+  /hs/api/v2/debt_detail/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        document_id:
+                          type: string
+                        date:
+                          type: string
+                        operation:
+                          type: string
+                        prepayment_sum:
+                          type: number
+                        cost:
+                          type: number
+                        may_be_payment:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              Title:
+                                type: string
+                              Id:
+                                type: string
+                              Balance:
+                                type: number
+                        cart:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              title:
+                                type: string
+                              count:
+                                type: number
+                              price:
+                                type: number
+                              discount_sum:
+                                type: number
+                              payment_amount:
+                                type: number
+                              tax:
+                                type: number
+                              calculation_subject:
+                                type: string
+                              itn:
+                                type: string
+              example:
+                result: true
+                data:
+                  - document_id: 4237a796-8d70-4a12-8cbf-5512d6b4ade2
+                    date: 2020-09-04 17:40
+                    operation: Аренда зала
+                    prepayment_sum: 0
+                    cost: 900
+                    may_be_payment:
+                      - Title: ФИТ
+                        Id: dab478c7-9507-11ea-89c2-900f90b7611a
+                        Balance: 0
+                    cart:
+                      - id: 1a09e7bb-53c5-11ea-89b6-2c4d546557dd
+                        title: Аренда зала
+                        count: 1
+                        price: 900
+                        discount_sum: 0
+                        payment_amount: 900
+                        tax: 6
+                        calculation_subject: УСЛУГА
+                        itn: '1231231231'
+      summary: Получить задолженность клиента
+      operationId: Получить задолженность клиента
+      description: ''
+      tags:
+        - Долги
+      parameters:
+        - name: client_id
+          in: query
+          description: >-
+            Идентификатор клиента (если передан, то номенклатуры и виды их цен
+            отбираются по сегменту клиентов, в который входит текущий клиент)
+          schema:
+            type: string
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+  /hs/api/v2/debt_payment:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Parameters:
+                    type: object
+                    properties:
+                      result:
+                        type: boolean
+                      sum:
+                        type: number
+                  Error:
+                    nullable: true
+                  ErrorMessage:
+                    nullable: true
+              example:
+                Parameters:
+                  result: true
+                  sum: 500
+                Error: null
+                ErrorMessage: null
+      summary: Оплатить
+      operationId: Оплатить
+      description: ''
+      tags:
+        - Долги
+      parameters:
+        - name: terminalid
+          in: header
+          description: e.g. 246431 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 246431 - Идентификатор терминала
+      requestBody:
+        content:
+          application/json:
+            example:
+              client_id: 97341542-0a05-11eb-89e7-c860000abe74
+              sales:
+                - ed5f68bd-e0ea-423f-8b79-5b35d9f944ba
+              payment_type: 1
+              cost: 459
+              transaction_id: ed5f68bd-e0ea-423f-8b79
+            schema:
+              type: object
+              required:
+                - client_id
+                - sales
+                - cost
+                - transaction_id
+              properties:
+                client_id:
+                  type: string
+                  description: Идентификатор клиента
+                sales:
+                  type: array
+                  items: {}
+                  description: Массив идентификаторов продаж
+                payment_list:
+                  $ref: '#/components/schemas/PaymentList'
+                  description: >-
+                    Массив структур оплат. Рекомендуется использовать этот
+                    параметр.
+                payment_type:
+                  type: number
+                  description: >-
+                    Вид оплаты. 0 - наличные, 1 - платёжная карта, 2 - лицевой
+                    счет
+                cost:
+                  type: number
+                  description: Сумма оплаты
+                transaction_id:
+                  type: string
+                  description: Идентификатор транзакции
+                itn:
+                  type: string
+                  description: ИНН
+  /hs/api/v2/client_appointments/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content: {}
+      summary: Получить список занятий клиента
+      operationId: Получить список занятий клиента
+      description: ''
+      tags:
+        - Занятия
+      parameters:
+        - name: client_id
+          in: query
+          description: Идентификатор клиента
+          required: true
+          schema:
+            type: string
+        - name: count
+          in: query
+          description: Количество выбираемых строк
+          required: true
+          example: '5'
+          schema:
+            type: number
+        - name: count_number
+          in: query
+          description: Номер порции запроса (номер листа)
+          required: true
+          example: '1'
+          schema:
+            type: number
+        - name: only_planned
+          in: query
+          description: Вернуть только занятия со статусом запланировано
+          schema:
+            type: boolean
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+  /hs/api/v2/schedule/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content: {}
+      summary: Получить расписание занятий за период
+      operationId: Получить расписание занятий за период
+      description: ''
+      tags:
+        - Занятия
+      parameters:
+        - name: start_date
+          in: query
+          description: Дата и время начала выборки (yyyy-mm-dd HH:MM)
+          required: true
+          schema:
+            type: string
+        - name: end_date
+          in: query
+          description: Дата и время окончания выборки (yyyy-mm-dd HH:MM)
+          required: true
+          schema:
+            type: string
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+  /hs/api/v2/schedule_item/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content: {}
+      summary: Получить информацию о занятии
+      operationId: Получить информацию о занятии
+      description: ''
+      tags:
+        - Занятия
+      parameters:
+        - name: client_id
+          in: query
+          description: >-
+            Идентификатор клиента (если передан, то номенклатуры и виды их цен
+            отбираются по сегменту клиентов, в который входит текущий клиент)
+          schema:
+            type: string
+        - name: appointment_id
+          in: query
+          description: Идентификатор занятия
+          required: true
+          schema:
+            type: string
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+  /hs/api/v2/group_appointment:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content: {}
+      summary: Запись на групповое занятие
+      operationId: Запись на групповое занятие
+      description: ''
+      tags:
+        - Занятия
+      parameters:
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+      requestBody:
+        content:
+          application/json:
+            example:
+              appointment_id: 23c0aa7d-46f3-4836-9ea7-6dd7886cbc65
+              client_id: 957ed50e-5220-11ea-89b6-2c4d546557dd
+            schema:
+              type: object
+              required:
+                - client_id
+                - appointment_id
+              properties:
+                client_id:
+                  type: string
+                  description: Идентификатор клиента
+                appointment_id:
+                  type: string
+                  description: Идентификатор занятия
+  /hs/api/v2/cancel_appointment/{appointment_id},{client_id}:
+    delete:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content: {}
+      summary: Отменить предварительную запись в персональном занятии
+      operationId: Отменить предварительную запись в персональном занятии
+      description: ''
+      tags:
+        - Занятия
+      parameters:
+        - name: client_id
+          in: path
+          description: Идентификатор клиента
+          required: true
+          schema:
+            type: string
+        - name: appointment_id
+          in: path
+          description: Идентификатор занятия
+          required: true
+          schema:
+            type: string
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+  /hs/api/v2/сancel_group_appointment/{appointment_id},{client_id}:
+    delete:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content: {}
+      summary: Отменить предварительную запись в персональном занятии
+      operationId: Отменить предварительную запись в персональном занятии
+      description: ''
+      tags:
+        - Занятия
+      parameters:
+        - name: client_id
+          in: path
+          description: Идентификатор клиента
+          required: true
+          schema:
+            type: string
+        - name: appointment_id
+          in: path
+          description: Идентификатор занятия
+          required: true
+          schema:
+            type: string
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+  /hs/api/v2/key_card/:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  data:
+                    nullable: true
+              example:
+                result: true
+                data: null
+        '400':
+          description: Bad Request
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  error:
+                    type: number
+                  error_message:
+                    type: string
+              example:
+                result: false
+                error: 2022
+                error_message: Ключ выдан другому клиенту
+      summary: Привязать ключ клиенту
+      operationId: Привязать ключ клиенту
+      description: ''
+      tags:
+        - Ключи
+      parameters:
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+      requestBody:
+        content:
+          application/json:
+            example:
+              client_id: 4ee4ce83
+              key_code: '35423623'
+            schema:
+              type: object
+              required:
+                - key_code
+              properties:
+                client_id:
+                  type: string
+                  example: 4ee4ce83
+                  description: >-
+                    8c91-11ef-b1cd-001a7dda7115 (required, string) -
+                    Идентификатор клиента
+                key_code:
+                  type: string
+                  example: '35423623'
+                  description: Код ключа
+    delete:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  data:
+                    nullable: true
+              example:
+                result: true
+                data: null
+        '400':
+          description: Bad Request
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  error:
+                    type: number
+                  error_message:
+                    type: string
+              example:
+                result: false
+                error: 2023
+                error_message: 'Отвязка невозможна: ключ не привязан к клиенту.'
+      summary: Отвязать привязанный ключ
+      operationId: Отвязать привязанный ключ
+      description: ''
+      tags:
+        - Ключи
+      parameters:
+        - name: client_id
+          in: query
+          description: Идентификатор клиента
+          required: true
+          schema:
+            type: string
+        - name: key_code
+          in: query
+          description: Код ключа
+          required: true
+          schema:
+            type: string
+        - name: terminalid
+          in: header
+          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+          required: false
+          schema:
+            type: string
+          example: 110132e6-ba129-4120-ac33-fcd612380121 - Идентификатор терминала
+components:
+  schemas:
+    cart:
+      type: object
+      required:
+        - purchase_id
+        - count
+      properties:
+        purchase_id:
+          type: string
+          description: Идентификатор номенклатуры
+        count:
+          type: number
+          description: Количество номенклатуры
+        employee_id:
+          type: string
+          description: Идентификатор сотрудника
+    passport:
+      type: object
+      properties:
+        series:
+          type: string
+          description: Серия паспорта
+        id:
+          type: string
+          description: Номер паспорта
+        issued_by:
+          type: string
+          description: Кем выдан паспорт
+        issue_date:
+          type: string
+          description: Дата выдачи
+        department_code:
+          type: string
+          description: Код подразделения
+    PaymentList:
+      type: object
+      required:
+        - type
+        - amount
+      properties:
+        type:
+          type: string
+          description: >-
+            Тип оплаты ("cash" - оплата наличными, "card" - оплата картой,
+            "deposit" - оплата с лицевого счета)
+        amount:
+          type: number
+          description: Сумма оплаты
+        id:
+          type: string
+          description: >-
+            Идентификатор лицевого счета (необходимо передавать только при
+            оплате с лицевого счета)
+tags:
+  - name: Информация о клиентах
+  - name: Членства, пакеты услуг, разовые услуги
+  - name: Лицевые счета
+  - name: Каталог
+  - name: Долги
+  - name: Занятия
+  - name: Ключи
