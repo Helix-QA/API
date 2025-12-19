@@ -9,7 +9,7 @@ paths:
   /hs/api/v1/auth_types/{clinic_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -39,7 +39,7 @@ paths:
                   message: Описание ошибки
       summary: Получить доступные варианты авторизации
       operationId: Получить доступные варианты авторизации
-      description: ''
+      description: ""
       tags:
         - Авторизация
       parameters:
@@ -60,7 +60,7 @@ paths:
   /hs/api/v1/auth/{clinic_id}/:
     post:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -101,7 +101,7 @@ paths:
                     Parameters:
                       sent_SMS: true
                     Error: 0
-                    ErrorMessage: ''
+                    ErrorMessage: ""
                 example2:
                   value:
                     Parameters:
@@ -111,7 +111,7 @@ paths:
                       message: null
       summary: Авторизоваться
       operationId: Авторизоваться
-      description: ''
+      description: ""
       tags:
         - Авторизация
       parameters:
@@ -127,13 +127,13 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
       requestBody:
         content:
           application/json:
             example:
-              login: '77731315'
-              confirmation_code: '9876'
+              login: "77731315"
+              confirmation_code: "9876"
               name: Иванов Иван
             schema:
               type: object
@@ -171,7 +171,7 @@ paths:
   /hs/api/v1/validity_usertoken/{clinic_id}/:
     post:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -190,7 +190,7 @@ paths:
                     Result: false
       summary: Валидность ключа пользователя
       operationId: Валидность ключа пользователя
-      description: ''
+      description: ""
       tags:
         - Авторизация
       parameters:
@@ -219,7 +219,7 @@ paths:
   /hs/api/v1/private_auth/{clinic_id}/:
     post:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -247,7 +247,7 @@ paths:
                   message: null
       summary: Авторизация с цифровой подписью
       operationId: Авторизация с цифровой подписью
-      description: ''
+      description: ""
       tags:
         - Авторизация
       parameters:
@@ -272,7 +272,7 @@ paths:
             example:
               name: Антон
               second_name: Андреевич
-              phone: '077729462'
+              phone: "077729462"
               sign: fa8ec54b5df3127309e391d65ad24115a3530771
             schema:
               type: object
@@ -306,7 +306,7 @@ paths:
   /hs/api/v1/book_services/{clinic_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -355,7 +355,7 @@ paths:
                       title: Косметология
                     price_min: 1100.5
                     price_max: 1100.5
-                    comment: ''
+                    comment: ""
                     active: true
                     length: 60
                     ServicesAtSameTime:
@@ -368,7 +368,7 @@ paths:
                     sort_index: 0
       summary: Получить список доступных для записи услуг
       operationId: Получить список доступных для записи услуг
-      description: ''
+      description: ""
       tags:
         - Запись на прием
       parameters:
@@ -395,17 +395,17 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
   /hs/api/v1/book_staff/{clinic_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content: {}
       summary: Получить список доступных для записи сотрудников
       operationId: Получить список доступных для записи сотрудников
-      description: ''
+      description: ""
       tags:
         - Запись на прием
       parameters:
@@ -446,11 +446,11 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
   /hs/api/v1/book_dates/{clinic_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -471,20 +471,20 @@ paths:
                         nullable: true
               example:
                 Parameters:
-                  - '2017-08-20T00:00:00'
-                  - '2017-08-21T00:00:00'
-                  - '2017-08-22T00:00:00'
-                  - '2017-08-23T00:00:00'
-                  - '2017-08-24T00:00:00'
-                  - '2017-08-25T00:00:00'
-                  - '2017-08-30T00:00:00'
-                  - '2017-08-31T00:00:00'
+                  - "2017-08-20T00:00:00"
+                  - "2017-08-21T00:00:00"
+                  - "2017-08-22T00:00:00"
+                  - "2017-08-23T00:00:00"
+                  - "2017-08-24T00:00:00"
+                  - "2017-08-25T00:00:00"
+                  - "2017-08-30T00:00:00"
+                  - "2017-08-31T00:00:00"
                 Errors:
                   code: 0
                   message: null
       summary: Получить список доступных для записи дат
       operationId: Получить список доступных для записи дат
-      description: ''
+      description: ""
       tags:
         - Запись на прием
       parameters:
@@ -546,11 +546,11 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
   /hs/api/v1/book_times/{clinic_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -582,30 +582,30 @@ paths:
                         nullable: true
               example:
                 Parameters:
-                  - time: '09:00'
+                  - time: "09:00"
                     seance_length: 30
-                    datetime: '2017-08-24T09:00:00'
-                  - time: '09:30'
+                    datetime: "2017-08-24T09:00:00"
+                  - time: "09:30"
                     seance_length: 30
-                    datetime: '2017-08-24T09:30:00'
-                  - time: '10:00'
+                    datetime: "2017-08-24T09:30:00"
+                  - time: "10:00"
                     seance_length: 30
-                    datetime: '2017-08-24T10:00:00'
-                  - time: '15:00'
+                    datetime: "2017-08-24T10:00:00"
+                  - time: "15:00"
                     seance_length: 30
-                    datetime: '2017-08-24T15:00:00'
-                  - time: '17:00'
+                    datetime: "2017-08-24T15:00:00"
+                  - time: "17:00"
                     seance_length: 30
-                    datetime: '2017-08-24T17:00:00'
-                  - time: '17:30'
+                    datetime: "2017-08-24T17:00:00"
+                  - time: "17:30"
                     seance_length: 30
-                    datetime: '2017-08-24T17:30:00'
+                    datetime: "2017-08-24T17:30:00"
                 Errors:
                   code: 0
                   message: null
       summary: Получить список слотов доступных для записи
       operationId: Получить список слотов доступных для записи
-      description: ''
+      description: ""
       tags:
         - Запись на прием
       parameters:
@@ -657,11 +657,11 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
   /hs/api/v1/record_marks/{clinic_id}:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -695,19 +695,19 @@ paths:
                 Parameters:
                   - id: 1561a273-bbc7-11e8-894d-4a2e5c85a0a3
                     title: Острая боль
-                    color: '#FF0000'
+                    color: "#FF0000"
                   - id: 1561a274-bbc7-11e8-894d-4a2e5c85a0a3
                     title: Первичный прием
-                    color: '#FFD700'
+                    color: "#FFD700"
                   - id: 1561a275-bbc7-11e8-894d-4a2e5c85a0a3
                     title: Повторный прием
-                    color: '#FFC0CB'
+                    color: "#FFC0CB"
                 Errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Метки предварительной записи
       operationId: Метки предварительной записи
-      description: ''
+      description: ""
       tags:
         - Запись на прием
       parameters:
@@ -727,7 +727,7 @@ paths:
   /hs/api/v1/recording_dates/{clinic_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -772,10 +772,10 @@ paths:
                       - 06.08.2024 15:30:00
                 Errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Даты записи
       operationId: Даты записи
-      description: ''
+      description: ""
       tags:
         - Запись на прием
       parameters:
@@ -822,7 +822,7 @@ paths:
   /hs/api/v1/record_cost/{clinic_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -919,7 +919,7 @@ paths:
                         description: Описание услуги
                       count: 1
                       balance: 0
-                      balance_warning: ''
+                      balance_warning: ""
                       price_type:
                         id: bb266307-3e83-11ea-96b8-38d547b31ac0
                         title: Розничная цена
@@ -942,10 +942,10 @@ paths:
                       amount: 50
                 Errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Расчет стоимости записи
       operationId: Расчет стоимости записи
-      description: ''
+      description: ""
       tags:
         - Запись на прием
       parameters:
@@ -994,7 +994,7 @@ paths:
   /hs/api/v1/book_record/{clinic_id}/:
     post:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -1015,7 +1015,7 @@ paths:
                 Errors: null
       summary: Запись на прием
       operationId: Запись на прием
-      description: ''
+      description: ""
       tags:
         - Запись на прием
       parameters:
@@ -1031,7 +1031,7 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
         - name: usertoken
           in: header
           description: e.g. 256D323401901DB2BD42405FA54509B0
@@ -1058,12 +1058,12 @@ paths:
                   - d9de866e-785c-11e8-b6dc-4a2e5c85a0a3
               Errors:
                 code: 0
-                message: ''
+                message: ""
             schema:
               type: object
               properties:
                 record_array:
-                  $ref: '#/components/schemas/Record'
+                  $ref: "#/components/schemas/Record"
                   description: >-
                     Массив записей. Является обязательным, если не передан
                     ID приема
@@ -1108,7 +1108,7 @@ paths:
   /hs/api/v1/change_record/{clinic_id}/:
     put:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -1129,7 +1129,7 @@ paths:
                 Errors: null
       summary: Перенести прием
       operationId: Перенести прием
-      description: ''
+      description: ""
       tags:
         - Запись на прием
       parameters:
@@ -1158,7 +1158,7 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
         - name: usertoken
           in: header
           description: e.g. 256D323401901DB2BD42405FA54509B0
@@ -1169,7 +1169,7 @@ paths:
   /hs/api/v1/cancel_record/{clinic_id}/:
     delete:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -1197,7 +1197,7 @@ paths:
                   message: null
       summary: Запись на прием
       operationId: Запись на прием
-      description: ''
+      description: ""
       tags:
         - Запись на прием
       parameters:
@@ -1220,7 +1220,7 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
         - name: usertoken
           in: header
           description: e.g. 256D323401901DB2BD42405FA54509B0
@@ -1231,7 +1231,7 @@ paths:
   /hs/api/v1/client/{clinic_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -1269,7 +1269,7 @@ paths:
                 Parameters:
                   full_name: Коренина Анна
                   name: Анна
-                  second_name: ''
+                  second_name: ""
                   last_name: Коренина
                   birthday: 15.11.1995
                   sex: null
@@ -1281,7 +1281,7 @@ paths:
                   message: null
       summary: Получить информацию о пациенте
       operationId: Получить информацию о пациенте
-      description: ''
+      description: ""
       tags:
         - Пациенты
       parameters:
@@ -1297,7 +1297,7 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
         - name: usertoken
           in: header
           description: e.g. 256D323401901DB2BD42405FA54509B0
@@ -1307,7 +1307,7 @@ paths:
           example: 256D323401901DB2BD42405FA54509B0
     post:
       responses:
-        '201':
+        "201":
           description: Created
           headers: {}
           content:
@@ -1358,14 +1358,14 @@ paths:
                   surname: Петров
                   patronymic: Васильевич
                   birth_date: 07.10.1987
-                  phone: '77777777777'
+                  phone: "77777777777"
                   email: client21321@mail.ru
                   sold_amount: 0
                   visits_count: 5
                 Errors:
                   code: 0
                   message: Описание ошибки
-        '400':
+        "400":
           description: Bad Request
           headers: {}
           content:
@@ -1383,7 +1383,7 @@ paths:
                 message: Неверный формат данных или отсутствует apikey
       summary: Создание пациента
       operationId: Создание пациента
-      description: ''
+      description: ""
       tags:
         - Пациенты
       parameters:
@@ -1404,8 +1404,8 @@ paths:
               phone: 79211234567
               email: 123456789@gmail.com
               sex: 1
-              birth_date: '2011'
-              clinic_id: ''
+              birth_date: "2011"
+              clinic_id: ""
             schema:
               type: object
               properties:
@@ -1440,7 +1440,7 @@ paths:
                 - clinic_id
     put:
       responses:
-        '201':
+        "201":
           description: Created
           headers: {}
           content:
@@ -1491,14 +1491,14 @@ paths:
                   surname: Петров
                   patronymic: Васильевич
                   birth_date: 07.10.1987
-                  phone: '77777777777'
+                  phone: "77777777777"
                   email: client21321@mail.ru
                   sold_amount: 0
                   visits_count: 5
                 Errors:
                   code: 0
                   message: Описание ошибки
-        '400':
+        "400":
           description: Bad Request
           headers: {}
           content:
@@ -1516,7 +1516,7 @@ paths:
                 message: Неверный формат данных или отсутствует apikey
       summary: Изменение пациента
       operationId: Изменение пациента
-      description: ''
+      description: ""
       tags:
         - Пациенты
       parameters:
@@ -1537,8 +1537,8 @@ paths:
               phone: 79211234567
               email: 123456789@gmail.com
               sex: 1
-              birth_date: '2011'
-              clinic_id: ''
+              birth_date: "2011"
+              clinic_id: ""
               id: 0d190fc8-1c01-11ef-b1bf-f02f7488d897
             schema:
               type: object
@@ -1579,7 +1579,7 @@ paths:
   /hs/api/v1/clients/{clinic_id}/:
     post:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -1624,7 +1624,7 @@ paths:
                     surname: Петров
                     patronymic: Васильевич
                     birth_date: 07.10.1987
-                    phone: '77777777777'
+                    phone: "77777777777"
                     email: client21321@mail.ru
                     sold_amount: 0
                     visits_count: 5
@@ -1636,7 +1636,7 @@ paths:
                   pages_count: 2
                   page_current: 1
                   page_size: 5
-        '400':
+        "400":
           description: Bad Request
           headers: {}
           content:
@@ -1659,7 +1659,7 @@ paths:
                   message: Описание ошибки
       summary: Информация о пациентах
       operationId: Информация о пациентах
-      description: ''
+      description: ""
       tags:
         - Пациенты
       parameters:
@@ -1681,7 +1681,7 @@ paths:
         content:
           application/json:
             example:
-              clinic_id: ''
+              clinic_id: ""
               page: 1
               count: 30
               order_by: name
@@ -1700,8 +1700,8 @@ paths:
               filters:
                 - type: id
                   value:
-                    - '[''47efc7f111104513a25b302e6712df59'''
-                    - '''04d419c74d6d11efb1c4f02f7488d897'']'
+                    - "['47efc7f111104513a25b302e6712df59'"
+                    - "'04d419c74d6d11efb1c4f02f7488d897']"
             schema:
               type: object
               properties:
@@ -1710,18 +1710,18 @@ paths:
                   description: ID клиники
                 page:
                   type: number
-                  description: 'Номер страницы (по умолчанию: 1)'
+                  description: "Номер страницы (по умолчанию: 1)"
                 count:
                   type: number
-                  description: 'Количество записей на странице (по умолчанию: 20)'
+                  description: "Количество записей на странице (по умолчанию: 20)"
                 order_by:
                   type: string
-                  description: 'Поле для сортировки (например: `name`, ''surname'')'
+                  description: "Поле для сортировки (например: `name`, 'surname')"
                 order_by_direction:
                   type: string
                   enum:
                     - DESC
-                  description: 'Направление сортировки: `ASC` или `DESC`'
+                  description: "Направление сортировки: `ASC` или `DESC`"
                 fields:
                   type: array
                   description: Список возвращаемых полей пациента
@@ -1735,7 +1735,7 @@ paths:
   /hs/api/v1/clinics/{clinic_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -1763,10 +1763,10 @@ paths:
                     work_time:
                       - active: true
                         day: 1
-                        start: '07:00'
-                        end: '22:00'
+                        start: "07:00"
+                        end: "22:00"
                     contact_information:
-                      phone: '78945612233'
+                      phone: "78945612233"
                       email: test_clinic@mail.ru
                       address: г.Москва
                       website: www.website.ru
@@ -1775,7 +1775,7 @@ paths:
                   message: Описание ошибки
       summary: Получить список клиник
       operationId: Получить список клиник
-      description: ''
+      description: ""
       tags:
         - Клиники
       parameters:
@@ -1789,7 +1789,7 @@ paths:
   /hs/api/v1/records/{clinic_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -1830,16 +1830,16 @@ paths:
                 Parameters:
                   - id: 7c802c46
                     clinic_id: 0d190fc8
-                    start_date: '2025'
-                    end_date: '2025'
-                    create_date: '2025'
+                    start_date: "2025"
+                    end_date: "2025"
+                    create_date: "2025"
                     client:
                       id: 401b3cea
                       name: Савелий
                       surname: Соновен
                       patronymic: Васильевич
                       display_name: Соновен Савелий Васильевич
-                      phone: '79211234567'
+                      phone: "79211234567"
                       email: 123456789@gmail.com
                     staff:
                       id: d39e5d29
@@ -1849,7 +1849,7 @@ paths:
                         title: Врач стоматолог
                       weight: 0
                       information: <img...>
-                      avatar: 'null'
+                      avatar: "null"
                     services:
                       - id: 6ad4c14f
                         title: Услуга 2
@@ -1873,7 +1873,7 @@ paths:
                   page_size: 5
       summary: Получить список записей
       operationId: Получить список записей
-      description: ''
+      description: ""
       tags:
         - Записи
       parameters:
@@ -1886,13 +1886,13 @@ paths:
         - name: page
           in: query
           description: Номер страницы
-          example: '1'
+          example: "1"
           schema:
             type: number
         - name: count
           in: query
           description: Количество записей на странице
-          example: '20'
+          example: "20"
           schema:
             type: number
         - name: id
@@ -1921,7 +1921,7 @@ paths:
           example: YOUR_USER_TOKEN
     put:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -1946,16 +1946,16 @@ paths:
                 Parameters:
                   - id: 7c802c46
                     clinic_id: 0d190fc8
-                    start_date: '2025'
-                    end_date: '2025'
-                    create_date: '2025'
+                    start_date: "2025"
+                    end_date: "2025"
+                    create_date: "2025"
                     client:
                       id: 401b3cea
                       name: Савелий
                       surname: Соновен
                       patronymic: Васильевич
                       display_name: Соновен Савелий Васильевич
-                      phone: '79211234567'
+                      phone: "79211234567"
                       email: 123456789@gmail.com
                     staff:
                       id: d39e5d29
@@ -1965,7 +1965,7 @@ paths:
                         title: Врач стоматолог
                       weight: 0
                       information: <img...>
-                      avatar: 'null'
+                      avatar: "null"
                     services:
                       - id: 6ad4c14f
                         title: Услуга 2
@@ -1984,7 +1984,7 @@ paths:
                   message: Описание ошибки
       summary: Изменить запись
       operationId: Изменить запись
-      description: ''
+      description: ""
       tags:
         - Записи
       parameters:
@@ -2045,7 +2045,7 @@ paths:
   /hs/api/v1/services/{clinic_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -2092,7 +2092,7 @@ paths:
                     category_id:
                       id: a19ee948-1c00-11ef-b1bf-f02f7488d897
                       title: Хирургия
-                    comment: ''
+                    comment: ""
                     seance_length: 60
                     active: true
                     staff:
@@ -2108,7 +2108,7 @@ paths:
                   page_size: 5
       summary: Получить список услуг
       operationId: Получить список услуг
-      description: ''
+      description: ""
       tags:
         - Записи
       parameters:
@@ -2137,13 +2137,13 @@ paths:
         - name: page
           in: query
           description: Номер страницы
-          example: '1'
+          example: "1"
           schema:
             type: number
         - name: count
           in: query
           description: Количество элементов на странице
-          example: '20'
+          example: "20"
           schema:
             type: number
         - name: apikey
@@ -2253,8 +2253,7 @@ components:
           type: string
           example: id
           description: >-
-            Тип фильтра (`id`, `name`, `surname`, `patronymic`, `phone`,
-            `email`)
+            Тип фильтра (`id`, `name`, `surname`, `patronymic`, `phone`, `email`)
         value:
           type: array
           items: {}
@@ -2285,7 +2284,7 @@ components:
           nullable: true
         phone:
           type: string
-          example: '77777777777'
+          example: "77777777777"
         email:
           type: string
           example: client21321@mail.ru
@@ -2363,7 +2362,7 @@ components:
           description: Пол (0 — не указан, 1 — мужчина, 2 — женщина)
         birth_date:
           type: string
-          example: '2011'
+          example: "2011"
           description: 01-01 (string, optional) - Дата рождения в формате `YYYY-MM-DD`
     Clinic:
       type: object
@@ -2384,7 +2383,7 @@ components:
           items: {}
           description: Расписание работы по дням недели
         contact_information:
-          $ref: '#/components/schemas/ContactInformation'
+          $ref: "#/components/schemas/ContactInformation"
           description: Контактная информация клиники
     WorkTime:
       type: object
@@ -2399,18 +2398,18 @@ components:
           description: День недели (1 = понедельник, 7 = воскресенье)
         start:
           type: string
-          example: '07:00'
+          example: "07:00"
           description: Время начала работы (формат `HH:mm`)
         end:
           type: string
-          example: '22:00'
+          example: "22:00"
           description: Время окончания работы (формат `HH:mm`)
     ContactInformation:
       type: object
       properties:
         phone:
           type: string
-          example: '78945612233'
+          example: "78945612233"
           description: Телефон клиники
         email:
           type: string
@@ -2442,21 +2441,21 @@ components:
           description: 1c01-11ef-b1bf-f02f7488d897 (string) - ID клиники
         start_date:
           type: string
-          example: '2025'
+          example: "2025"
           description: 06-30T12:00:00 (string) - Дата и время начала приёма (ISO 8601)
         end_date:
           type: string
-          example: '2025'
+          example: "2025"
           description: 06-30T12:15:00 (string) - Дата и время окончания приёма (ISO 8601)
         create_date:
           type: string
-          example: '2025'
+          example: "2025"
           description: 06-30T09:49:06 (string) - Дата создания записи (ISO 8601)
         client:
-          $ref: '#/components/schemas/ClientInfo'
+          $ref: "#/components/schemas/ClientInfo"
           description: Данные пациента
         staff:
-          $ref: '#/components/schemas/StaffInfo'
+          $ref: "#/components/schemas/StaffInfo"
           description: Данные сотрудника (врача)
         services:
           type: array
@@ -2467,7 +2466,7 @@ components:
           example: Комментарий
           description: Комментарий к записи
         created_user:
-          $ref: '#/components/schemas/UserInfo'
+          $ref: "#/components/schemas/UserInfo"
           description: Пользователь, создавший запись
         status:
           type: string
@@ -2496,7 +2495,7 @@ components:
           example: Соновен Савелий Васильевич
         phone:
           type: string
-          example: '79211234567'
+          example: "79211234567"
         email:
           type: string
           example: 123456789@gmail.com
@@ -2511,7 +2510,7 @@ components:
           type: string
           example: Врач
         specialization:
-          $ref: '#/components/schemas/Specialization'
+          $ref: "#/components/schemas/Specialization"
         weight:
           type: number
         information:
@@ -2520,7 +2519,7 @@ components:
           description: HTML-строка с эмоджи/описанием
         avatar:
           type: string
-          example: 'null'
+          example: "null"
           description: Аватар врача
           nullable: true
     Specialization:
@@ -2596,7 +2595,7 @@ components:
           description: Вес/приоритет в сортировке
         category_id:
           oneOf:
-            - $ref: '#/components/schemas/Category'
+            - $ref: "#/components/schemas/Category"
               description: Категория услуги
             - nullable: true
         comment:
@@ -2613,7 +2612,7 @@ components:
         staff:
           type: array
           items:
-            $ref: '#/components/schemas/ServiceStaff'
+            $ref: "#/components/schemas/ServiceStaff"
           description: Список врачей, выполняющих услугу
           nullable: true
     Category:

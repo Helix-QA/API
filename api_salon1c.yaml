@@ -9,7 +9,7 @@ paths:
   /hs/api/v1/auth_types/{salon_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -46,10 +46,10 @@ paths:
                     title: Email
                 errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Получить доступные варианты авторизации
       operationId: Получить доступные варианты авторизации
-      description: ''
+      description: ""
       tags:
         - Авторизация
       parameters:
@@ -69,7 +69,7 @@ paths:
   /hs/api/v1/auth/{salon_id}/:
     post:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -110,7 +110,7 @@ paths:
                     Parameters:
                       sent_SMS: true
                     Error: 0
-                    ErrorMessage: ''
+                    ErrorMessage: ""
                 example2:
                   value:
                     Parameters:
@@ -120,7 +120,7 @@ paths:
                       message: null
       summary: Авторизоваться
       operationId: Авторизоваться
-      description: ''
+      description: ""
       tags:
         - Авторизация
       parameters:
@@ -136,13 +136,13 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
       requestBody:
         content:
           application/json:
             example:
-              login: '77731315'
-              confirmation_code: '9876'
+              login: "77731315"
+              confirmation_code: "9876"
               name: Иванов Иван
             schema:
               type: object
@@ -151,11 +151,11 @@ paths:
               properties:
                 login:
                   type: string
-                  example: '79876543210'
-                  description: 'Номер телефона клиента. Должен передаваться в формате:'
+                  example: "79876543210"
+                  description: "Номер телефона клиента. Должен передаваться в формате:"
                 confirmation_code:
                   type: string
-                  example: '1234'
+                  example: "1234"
                   description: Код подтверждения
                 name:
                   type: string
@@ -169,7 +169,7 @@ paths:
                 birthday:
                   type: string
                   example: 31.12.1990
-                  description: 'Дата рождения в формате:'
+                  description: "Дата рождения в формате:"
                 email:
                   type: string
                   description: Электронная почта клиента
@@ -181,7 +181,7 @@ paths:
   /hs/api/v1/validity_usertoken/{salon_id}/:
     post:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -200,7 +200,7 @@ paths:
                     Result: false
       summary: Валидность ключа пользователя
       operationId: Валидность ключа пользователя
-      description: ''
+      description: ""
       tags:
         - Авторизация
       parameters:
@@ -218,7 +218,7 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
         - name: usertoken
           in: header
           description: e.g. 5dff0370-ffd9-453c-b116-f09f405f0603
@@ -229,7 +229,7 @@ paths:
   /hs/api/v1/private_auth/{salon_id}/:
     post:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -257,7 +257,7 @@ paths:
                   message: null
       summary: Авторизоваться
       operationId: Авторизоваться
-      description: ''
+      description: ""
       tags:
         - Авторизация
       parameters:
@@ -275,14 +275,14 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
       requestBody:
         content:
           application/json:
             example:
               name: Антон
               second_name: Андреевич
-              phone: '077729462'
+              phone: "077729462"
               sign: fa8ec54b5df3127309e391d65ad24115a3530771
             schema:
               type: object
@@ -300,8 +300,8 @@ paths:
                   description: Фамилия клиента
                 phone:
                   type: string
-                  example: '79876543210'
-                  description: 'Телефон клиента:'
+                  example: "79876543210"
+                  description: "Телефон клиента:"
                 email:
                   type: string
                   description: Email клиента
@@ -311,14 +311,14 @@ paths:
                 birthday:
                   type: string
                   example: 31.12.1990
-                  description: 'Дата рождения в формате:'
+                  description: "Дата рождения в формате:"
                 sign:
                   type: string
                   description: Цифровая подпись
   /hs/api/v1/auth_request/{salon_id}:
     post:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -352,10 +352,10 @@ paths:
                   method: outgoing_telegram
                 Errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Подтверждение номера телефона
       operationId: Подтверждение номера телефона
-      description: ''
+      description: ""
       tags:
         - Авторизация
       parameters:
@@ -376,7 +376,7 @@ paths:
         content:
           application/json:
             example:
-              phone: '79876543210'
+              phone: "79876543210"
               method: outgoing_telegram
               request_id: 27dd2f8e-32a4-11ee-b18f-f02f7488d897
             schema:
@@ -390,7 +390,7 @@ paths:
                   description: Идентификатор запроса.
                 phone:
                   type: string
-                  example: '79876543210'
+                  example: "79876543210"
                   description: Номер телефона клиента. Должен передаваться в формате
                 method:
                   type: string
@@ -410,7 +410,7 @@ paths:
                 birthday:
                   type: string
                   example: 31.12.1990
-                  description: 'Дата рождения в формате:'
+                  description: "Дата рождения в формате:"
                 email:
                   type: string
                   example: test@mail.ru
@@ -418,7 +418,7 @@ paths:
   /hs/api/v1/auth_token/{salon_id}:
     post:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -443,10 +443,10 @@ paths:
                   UserToken: F2DD60B2BB446F0327CEB37153C8CC5F
                 Errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Получение токена клиента при исходящей авторизации
       operationId: Получение токена клиента при исходящей авторизации
-      description: ''
+      description: ""
       tags:
         - Авторизация
       parameters:
@@ -467,7 +467,7 @@ paths:
         content:
           application/json:
             example:
-              phone: '79876543210'
+              phone: "79876543210"
               method: outgoing_telegram
               request_id: 27dd2f8e-32a4-11ee-b18f-f02f7488d897
             schema:
@@ -481,7 +481,7 @@ paths:
                   description: Идентификатор запроса.
                 phone:
                   type: string
-                  example: '79876543210'
+                  example: "79876543210"
                   description: Номер телефона клиента. Должен передаваться в формате
                 method:
                   type: string
@@ -490,7 +490,7 @@ paths:
   /hs/api/v1/book_services/{salon_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -539,7 +539,7 @@ paths:
                       title: Косметология
                     price_min: 1100
                     price_max: 1100
-                    comment: ''
+                    comment: ""
                     active: true
                     length: 60
                     ServicesAtSameTime:
@@ -552,7 +552,7 @@ paths:
                     sort_index: 0
       summary: Получить список доступных для бронирования услуг
       operationId: Получить список доступных для бронирования услуг
-      description: ''
+      description: ""
       tags:
         - Запись на визит
       parameters:
@@ -579,7 +579,7 @@ paths:
             Строка Json с массивом идентификаторов услуг, которые сотрудник
             должен оказать последовательно.
 
-            Пример такой строки:  
+            Пример такой строки:
 
             {"services_array":["140df5b4-5a58-11e7-82e7-0050568b5c8d","d8329477-5a5a-11e7-82e7-0050568b5c8d"]}
 
@@ -593,17 +593,17 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
   /hs/api/v1/book_staff/{salon_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content: {}
       summary: Получить список доступных для записи сотрудников
       operationId: Получить список доступных для записи сотрудников
-      description: ''
+      description: ""
       tags:
         - Запись на визит
       parameters:
@@ -624,7 +624,7 @@ paths:
             Строка Json с массивом идентификаторов услуг, которые сотрудник
             должен оказать последовательно.
 
-            Пример такой строки:  
+            Пример такой строки:
 
             {"services_array":["140df5b4-5a58-11e7-82e7-0050568b5c8d","d8329477-5a5a-11e7-82e7-0050568b5c8d"]}
 
@@ -644,11 +644,11 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
   /hs/api/v1/book_dates/{salon_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -669,20 +669,20 @@ paths:
                         nullable: true
               example:
                 Parameters:
-                  - '2017-08-20T00:00:00'
-                  - '2017-08-21T00:00:00'
-                  - '2017-08-22T00:00:00'
-                  - '2017-08-23T00:00:00'
-                  - '2017-08-24T00:00:00'
-                  - '2017-08-25T00:00:00'
-                  - '2017-08-30T00:00:00'
-                  - '2017-08-31T00:00:00'
+                  - "2017-08-20T00:00:00"
+                  - "2017-08-21T00:00:00"
+                  - "2017-08-22T00:00:00"
+                  - "2017-08-23T00:00:00"
+                  - "2017-08-24T00:00:00"
+                  - "2017-08-25T00:00:00"
+                  - "2017-08-30T00:00:00"
+                  - "2017-08-31T00:00:00"
                 Errors:
                   code: 0
                   message: null
       summary: Получить список доступных для записи дат
       operationId: Получить список доступных для записи дат
-      description: ''
+      description: ""
       tags:
         - Запись на визит
       parameters:
@@ -726,7 +726,7 @@ paths:
             Строка Json с массивом идентификаторов услуг, которые нужно оказать
             одновременно.
 
-            Пример такой строки:  
+            Пример такой строки:
 
             {"services_array":["140df5b4-5a58-11e7-82e7-0050568b5c8d","d8329477-5a5a-11e7-82e7-0050568b5c8d"]}
           schema:
@@ -737,11 +737,11 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
   /hs/api/v1/book_times/{salon_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -773,30 +773,30 @@ paths:
                         nullable: true
               example:
                 Parameters:
-                  - time: '09:00'
+                  - time: "09:00"
                     seance_length: 30
-                    datetime: '2017-08-24T09:00:00'
-                  - time: '09:30'
+                    datetime: "2017-08-24T09:00:00"
+                  - time: "09:30"
                     seance_length: 30
-                    datetime: '2017-08-24T09:30:00'
-                  - time: '10:00'
+                    datetime: "2017-08-24T09:30:00"
+                  - time: "10:00"
                     seance_length: 30
-                    datetime: '2017-08-24T10:00:00'
-                  - time: '15:00'
+                    datetime: "2017-08-24T10:00:00"
+                  - time: "15:00"
                     seance_length: 30
-                    datetime: '2017-08-24T15:00:00'
-                  - time: '17:00'
+                    datetime: "2017-08-24T15:00:00"
+                  - time: "17:00"
                     seance_length: 30
-                    datetime: '2017-08-24T17:00:00'
-                  - time: '17:30'
+                    datetime: "2017-08-24T17:00:00"
+                  - time: "17:30"
                     seance_length: 30
-                    datetime: '2017-08-24T17:30:00'
+                    datetime: "2017-08-24T17:30:00"
                 Errors:
                   code: 0
                   message: null
       summary: Получить список слотов доступных для записи
       operationId: Получить список слотов доступных для записи
-      description: ''
+      description: ""
       tags:
         - Запись на визит
       parameters:
@@ -830,7 +830,7 @@ paths:
             Строка Json с массивом идентификаторов услуг, которые нужно оказать
             одновременно.
 
-            Пример такой строки:  
+            Пример такой строки:
 
             {"services_array":["140df5b4-5a58-11e7-82e7-0050568b5c8d","d8329477-5a5a-11e7-82e7-0050568b5c8d"]}
           schema:
@@ -841,11 +841,11 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
   /hs/api/v1/recording_dates/{salon_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -890,10 +890,10 @@ paths:
                       - 06.08.2024 15:30:00
                 Errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Даты записи
       operationId: Даты записи
-      description: ''
+      description: ""
       tags:
         - Запись на визит
       parameters:
@@ -940,7 +940,7 @@ paths:
   /hs/api/v1/book_record/{salon_id}/:
     post:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -961,7 +961,7 @@ paths:
                 Errors: null
       summary: Запись на визит
       operationId: Запись на визит
-      description: ''
+      description: ""
       tags:
         - Запись на визит
       parameters:
@@ -977,7 +977,7 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
         - name: usertoken
           in: header
           description: e.g. 256D323401901DB2BD42405FA54509B0
@@ -1001,12 +1001,12 @@ paths:
                     payment_amount: 1300
               Errors:
                 code: 0
-                message: ''
+                message: ""
             schema:
               type: object
               properties:
                 record_array:
-                  $ref: '#/components/schemas/Record'
+                  $ref: "#/components/schemas/Record"
                   description: >-
                     Массив записей. Является обязательным, если не передан
                     идентификатор визита.
@@ -1048,7 +1048,7 @@ paths:
   /hs/api/v1/change_record/{salon_id}/:
     put:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -1069,7 +1069,7 @@ paths:
                 Errors: null
       summary: Перенести визит
       operationId: Перенести визит
-      description: ''
+      description: ""
       tags:
         - Запись на визит
       parameters:
@@ -1098,7 +1098,7 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
         - name: usertoken
           in: header
           description: e.g. 256D323401901DB2BD42405FA54509B0
@@ -1109,7 +1109,7 @@ paths:
   /hs/api/v1/cancel_record/{salon_id}/:
     delete:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -1130,7 +1130,7 @@ paths:
                 Errors: null
       summary: Отменить запись
       operationId: Отменить запись
-      description: ''
+      description: ""
       tags:
         - Запись на визит
       parameters:
@@ -1152,7 +1152,7 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
         - name: usertoken
           in: header
           description: e.g. 256D323401901DB2BD42405FA54509B0
@@ -1163,7 +1163,7 @@ paths:
   /hs/api/v1/record_cost/{salon_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -1275,7 +1275,7 @@ paths:
                             http://localhost/Salon/hs/api/files/0d44270f-e77f-4e45-a9ad-b4612412a48d/fbe55c58-6e42-11ee-b19b-f02f7488d897
                       count: 1
                       balance: 0
-                      balance_warning: ''
+                      balance_warning: ""
                       price_type:
                         id: bb266307-3e83-11ea-96b8-38d547b31ac0
                         title: Розничная цена
@@ -1299,10 +1299,10 @@ paths:
                   promocode: Test
                 errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Расчет стоимости записи
       operationId: Расчет стоимости записи
-      description: ''
+      description: ""
       tags:
         - Запись на визит
       parameters:
@@ -1319,14 +1319,14 @@ paths:
             Строка Json с массивом структур, содержащих параметры:
 
 
-            <ul> 
+            <ul>
                 <li> "datetime" - время записи: "20240831T1500"</li>
                 <li> "service_id" - идентификатор номенклатуры</li>
                 <li> "staff_id" - идентификатор сотрудника</li>
             </ul>
 
 
-            <br>Пример такой строки:   
+            <br>Пример такой строки:
 
             [{"datetime": "20240831T1500","service_id":
             "9ca0fa6c-48ee-11ea-96bc-38d547b31ac0","staff_id":
@@ -1357,7 +1357,7 @@ paths:
   /hs/api/v1/finished_visites/{salon_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -1425,19 +1425,19 @@ paths:
               example:
                 Parameters:
                   - id: 2aa25425-e4f9-11e9-89ab-2c4d546557dd
-                    actual_start_date: '2019-10-15T14:00:00'
-                    actual_end_date: '2019-10-15T14:48:40'
+                    actual_start_date: "2019-10-15T14:00:00"
+                    actual_end_date: "2019-10-15T14:48:40"
                     services:
-                      - start_date: '2019-10-02T12:00:00'
-                        end_date: '2019-10-02T12:40:00'
+                      - start_date: "2019-10-02T12:00:00"
+                        end_date: "2019-10-02T12:40:00"
                         service:
                           id: 0c599e34-5b0d-11e7-82e7-0050568b5c8d
                           title: Воздушно-вихревой массаж
                         staff:
                           id: d7d792c2-0571-11e7-a42a-0050568b5c8d
                           title: Ипритова Инга Юрьевна
-                      - start_date: '2019-10-02T12:40:00'
-                        end_date: '2019-10-02T12:40:00'
+                      - start_date: "2019-10-02T12:40:00"
+                        end_date: "2019-10-02T12:40:00"
                         service:
                           id: e21cf6d4-5a57-11e7-82e7-0050568b5c8d
                           title: Гидромассаж
@@ -1451,10 +1451,10 @@ paths:
                         - +7 (999) 8452010
                 Errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Получить список оконченных визитов
       operationId: Получить список оконченных визитов
-      description: ''
+      description: ""
       tags:
         - Визиты
       parameters:
@@ -1480,11 +1480,11 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
   /hs/api/v1/visites/{salon_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -1555,19 +1555,19 @@ paths:
                 Parameters:
                   - id: 2aa25425-e4f9-11e9-89ab-2c4d546557dd
                     status: Finished
-                    actual_start_date: '2019-10-15T14:00:00'
-                    actual_end_date: '2019-10-15T14:48:40'
+                    actual_start_date: "2019-10-15T14:00:00"
+                    actual_end_date: "2019-10-15T14:48:40"
                     services:
-                      - start_date: '2019-10-02T12:00:00'
-                        end_date: '2019-10-02T12:40:00'
+                      - start_date: "2019-10-02T12:00:00"
+                        end_date: "2019-10-02T12:40:00"
                         service:
                           id: 0c599e34-5b0d-11e7-82e7-0050568b5c8d
                           title: Воздушно-вихревой массаж
                         staff:
                           id: d7d792c2-0571-11e7-a42a-0050568b5c8d
                           title: Ипритова Инга Юрьевна
-                      - start_date: '2019-10-02T12:40:00'
-                        end_date: '2019-10-02T12:40:00'
+                      - start_date: "2019-10-02T12:40:00"
+                        end_date: "2019-10-02T12:40:00"
                         service:
                           id: e21cf6d4-5a57-11e7-82e7-0050568b5c8d
                           title: Гидромассаж
@@ -1581,10 +1581,10 @@ paths:
                         - +7 (999) 8452010
                 Errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Получить список визитов
       operationId: Получить список визитов
-      description: ''
+      description: ""
       tags:
         - Визиты
       parameters:
@@ -1610,11 +1610,11 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
   /hs/api/v1/debt_visits/{salon_id}:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -1694,7 +1694,7 @@ paths:
                     FiscalCheck: null
                     Customer:
                       Name: Одношевич Евгений
-                      Phone: '79876543210'
+                      Phone: "79876543210"
                       Email: null
                     Organization:
                       TaxationSystemCode: null
@@ -1718,7 +1718,7 @@ paths:
                   message: null
       summary: Получить список долговых визитов
       operationId: Получить список долговых визитов
-      description: ''
+      description: ""
       tags:
         - Оплата визитов
       parameters:
@@ -1734,11 +1734,11 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
   /hs/api/v1/visit_payment/{salon_id}/:
     post:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -1759,7 +1759,7 @@ paths:
                 Errors: null
       summary: Оплатить визит
       operationId: Оплатить визит
-      description: ''
+      description: ""
       tags:
         - Оплата визитов
       parameters:
@@ -1775,7 +1775,7 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
         - name: usertoken
           in: header
           description: e.g. 256D323401901DB2BD42405FA54509B0
@@ -1806,7 +1806,7 @@ paths:
                   type: string
                   description: ID визита
                 payment_list:
-                  $ref: '#/components/schemas/PaymentList'
+                  $ref: "#/components/schemas/PaymentList"
                   description: Массив структур оплат
                 transaction_id:
                   type: string
@@ -1814,7 +1814,7 @@ paths:
   /hs/api/v1/client/{salon_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -1867,7 +1867,7 @@ paths:
                 Parameters:
                   full_name: Коренина Анна
                   name: Анна
-                  second_name: ''
+                  second_name: ""
                   last_name: Коренина
                   birthday: 31.12.1990
                   sex: null
@@ -1877,15 +1877,15 @@ paths:
                   cards:
                     - id: 523d8557-c5b5-11ea-89d3-2c4d546557dd
                       title: Карта №5902047170294
-                      card_code: '5902047170294'
+                      card_code: "5902047170294"
                       card_type: barcode
-                      link: ''
+                      link: ""
                 Errors:
                   code: 0
                   message: null
       summary: Получить информацию о клиенте
       operationId: Получить информацию о клиенте
-      description: ''
+      description: ""
       tags:
         - Клиенты
       parameters:
@@ -1901,7 +1901,7 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
         - name: usertoken
           in: header
           description: e.g. 256D323401901DB2BD42405FA54509B0
@@ -1911,7 +1911,7 @@ paths:
           example: 256D323401901DB2BD42405FA54509B0
     post:
       responses:
-        '201':
+        "201":
           description: Created
           headers: {}
           content:
@@ -1962,14 +1962,14 @@ paths:
                   surname: Петров
                   patronymic: Васильевич
                   birth_date: 07.10.1987
-                  phone: '77777777777'
+                  phone: "77777777777"
                   email: client21321@mail.ru
                   sold_amount: 0
                   visits_count: 5
                 Errors:
                   code: 0
                   message: Описание ошибки
-        '400':
+        "400":
           description: Bad Request
           headers: {}
           content:
@@ -1987,7 +1987,7 @@ paths:
                 message: Неверный формат данных или отсутствует apikey
       summary: Создание клиента
       operationId: Создание клиента
-      description: ''
+      description: ""
       tags:
         - Клиенты
       parameters:
@@ -2008,8 +2008,8 @@ paths:
               phone: 79211234567
               email: 123456789@gmail.com
               sex: 1
-              birth_date: '2011'
-              salon_id: ''
+              birth_date: "2011"
+              salon_id: ""
             schema:
               type: object
               properties:
@@ -2044,7 +2044,7 @@ paths:
                 - salon_id
     put:
       responses:
-        '201':
+        "201":
           description: Created
           headers: {}
           content:
@@ -2095,14 +2095,14 @@ paths:
                   surname: Петров
                   patronymic: Васильевич
                   birth_date: 07.10.1987
-                  phone: '77777777777'
+                  phone: "77777777777"
                   email: client21321@mail.ru
                   sold_amount: 0
                   visits_count: 5
                 Errors:
                   code: 0
                   message: Описание ошибки
-        '400':
+        "400":
           description: Bad Request
           headers: {}
           content:
@@ -2120,7 +2120,7 @@ paths:
                 message: Неверный формат данных или отсутствует apikey
       summary: Изменение клиента
       operationId: Изменение клиента
-      description: ''
+      description: ""
       tags:
         - Клиенты
       parameters:
@@ -2141,8 +2141,8 @@ paths:
               phone: 79211234567
               email: 123456789@gmail.com
               sex: 1
-              birth_date: '2011'
-              salon_id: ''
+              birth_date: "2011"
+              salon_id: ""
               id: 0d190fc8-1c01-11ef-b1bf-f02f7488d897
             schema:
               type: object
@@ -2183,7 +2183,7 @@ paths:
   /hs/api/v1/clients/{salon_id}/:
     post:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -2228,7 +2228,7 @@ paths:
                     surname: Петров
                     patronymic: Васильевич
                     birth_date: 07.10.1987
-                    phone: '77777777777'
+                    phone: "77777777777"
                     email: client21321@mail.ru
                     sold_amount: 0
                     visits_count: 5
@@ -2240,7 +2240,7 @@ paths:
                   pages_count: 2
                   page_current: 1
                   page_size: 5
-        '400':
+        "400":
           description: Bad Request
           headers: {}
           content:
@@ -2263,7 +2263,7 @@ paths:
                   message: Описание ошибки
       summary: Информация о клиентах
       operationId: Информация о клиентах
-      description: ''
+      description: ""
       tags:
         - Клиенты
       parameters:
@@ -2285,7 +2285,7 @@ paths:
         content:
           application/json:
             example:
-              salon_id: ''
+              salon_id: ""
               page: 1
               count: 30
               order_by: name
@@ -2304,8 +2304,8 @@ paths:
               filters:
                 - type: id
                   value:
-                    - '[''47efc7f111104513a25b302e6712df59'''
-                    - '''04d419c74d6d11efb1c4f02f7488d897'']'
+                    - "['47efc7f111104513a25b302e6712df59'"
+                    - "'04d419c74d6d11efb1c4f02f7488d897']"
             schema:
               type: object
               properties:
@@ -2314,18 +2314,18 @@ paths:
                   description: ID салона.
                 page:
                   type: number
-                  description: 'Номер страницы (по умолчанию: 1)'
+                  description: "Номер страницы (по умолчанию: 1)"
                 count:
                   type: number
-                  description: 'Количество записей на странице (по умолчанию: 20)'
+                  description: "Количество записей на странице (по умолчанию: 20)"
                 order_by:
                   type: string
-                  description: 'Поле для сортировки (например: `name`, ''surname'')'
+                  description: "Поле для сортировки (например: `name`, 'surname')"
                 order_by_direction:
                   type: string
                   enum:
                     - DESC
-                  description: 'Направление сортировки: `ASC` или `DESC`'
+                  description: "Направление сортировки: `ASC` или `DESC`"
                 fields:
                   type: array
                   description: Список возвращаемых полей клиента
@@ -2339,7 +2339,7 @@ paths:
   /hs/api/v1/deposit_list/{salon_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -2397,10 +2397,10 @@ paths:
                     balance: 1500
                 Errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Получить лицевые и бонусные счета клиента
       operationId: Получить лицевые и бонусные счета клиента
-      description: ''
+      description: ""
       tags:
         - Клиенты
       parameters:
@@ -2434,7 +2434,7 @@ paths:
   /hs/api/v1/update_client/{salon_id}:
     post:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -2483,7 +2483,7 @@ paths:
                 Errors: null
       summary: Обновить информацию о клиенте
       operationId: Обновить информацию о клиенте
-      description: ''
+      description: ""
       tags:
         - Клиенты
       parameters:
@@ -2499,7 +2499,7 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
         - name: usertoken
           in: header
           description: e.g. 256D323401901DB2BD42405FA54509B0
@@ -2515,7 +2515,7 @@ paths:
               name: Анна
               second_name: Сергеевна
               sex: 2
-              phone: '79876541115'
+              phone: "79876541115"
               Email: Andreeva1975@mail.ru
             schema:
               type: object
@@ -2544,7 +2544,7 @@ paths:
   /hs/api/v1/refill_deposit/{salon_id}:
     post:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -2565,7 +2565,7 @@ paths:
                 Errors: null
       summary: Пополнить лицевой счет клиента
       operationId: Пополнить лицевой счет клиента
-      description: ''
+      description: ""
       tags:
         - Клиенты
       parameters:
@@ -2601,7 +2601,7 @@ paths:
   /hs/api/v1/records_history/{salon_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -2677,15 +2677,15 @@ paths:
               example:
                 Parameters:
                   - id: 5ee2827f-8a80-11e8-8963-2c4d546557dd
-                    start_date: '2018-07-18T18:00:00'
-                    end_date: '2018-07-18T19:00:00'
+                    start_date: "2018-07-18T18:00:00"
+                    end_date: "2018-07-18T19:00:00"
                     client:
                       id: c27e5408-6003-11e7-82e7-0050568b5c8d
                       name: Баранова Екатерина Сергеевна
                     status: arrived
                     services:
-                      - start_date: '2018-07-18T19:00:00'
-                        end_date: '2018-07-18T20:00:00'
+                      - start_date: "2018-07-18T19:00:00"
+                        end_date: "2018-07-18T20:00:00"
                         service:
                           id: e21cf6d4-5a57-11e7-82e7-0050568b5c8d
                           name: Гидромассаж
@@ -2694,8 +2694,8 @@ paths:
                           name: Ипритова Инга Юрьевна
                         count: 2
                         sum: 4600
-                      - start_date: '2018-07-18T18:00:00'
-                        end_date: '2018-07-18T19:00:00'
+                      - start_date: "2018-07-18T18:00:00"
+                        end_date: "2018-07-18T19:00:00"
                         service:
                           id: e556fd0c-01a8-11e8-b770-0050568b5c8d
                           name: Антицеллюлитный массаж
@@ -2708,10 +2708,10 @@ paths:
                     sum_total: 6600
                 Errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Получить историю визитов
       operationId: Получить историю визитов
-      description: ''
+      description: ""
       tags:
         - Клиенты
       parameters:
@@ -2727,7 +2727,7 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
         - name: usertoken
           in: header
           description: e.g. 256D323401901DB2BD42405FA54509B0
@@ -2738,7 +2738,7 @@ paths:
   /hs/api/v1/records/{salon_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -2814,15 +2814,15 @@ paths:
               example:
                 Parameters:
                   - id: 5ee2827f-8a80-11e8-8963-2c4d546557dd
-                    start_date: '2018-07-18T18:00:00'
-                    end_date: '2018-07-18T19:00:00'
+                    start_date: "2018-07-18T18:00:00"
+                    end_date: "2018-07-18T19:00:00"
                     client:
                       id: c27e5408-6003-11e7-82e7-0050568b5c8d
                       name: Баранова Екатерина Сергеевна
                     status: planned
                     services:
-                      - start_date: '2018-07-18T19:00:00'
-                        end_date: '2018-07-18T20:00:00'
+                      - start_date: "2018-07-18T19:00:00"
+                        end_date: "2018-07-18T20:00:00"
                         service:
                           id: e21cf6d4-5a57-11e7-82e7-0050568b5c8d
                           name: Гидромассаж
@@ -2831,8 +2831,8 @@ paths:
                           name: Ипритова Инга Юрьевна
                         count: 2
                         sum: 4600
-                      - start_date: '2018-07-18T18:00:00'
-                        end_date: '2018-07-18T19:00:00'
+                      - start_date: "2018-07-18T18:00:00"
+                        end_date: "2018-07-18T19:00:00"
                         service:
                           id: e556fd0c-01a8-11e8-b770-0050568b5c8d
                           name: Антицеллюлитный массаж
@@ -2845,10 +2845,10 @@ paths:
                     sum_total: 6600
                 Errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Получить запланированные визиты клиента
       operationId: Получить запланированные визиты клиента
-      description: ''
+      description: ""
       tags:
         - Клиенты
       parameters:
@@ -2864,7 +2864,7 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
         - name: usertoken
           in: header
           description: e.g. 256D323401901DB2BD42405FA54509B0
@@ -2874,7 +2874,7 @@ paths:
           example: 256D323401901DB2BD42405FA54509B0
     put:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -2899,16 +2899,16 @@ paths:
                 Parameters:
                   - id: 7c802c46
                     salon_id: 0d190fc8
-                    start_date: '2025'
-                    end_date: '2025'
-                    create_date: '2025'
+                    start_date: "2025"
+                    end_date: "2025"
+                    create_date: "2025"
                     client:
                       id: 401b3cea
                       name: Савелий
                       surname: Соновен
                       patronymic: Васильевич
                       display_name: Соновен Савелий Васильевич
-                      phone: '79211234567'
+                      phone: "79211234567"
                       email: 123456789@gmail.com
                     staffs:
                       - id: d39e5d29
@@ -2918,7 +2918,7 @@ paths:
                           title: Врач стоматолог
                         weight: 0
                         information: <img...>
-                        avatar: 'null'
+                        avatar: "null"
                     services:
                       - id: 6ad4c14f
                         title: Услуга 2
@@ -2937,7 +2937,7 @@ paths:
                   message: Описание ошибки
       summary: Изменить запись
       operationId: Изменить запись
-      description: ''
+      description: ""
       tags:
         - Услуги
       parameters:
@@ -2992,7 +2992,7 @@ paths:
   /hs/api/v1/tickets/{salon_id}:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -3088,17 +3088,17 @@ paths:
                     type: package
                     count: 6
                     status: active
-                    active_date: '2025-10-29'
-                    end_date: '2025-10-30'
-                    start_status_date: '2025-10-29'
-                    end_status_date: '2025-10-30'
+                    active_date: "2025-10-29"
+                    end_date: "2025-10-30"
+                    start_status_date: "2025-10-29"
+                    end_status_date: "2025-10-30"
                     total_frozen: 0
                     balance_frozen: 0
                     min_frozen_count: 0
                     total_guest_visit: 0
                     balance_guest_visit: 0
                     type_activation:
-                      title: ''
+                      title: ""
                       type: at_sale
                     avialable_actions: []
                     freeze_list: []
@@ -3114,10 +3114,10 @@ paths:
                         title: Салон 2
                 Errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Получить список пакетов услуг, разовых услуг
       operationId: Получить список пакетов услуг, разовых услуг
-      description: ''
+      description: ""
       tags:
         - Клиенты
       parameters:
@@ -3138,13 +3138,13 @@ paths:
   /hs/api/v1/ticket/{salon_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content: {}
       summary: Получить описание пакета услуг
       operationId: Получить описание пакета услуг
-      description: ''
+      description: ""
       tags:
         - Клиенты
       parameters:
@@ -3172,7 +3172,7 @@ paths:
   /hs/api/v1/salons/{salon_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -3200,10 +3200,10 @@ paths:
                     work_time:
                       - active: true
                         day: 1
-                        start: '07:00'
-                        end: '22:00'
+                        start: "07:00"
+                        end: "22:00"
                     contact_information:
-                      phone: '78945612233'
+                      phone: "78945612233"
                       email: test_salon@mail.ru
                       address: г.Москва
                       website: www.website.ru
@@ -3212,7 +3212,7 @@ paths:
                   message: Описание ошибки
       summary: Получить список салонов
       operationId: Получить список салонов
-      description: ''
+      description: ""
       tags:
         - Салоны
       parameters:
@@ -3226,7 +3226,7 @@ paths:
   /hs/api/v1/records_list/{salon_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -3267,16 +3267,16 @@ paths:
                 Parameters:
                   - id: 7c802c46
                     salon_id: 0d190fc8
-                    start_date: '2025'
-                    end_date: '2025'
-                    create_date: '2025'
+                    start_date: "2025"
+                    end_date: "2025"
+                    create_date: "2025"
                     client:
                       id: 401b3cea
                       name: Савелий
                       surname: Соновен
                       patronymic: Васильевич
                       display_name: Соновен Савелий Васильевич
-                      phone: '79211234567'
+                      phone: "79211234567"
                       email: 123456789@gmail.com
                     staffs:
                       - id: d39e5d29
@@ -3286,7 +3286,7 @@ paths:
                           title: Врач стоматолог
                         weight: 0
                         information: <img...>
-                        avatar: 'null'
+                        avatar: "null"
                     services:
                       - id: 6ad4c14f
                         title: Услуга 2
@@ -3310,7 +3310,7 @@ paths:
                   page_size: 5
       summary: Получить список записей
       operationId: Получить список записей
-      description: ''
+      description: ""
       tags:
         - Услуги
       parameters:
@@ -3323,13 +3323,13 @@ paths:
         - name: page
           in: query
           description: Номер страницы
-          example: '1'
+          example: "1"
           schema:
             type: number
         - name: count
           in: query
           description: Количество записей на странице
-          example: '20'
+          example: "20"
           schema:
             type: number
         - name: id
@@ -3359,7 +3359,7 @@ paths:
   /hs/api/v1/services/{salon_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -3402,7 +3402,7 @@ paths:
                     title: Услуга 2
                     price_min: 500
                     price_max: 500
-                    prices: 
+                    prices:
                       - id: a19ee948-1c00-11ef-b1bf-f02f7488d897
                         title: Розничная цена
                         price: 500
@@ -3410,7 +3410,7 @@ paths:
                     category_id:
                       id: a19ee948-1c00-11ef-b1bf-f02f7488d897
                       title: Хирургия
-                    comment: ''
+                    comment: ""
                     seance_length: 60
                     active: true
                     staff:
@@ -3426,7 +3426,7 @@ paths:
                   page_size: 5
       summary: Получить список услуг
       operationId: Получить список услуг
-      description: ''
+      description: ""
       tags:
         - Услуги
       parameters:
@@ -3455,13 +3455,13 @@ paths:
         - name: page
           in: query
           description: Номер страницы
-          example: '1'
+          example: "1"
           schema:
             type: number
         - name: count
           in: query
           description: Количество элементов на странице
-          example: '20'
+          example: "20"
           schema:
             type: number
         - name: apikey
@@ -3481,7 +3481,7 @@ paths:
   /hs/api/v1/record_rating/{salon_id}:
     post:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -3502,7 +3502,7 @@ paths:
                 Error: null
       summary: Установить оценку и комментарий к визиту
       operationId: Установить оценку и комментарий к визиту
-      description: ''
+      description: ""
       tags:
         - Оценки и комментарии клиентов
       parameters:
@@ -3518,7 +3518,7 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
         - name: usertoken
           in: header
           description: e.g. 256D323401901DB2BD42405FA54509B0
@@ -3557,13 +3557,13 @@ paths:
   /hs/api/v1/comments/{salon_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content: {}
       summary: Получить комментарии по сотруднику
       operationId: Получить комментарии по сотруднику
-      description: ''
+      description: ""
       tags:
         - Оценки и комментарии клиентов
       parameters:
@@ -3615,7 +3615,7 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
         - name: usertoken
           in: header
           description: e.g. 256D323401901DB2BD42405FA54509B0
@@ -3626,7 +3626,7 @@ paths:
   /hs/api/v1/price_list/{salon_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -3728,7 +3728,7 @@ paths:
                       category:
                         id: 4614bc05-757f-11ea-89ba-2c4d546557dd
                         title: Запасы
-                      price: '1000'
+                      price: "1000"
                       description: null
                       services: null
                       validity: null
@@ -3736,7 +3736,7 @@ paths:
                       balance: 0
                       pictures: []
                       country_origin: null
-                      article: ''
+                      article: ""
                       unit: мл
                       additional_details: []
                     - id: 367a2fcd-05be-11e8-b770-0050568b5c8d
@@ -3745,14 +3745,14 @@ paths:
                       category:
                         id: 4614bc05-757f-11ea-89ba-2c4d546557dd
                         title: Запасы
-                      price: '500'
+                      price: "500"
                       description: null
                       services: null
                       validity: null
                       available_time: null
                       balance: 7
                       country_origin: БОСНИЯ И ГЕРЦЕГОВИНА
-                      article: ''
+                      article: ""
                       unit: шт
                       additional_details: []
                       pictures:
@@ -3769,10 +3769,10 @@ paths:
                     page_count: 20
                   errors:
                     code: 0
-                    message: ''
+                    message: ""
       summary: Получить прайс клиента
       operationId: Получить прайс клиента
-      description: ''
+      description: ""
       tags:
         - Онлайн-магазин
       parameters:
@@ -3788,7 +3788,7 @@ paths:
           description: >
 
             Строка Json с массивом строк, содержащим параметры "product_id"
-            идентификатор номенклатуры. 
+            идентификатор номенклатуры.
 
             Пример такой строки: ["9ad49672-a043-11e7-ab37-000c2938171c",
             "8bac3895-9e13-11e7-9966-0050568bd50c"]
@@ -3856,7 +3856,7 @@ paths:
   /hs/api/v1/cart_cost/{salon_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -3977,7 +3977,7 @@ paths:
                         id: c85e4472-cc8f-11e8-8973-2c4d546557dd
                         title: Крем для рук
                         type: product
-                        description: ''
+                        description: ""
                         services: null
                         validity: null
                         pictures:
@@ -3997,7 +3997,7 @@ paths:
                         id: 13fbaafe-107e-11e7-ad3d-0050568b5c8d
                         title: Шампунь
                         type: product
-                        description: ''
+                        description: ""
                         services: null
                         validity: null
                         pictures:
@@ -4041,10 +4041,10 @@ paths:
                       title: Наличными
                 errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Получить стоимость корзины
       operationId: Получить стоимость корзины
-      description: ''
+      description: ""
       tags:
         - Онлайн-магазин
       parameters:
@@ -4069,7 +4069,7 @@ paths:
           description: |-
             Строка json с объектом доставки.
 
-            <ul> 
+            <ul>
                 <li> id (required) - Идентификатор номенклатуры доставки </li>
                 <li> price (required) - Стоимость услуги доставки </li>
             </ul>
@@ -4080,7 +4080,7 @@ paths:
           description: |-
             Строка json с объектом предварительных оплат.
 
-            <ul> 
+            <ul>
                 <li> type (required) - Тип оплаты ("cash" - оплата наличными, "card" - оплата картой, "deposit" - оплата с лицевого счета, "bonus" - оплата с бонусного счета) </li>
                 <li> amount (required) - Сумма оплаты </li>
                 <li> id (optional) - Идентификатор лицевого счета (необходимо передавать только при оплате с лицевого/бонусного счета) </li>
@@ -4092,7 +4092,7 @@ paths:
           description: |-
             Строка json с объектом данных клиента.
 
-            <ul> 
+            <ul>
                 <li> phone (optional, string) - Телефон клиента. Необходим, если в заголовках не передается usertoken </li>
                 <li> last_name (optional, string) - Фамилия клиента. Требуется, если в заголовках не передается usertoken </li>
                 <li> name (optional, string) - Имя клиента. Необходимо, если в заголовках не передается usertoken </li>
@@ -4123,7 +4123,7 @@ paths:
   /hs/api/v1/payment/{salon_id}:
     post:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -4148,10 +4148,10 @@ paths:
                   result: true
                 errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Оплатить покупки
       operationId: Оплатить покупки
-      description: ''
+      description: ""
       tags:
         - Онлайн-магазин
       parameters:
@@ -4198,13 +4198,13 @@ paths:
                   type: string
                   description: Идентификатор транзакции
                 cart:
-                  $ref: '#/components/schemas/cart'
+                  $ref: "#/components/schemas/cart"
                   description: Массив объектов оплачиваемых номенклатур
                 payment_list:
-                  $ref: '#/components/schemas/PaymentList'
+                  $ref: "#/components/schemas/PaymentList"
                   description: Массив объектов оплат
                 gift_to:
-                  $ref: '#/components/schemas/GiftTo'
+                  $ref: "#/components/schemas/GiftTo"
                   description: Объект с данными клиента, которому предназначен сертификат
                 comment:
                   type: string
@@ -4213,7 +4213,7 @@ paths:
                   type: string
                   description: Адрес заказа
                 delivery:
-                  $ref: '#/components/schemas/delivery'
+                  $ref: "#/components/schemas/delivery"
                   description: Объект с услугой доставки
                 promocode:
                   type: string
@@ -4221,7 +4221,7 @@ paths:
   /hs/api/v1/group_list/{salon_id}:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -4283,10 +4283,10 @@ paths:
                         included_groups: null
                 errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Получить разделы товаров
       operationId: Получить разделы товаров
-      description: ''
+      description: ""
       tags:
         - Онлайн-магазин
       parameters:
@@ -4300,7 +4300,7 @@ paths:
   /hs/api/v1/contact_information/{salon_id}:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -4365,10 +4365,10 @@ paths:
                       http://192.168.8.122:8085/RepeaterSalon/hs/api/files/30a6b5df-e2f4-4970-aac7-d5962ac2d74e/508c17b0-1cec-11eb-8071-04d4c44bd374
                 errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Получить контатную информацию
       operationId: Получить контатную информацию
-      description: ''
+      description: ""
       tags:
         - Онлайн-магазин
       parameters:
@@ -4382,7 +4382,7 @@ paths:
   /hs/api/v1/public_offer/{salon_id}:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -4393,7 +4393,7 @@ paths:
                 }
       summary: Публичная оферта
       operationId: Публичная оферта
-      description: ''
+      description: ""
       tags:
         - Онлайн-магазин
       parameters:
@@ -4407,7 +4407,7 @@ paths:
   /hs/api/v1/order_list/{salon_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -4503,12 +4503,12 @@ paths:
                 parameters:
                   order_list:
                     - id: c9726d0f-4689-11eb-8075-04d4c44bd374
-                      number: '00000000002'
+                      number: "00000000002"
                       shipment_date: null
-                      date: '2020-12-25T12:07:27'
+                      date: "2020-12-25T12:07:27"
                       status: Открыт
                       status_id: c9726d0f-4689-11eb-8075-04d4c44bd312
-                      comment: ''
+                      comment: ""
                       purchase_list:
                         - title: 40002 Toss The Garter
                           type: product
@@ -4540,10 +4540,10 @@ paths:
                     page_count: 20
                 errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: История заказов
       operationId: История заказов
-      description: ''
+      description: ""
       tags:
         - Онлайн-магазин
       parameters:
@@ -4601,7 +4601,7 @@ paths:
   /hs/api/v1/order_status_list/{salon_id}:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -4642,10 +4642,10 @@ paths:
                     title: Отменен
                 errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Получить статусы заказов
       operationId: Получить статусы заказов
-      description: ''
+      description: ""
       tags:
         - Онлайн-магазин
       parameters:
@@ -4659,7 +4659,7 @@ paths:
   /hs/api/v1/deposit_detail/{salon_id}/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -4742,10 +4742,10 @@ paths:
                     page_count: 5
                 errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Получить расшифровку движений средств на лицевом или бонусном счете
       operationId: Получить расшифровку движений средств на лицевом или бонусном счете
-      description: ''
+      description: ""
       tags:
         - Онлайн-магазин
       parameters:
@@ -4775,7 +4775,7 @@ paths:
   /hs/api/v1/delivery_list/{salon_id}:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -4828,10 +4828,10 @@ paths:
                     checked: false
                 errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Получить список услуг по доставке
       operationId: Получить список услуг по доставке
-      description: ''
+      description: ""
       tags:
         - Онлайн-магазин
       parameters:
@@ -4845,7 +4845,7 @@ paths:
   /hs/api/v1/filter_list/{salon_id}:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -4898,9 +4898,9 @@ paths:
                     title: Цена
                     values:
                       - id: from
-                        title: ''
+                        title: ""
                       - id: to
-                        title: ''
+                        title: ""
                   - id: tags
                     title: Теги
                     values:
@@ -4910,10 +4910,10 @@ paths:
                         title: Скидка
                 errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Получить список фильтров по товарам
       operationId: Получить список фильтров по товарам
-      description: ''
+      description: ""
       tags:
         - Онлайн-магазин
       parameters:
@@ -4927,7 +4927,7 @@ paths:
   /hs/api/v2/book_staff/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -4964,10 +4964,10 @@ paths:
                       http://192.168.8.122:8085/Salon3/hs/api/files/5c55ccbd-cf1a-471a-9426-7fa9710c0e6e/e6c1b1fa-0571-11e7-a42a-0050568b5c8d-25817.jpeg
                 errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Получить список доступных для записи сотрудников
       operationId: Получить список доступных для записи сотрудников
-      description: ''
+      description: ""
       tags:
         - Терминал самообслуживания
       parameters:
@@ -4985,11 +4985,11 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
   /hs/api/v2/book_services/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -5029,10 +5029,10 @@ paths:
                       http://192.168.8.122:8085/Salon3/hs/api/files/5c55ccbd-cf1a-471a-9426-7fa9710c0e6e/f3d08965-c757-11ee-80eb-04d4c44bd374
                 errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Получить список доступных для бронирования услуг
       operationId: Получить список доступных для бронирования услуг
-      description: ''
+      description: ""
       tags:
         - Терминал самообслуживания
       parameters:
@@ -5048,11 +5048,11 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
   /hs/api/v2/find_client_by_phone/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -5092,17 +5092,17 @@ paths:
                   client_found: true
                   client_data:
                     id: bcade0eb-ebea-11ec-80a3-04d4c44bd374
-                    phone: '79882843969'
-                    last_name: ''
+                    phone: "79882843969"
+                    last_name: ""
                     name: Анна
-                    second_name: ''
+                    second_name: ""
                     usertoken: 0E4878891AFE6ED9A31C736B1F9DECCE
                 errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Найти клиента по номеру телефона
       operationId: Найти клиента по номеру телефона
-      description: ''
+      description: ""
       tags:
         - Терминал самообслуживания
       parameters:
@@ -5118,11 +5118,11 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
   /hs/api/v2/auth:
     post:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -5147,10 +5147,10 @@ paths:
                   UserToken: 9040A083D15FFF777A695EB266903EA5
                 errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Авторизоваться
       operationId: Авторизоваться
-      description: ''
+      description: ""
       tags:
         - Терминал самообслуживания
       parameters:
@@ -5160,12 +5160,12 @@ paths:
           required: false
           schema:
             type: string
-          example: '147556'
+          example: "147556"
       requestBody:
         content:
           application/json:
             example:
-              phone: '+79882843957'
+              phone: "+79882843957"
               name: Иванов Иван
             schema:
               type: object
@@ -5184,7 +5184,7 @@ paths:
   /hs/api/v2/cart_cost/:
     get:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -5282,7 +5282,7 @@ paths:
                         id: e21cf6d4-5a57-11e7-82e7-0050568b5c8d
                         title: Гидромассаж
                         type: service
-                        description: ''
+                        description: ""
                         pictures:
                           - >-
                             http://192.168.8.122:8085/Salon3/hs/api/files/5c55ccbd-cf1a-471a-9426-7fa9710c0e6e/f3d08965-c757-11ee-80eb-04d4c44bd374
@@ -5307,14 +5307,14 @@ paths:
                       payment_amount: 2236
                   promotions:
                     - type: bonus
-                      title: ''
+                      title: ""
                       amount: 100
                 errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Получить стоимость корзины
       operationId: Получить стоимость корзины
-      description: ''
+      description: ""
       tags:
         - Терминал самообслуживания
       parameters:
@@ -5338,7 +5338,7 @@ paths:
           description: |-
             Строка json с объектом предварительных оплат.
 
-            <ul> 
+            <ul>
                 <li> type (required) - Тип оплаты ("cash" - оплата наличными, "card" - оплата картой, "bonus" - оплата с бонусного счета) </li>
                 <li> amount (required) - Сумма оплаты </li>
                 <li> id (optional) - Идентификатор бонусного счета (необходимо передавать только при оплате с бонусного счета) </li>
@@ -5367,7 +5367,7 @@ paths:
   /hs/api/v2/payment:
     post:
       responses:
-        '200':
+        "200":
           description: OK
           headers: {}
           content:
@@ -5395,10 +5395,10 @@ paths:
                   record_id: 22a871af-c9fa-11ee-80ec-04d4c44bd374
                 errors:
                   code: 0
-                  message: ''
+                  message: ""
       summary: Оплатить покупки
       operationId: Оплатить покупки
-      description: ''
+      description: ""
       tags:
         - Терминал самообслуживания
       parameters:
@@ -5426,13 +5426,13 @@ paths:
               payment_list:
                 - id: 22a871af-c9fa-11ee-80ec-04d4c44bd374
                   type: bonus
-                  amount: '136'
+                  amount: "136"
                 - type: cash
-                  amount: '200'
+                  amount: "200"
                 - type: card
-                  amount: '2000'
-              receipt_number: '123'
-              transaction_id: '1233232'
+                  amount: "2000"
+              receipt_number: "123"
+              transaction_id: "1233232"
             schema:
               type: object
               required:
@@ -5448,10 +5448,10 @@ paths:
                   type: string
                   description: Номер чека ККМ
                 cart:
-                  $ref: '#/components/schemas/cart'
+                  $ref: "#/components/schemas/cart"
                   description: Массив объектов оплачиваемых номенклатур
                 payment_list:
-                  $ref: '#/components/schemas/PaymentList'
+                  $ref: "#/components/schemas/PaymentList"
                   description: Массив объектов оплат
                 promocode:
                   type: string
@@ -5629,7 +5629,7 @@ components:
           nullable: true
         phone:
           type: string
-          example: '77777777777'
+          example: "77777777777"
         email:
           type: string
           example: client21321@mail.ru
@@ -5707,7 +5707,7 @@ components:
           description: Пол (0 — не указан, 1 — мужчина, 2 — женщина)
         birth_date:
           type: string
-          example: '2011'
+          example: "2011"
           description: 01-01 (string, optional) - Дата рождения в формате `YYYY-MM-DD`
     Salon:
       type: object
@@ -5729,7 +5729,7 @@ components:
           items: {}
           description: Расписание работы по дням недели
         contact_information:
-          $ref: '#/components/schemas/ContactInformation'
+          $ref: "#/components/schemas/ContactInformation"
           description: Контактная информация салона
     WorkTime:
       type: object
@@ -5744,18 +5744,18 @@ components:
           description: День недели (1 = понедельник, 7 = воскресенье)
         start:
           type: string
-          example: '07:00'
+          example: "07:00"
           description: Время начала работы (формат `HH:mm`)
         end:
           type: string
-          example: '22:00'
+          example: "22:00"
           description: Время окончания работы (формат `HH:mm`)
     ContactInformation:
       type: object
       properties:
         phone:
           type: string
-          example: '78945612233'
+          example: "78945612233"
           description: Телефон салона
         email:
           type: string
@@ -5787,18 +5787,18 @@ components:
           description: 1c01-11ef-b1bf-f02f7488d897 (string) - ID салона
         start_date:
           type: string
-          example: '2025'
+          example: "2025"
           description: 06-30T12:00:00 (string) - Дата и время начала визита (ISO 8601)
         end_date:
           type: string
-          example: '2025'
+          example: "2025"
           description: 06-30T12:15:00 (string) - Дата и время окончания визита (ISO 8601)
         create_date:
           type: string
-          example: '2025'
+          example: "2025"
           description: 06-30T09:49:06 (string) - Дата создания записи (ISO 8601)
         client:
-          $ref: '#/components/schemas/ClientInfo'
+          $ref: "#/components/schemas/ClientInfo"
           description: Данные клиента
         staffs:
           type: array
@@ -5813,7 +5813,7 @@ components:
           example: Комментарий
           description: Комментарий к записи
         created_user:
-          $ref: '#/components/schemas/UserInfo'
+          $ref: "#/components/schemas/UserInfo"
           description: Пользователь, создавший запись
         status:
           type: string
@@ -5842,7 +5842,7 @@ components:
           example: Соновен Савелий Васильевич
         phone:
           type: string
-          example: '79211234567'
+          example: "79211234567"
         email:
           type: string
           example: 123456789@gmail.com
@@ -5857,7 +5857,7 @@ components:
           type: string
           example: Врач
         specialization:
-          $ref: '#/components/schemas/Specialization'
+          $ref: "#/components/schemas/Specialization"
         weight:
           type: number
         information:
@@ -5866,7 +5866,7 @@ components:
           description: HTML-строка с эмоджи/описанием
         avatar:
           type: string
-          example: 'null'
+          example: "null"
           description: Аватар врача
           nullable: true
     Specialization:
@@ -5942,7 +5942,7 @@ components:
           description: Вес/приоритет в сортировке
         category_id:
           oneOf:
-            - $ref: '#/components/schemas/Category'
+            - $ref: "#/components/schemas/Category"
               description: Категория услуги
             - nullable: true
         comment:
@@ -5959,7 +5959,7 @@ components:
         staff:
           type: array
           items:
-            $ref: '#/components/schemas/ServiceStaff'
+            $ref: "#/components/schemas/ServiceStaff"
           description: Список врачей, выполняющих услугу
           nullable: true
     Category:
