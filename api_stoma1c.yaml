@@ -1,5 +1,7 @@
 openapi: 3.0.3
 info:
+  x-logo:
+    url: https://raw.githubusercontent.com/Helix-QA/API/refs/heads/main/assets/stoma_logo.svg
   title: 1С:Медицина. Стоматологическая клиника, ред. 2.1
   version: 1.0.0
   description: Документация API для 1С:Медицина. Стоматологическая клиника, ред. 2.1
