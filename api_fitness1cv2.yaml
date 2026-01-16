@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   x-logo:
-    url: https://raw.githubusercontent.com/Helix-QA/API/refs/heads/main/assets/fitness_logo.svg
+    url: https://www.fitness1c.ru/local/templates/fitness.v2/images/logo_n.svg
   title: API 1С:Фитнес клуб 4.0 V2
   version: 1.0.0
   description: Документация API для 1С:Fitness, редакция 4.0 v2

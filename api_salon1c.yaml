@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   x-logo:
-    url: https://raw.githubusercontent.com/Helix-QA/API/refs/heads/main/assets/salon_logo.svg
+    url: https://salon1c.ru/local/templates/salon1c.25/images/logo_mm.svg
   title: API 1С:SPA-Салон, редакция 3.0
   version: 1.0.0
   description: Документация API для 1С:SPA-Салон, редакция 3.0
