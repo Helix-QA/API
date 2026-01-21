@@ -9411,6 +9411,12 @@ paths:
                     properties:
                       link:
                         type: string
+                      id:
+                        type: string
+                        description: Идентификатор заказа. Используется для последующего запроса статуса оплаты платёжной ссылки.
+                    required:
+                      - id
+                title: СоздатьСсылкуНаОплатуOk
               examples:
                 example1:
                   value:
@@ -9534,6 +9540,64 @@ paths:
                 sales:
                   type: string
                   description: Массив идентификаторов реализаций
+  /hs/api/v3/payment_link_status:
+    get:
+      operationId: получитьСтатусОплатыПоСсылке
+      tags:
+        - Оплаты
+      summary: Получить статус оплаты по ссылке
+      parameters:
+        - in: query
+          name: id
+          required: true
+          style: form
+          description: Идентификатор заказа, полученный в методе "payment_link"
+          explode: true
+          schema:
+            type: string
+          allowReserved: false
+        - in: header
+          name: apikey
+          required: false
+          style: simple
+          example: 409265d1-a0af-4ce8-88ec-7e3435024111
+          explode: false
+          schema:
+            type: string
+          allowReserved: false
+        - in: header
+          name: usertoken
+          required: false
+          style: simple
+          example: 7e8245d1-574f-4ce8-88ec-7e34358df45
+          explode: false
+          schema:
+            type: string
+          allowReserved: false
+        - in: header
+          name: token-master
+          required: false
+          style: simple
+          example: a62afb1e-97b2-11e7-b142-0050568b93ed
+          explode: false
+          schema:
+            type: string
+          allowReserved: false
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      status:
+                        $ref: "#/components/schemas/PaymentLinkStatus"
   /hs/api/v3/debts:
     get:
       responses:
@@ -11511,6 +11575,18 @@ paths:
           example: 110132e6-ba129-4120-ac33-fcd612380121
 components:
   schemas:
+    PaymentLinkStatus:
+      description: Статус оплаты заказа
+      type: integer
+      enum:
+        - 1
+        - 2
+        - 3
+      x-enumDescriptions:
+        1: Не оплачено
+        2: Оплачено
+        3: Отказ (Истёкший)
+      example: 2
     ProductType:
       type: string
       enum:
