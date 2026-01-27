@@ -14,8 +14,11 @@ info:
     **token-master** - Токен родителя, используемый при оплате с аккаунта родителя за ребенка.
 servers:
   - url: https://app.1c.fitness/fitnessapi
+security:
+  - basicAuth: []
+    apiKey: []
 paths:
-  /hs/api/v3/auth_types/:
+  /hs/api/v3/auth_types:
     get:
       responses:
         "200":
@@ -28,21 +31,30 @@ paths:
                 properties:
                   result:
                     type: boolean
+                    description: Результат выполнения запроса
                   data:
                     type: object
+                    description: Данные запроса
                     properties:
                       auth_types:
                         type: array
                         items:
                           type: object
                           properties:
-                            type:
-                              type: string
                             title:
                               type: string
+                              description: Представление типа авторизации
+                            type:
+                              type: string
+                              description: Тип авторизации
+                              examples:
+                                - sms
+                              enum:
+                                - sms
+                                - whats_app
                           required:
-                            - type
                             - title
+                            - type
               example:
                 result: true
                 data:
@@ -53,20 +65,25 @@ paths:
                       title: WhatsApp
                     - type: call
                       title: Звонок
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
       summary: Доступные варианты авторизации
-      operationId: Доступные варианты авторизации
+      operationId: auth_types
       description: ""
       tags:
         - Авторизация
-      parameters:
-        - name: apikey
-          in: header
-          description: e.g. 6656e176-7adc-4214-b49b-ee4a3694b48c
-          required: false
-          schema:
-            type: string
-          example: 6656e176-7adc-4214-b49b-ee4a3694b48c
-  /hs/api/v3/confirm_phone/:
+      parameters: []
+  /hs/api/v3/confirm_phone:
     post:
       responses:
         "200":
@@ -105,8 +122,20 @@ paths:
                     result: true
                     data:
                       pass_token: 580392e6-ba49-4280-ac67-fcd6f2180121
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
       summary: Подтверждение номера телефона
-      operationId: Подтверждение номера телефона
+      operationId: confirm_phone
       description: ""
       tags:
         - Авторизация
@@ -155,7 +184,7 @@ paths:
                     При передаче параметра, определяющего статус восстановления
                     пароля, будет выполнена проверка на наличие клиента в базе
                     данных
-  /hs/api/v3/password/:
+  /hs/api/v3/password:
     post:
       responses:
         "200":
@@ -1833,7 +1862,7 @@ paths:
           schema:
             type: string
           example: 580392-e6ba49428-0ac67fcd-f2180121
-  /hs/api/v3/visits_history/:
+  /hs/api/v3/visits_history:
     get:
       responses:
         "200":
@@ -1845,83 +1874,80 @@ paths:
                 type: object
                 properties:
                   result:
-                    type: boolean
+                    $ref: "#/components/schemas/ResultResponse"
                   data:
+                    description: Данные ответа
                     type: array
                     items:
                       type: object
                       properties:
                         id:
-                          type: string
+                          description: Идентификатор посещения
+                          $ref: "#/components/schemas/ID"
                         start_date:
-                          type: string
+                          $ref: '#/components/schemas/StartDate'
                         end_date:
-                          type: string
+                          $ref: '#/components/schemas/EndDate'
+                        is_visit:
+                          description: Посещение состоялось (клиент находился в клубе)
+                          type: boolean
                         appointment_list:
+                          description: Массив занятий клиента
                           type: array
                           items:
                             type: object
                             properties:
                               appointment_id:
-                                type: string
+                                description: Идентификатор занятия
+                                $ref: "#/components/schemas/ID"
                               type:
+                                description: "Тип занятия: <ul><li> personal - персональное </li><li>classes - групповое</li></ul>"
                                 type: string
                               status:
+                                description: "Статус занятия: <ul><li> planned - запланировано </li><li> canceled - отменено </li><li> ended - проведено</li><li>passes - проводится</li></ul>"
                                 type: string
                               start_date:
-                                type: string
+                                $ref: '#/components/schemas/StartDate'
                               end_date:
-                                type: string
+                                $ref: '#/components/schemas/EndDate'
                               duration:
+                                description: Продолжительность занятия в минутах
                                 type: number
                               count:
+                                description: Количество услуг в занятии
                                 type: number
                               arrival_status:
+                                description: "Статус прибытия клиента: <ul><li> arrived - прибыл</li><li>not_arrived - не прибыл</li><li>canceled - отменил</li>"
                                 type: string
                               service:
-                                type: object
-                                properties:
-                                  title:
-                                    type: string
-                                  id:
-                                    type: string
+                                description: Услуга занятия
+                                $ref: '#/components/schemas/IDTitle'
                               room:
-                                type: object
-                                properties:
-                                  title:
-                                    type: string
-                                  id:
-                                    type: string
+                                description: Помещение
+                                $ref: "#/components/schemas/IDTitle"
                               employee:
+                                description: Сотрудник занятия
                                 type: object
                                 properties:
                                   name:
+                                    description: "ФИО сотрудника"
                                     type: string
+                                    example: "Иванов Иван Иванович"
                                   id:
-                                    type: string
+                                    $ref: '#/components/schemas/ID'
                                   position:
-                                    type: object
-                                    properties:
-                                      title:
-                                        x-nullable: true
-                                      id:
-                                        x-nullable: true
+                                    description: Должность сотрудника
+                                    $ref: '#/components/schemas/IDTitle'
+                              resources:
+                                description: Ресурсы помещения в занятии
+                                type: [array, "null"]
+                                items:
+                                  $ref: '#/components/schemas/IDTitle'
                   club:
-                    type: object
-                    properties:
-                      id:
-                        type: string
-                      title:
-                        type: string
+                    description: Структура клуба
+                    $ref: "#/components/schemas/IDTitle"
                   pagination_response:
-                    type: object
-                    properties:
-                      requested_offset:
-                        type: number
-                      page_size:
-                        type: number
-                      total_results:
-                        type: number
+                    $ref: "#/components/schemas/PaginationResponse"
               example:
                 result: true
                 data:
@@ -1949,6 +1975,9 @@ paths:
                           position:
                             title: null
                             id: null
+                        resources:
+                          - title: Правая половина
+                            id: a001c5f8-f8c5-11e1-bd50-3860779088bc
                 club:
                   id: 9efcd44b-272f-11e6-bf79-3085a98f71a0
                   title: SPA Салон
@@ -1957,26 +1986,24 @@ paths:
                   page_size: 20
                   total_results: 44
         "400":
-          description: Bad Request
-          headers: {}
+          description: Некорректный запрос
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  result:
-                    type: boolean
-                  error:
-                    type: number
-                  error_message:
-                    type: string
-              example:
-                result: false
-                error: 1064
-                error_message: Описание ошибки
+                $ref: "#/components/schemas/BadRequest"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
       summary: Получить историю посещений клиента
-      operationId: Получить историю посещений клиента
-      description: ""
+      operationId: visits_history
+      description: >-
+        Метод возвращает массив данных, содержащий информацию о посещениях клуба клиентом.
+        <br> Приоритет второстепенных параметров:
+        <br> 1. `service_id`
+        <br> 2. `type`
       tags:
         - Клиенты
       parameters:
@@ -1997,9 +2024,7 @@ paths:
             type: string
         - name: club_id
           in: query
-          description: >-
-            Идентификатор структурной единицы.(Если не передать, берется первый
-            из внешней системы)
+          description: Идентификатор структурной единицы.(Если не передать, берется первый из внешней системы)
           schema:
             type: string
         - name: order
@@ -2008,17 +2033,10 @@ paths:
           example: DESC
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121
-          required: false
-          schema:
-            type: string
-          example: 110132e6-ba129-4120-ac33-fcd612380121
         - name: usertoken
           in: header
-          description: e.g. 580392-e6ba49428-0ac67fcd-f2180121
-          required: false
+          description: Ключ клиента
+          required: true
           schema:
             type: string
           example: 580392-e6ba49428-0ac67fcd-f2180121
@@ -4414,7 +4432,7 @@ paths:
           schema:
             type: string
           example: 580392-e6ba49428-0ac67fcd-f2180121
-  /hs/api/v3/appointment/:
+  /hs/api/v3/appointment:
     get:
       responses:
         "200":
@@ -4426,117 +4444,9 @@ paths:
                 type: object
                 properties:
                   result:
-                    type: boolean
+                    $ref: "#/components/schemas/ResultResponse"
                   data:
-                    type: object
-                    properties:
-                      appointment_id:
-                        type: string
-                      already_booked:
-                        type: boolean
-                      payment_required:
-                        type: boolean
-                      canceled:
-                        type: boolean
-                      reason_for_cancellation:
-                        x-nullable: true
-                      status:
-                        type: string
-                      service:
-                        type: object
-                        properties:
-                          title:
-                            type: string
-                          id:
-                            type: string
-                          description:
-                            type: string
-                          color:
-                            x-nullable: true
-                          course:
-                            type: object
-                            properties:
-                              title:
-                                x-nullable: true
-                              id:
-                                x-nullable: true
-                          price:
-                            type: number
-                      service_replacement:
-                        type: object
-                        properties:
-                          title:
-                            x-nullable: true
-                          id:
-                            x-nullable: true
-                          description:
-                            x-nullable: true
-                      group:
-                        type: object
-                        properties:
-                          title:
-                            type: string
-                          id:
-                            type: string
-                      room:
-                        type: object
-                        properties:
-                          title:
-                            x-nullable: true
-                          id:
-                            x-nullable: true
-                      room_replacement:
-                        type: object
-                        properties:
-                          title:
-                            x-nullable: true
-                          id:
-                            x-nullable: true
-                      employee:
-                        type: object
-                        properties:
-                          name:
-                            type: string
-                          id:
-                            type: string
-                          biography:
-                            type: string
-                          awards:
-                            type: string
-                          description:
-                            x-nullable: true
-                          photo:
-                            x-nullable: true
-                          position:
-                            type: object
-                            properties:
-                              title:
-                                type: string
-                              id:
-                                type: string
-                      employee_replacement:
-                        x-nullable: true
-                      type:
-                        type: string
-                      start_date:
-                        type: string
-                      start_date_replacement:
-                        type: string
-                      end_date:
-                        type: string
-                      duration:
-                        type: number
-                      commercial:
-                        type: boolean
-                      booking_online:
-                        type: boolean
-                      booking_window:
-                        x-nullable: true
-                      cost:
-                        type: number
-                      marketing_badges:
-                        type: array
-                        items: {}
+                    $ref: "#/components/schemas/AppointmentObject"
               example:
                 result: true
                 data:
@@ -4589,8 +4499,20 @@ paths:
                   booking_window: null
                   cost: 1000
                   marketing_badges: []
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
       summary: Информация о персональном занятии
-      operationId: Информация о персональном занятии
+      operationId: get_appointment
       description: ""
       tags:
         - Персональные занятия
@@ -4679,7 +4601,7 @@ paths:
                   temporarily_reserved: false
                   status: reserved_and_payed
       summary: Записаться на персонально занятие
-      operationId: Записаться на персонально занятие
+      operationId: post_appointment
       description: ""
       tags:
         - Персональные занятия
@@ -4813,7 +4735,7 @@ paths:
           schema:
             type: string
           example: 580392-e6ba49428-0ac67fcd-f2180121
-  /hs/api/v3/classes/:
+  /hs/api/v3/classes:
     get:
       responses:
         "200":
@@ -4825,170 +4747,122 @@ paths:
                 type: object
                 properties:
                   result:
-                    type: boolean
+                    $ref: "#/components/schemas/ResultResponse"
                   data:
+                    description: Данные запроса
                     type: array
                     items:
                       type: object
                       properties:
                         appointment_id:
-                          type: string
+                          $ref: '#/components/schemas/ID'
                         already_booked:
-                          type: boolean
+                          type: [boolean, "null"]
+                          description: Признак записи клиента на занятие
                         online:
                           type: boolean
+                          description: Признак онлайн тренировки
                         canceled:
                           type: boolean
+                          description: Признак отмены занятия
                         reason_for_cancellation:
                           type: string
+                          description: Причина отмены занятия
                         booked:
                           type: string
+                          description: Количество записанных клиентов
                         web_booked:
                           type: string
+                          description: Количество записанных клиентов онлайн
                         web_capacity:
                           type: string
+                          description: "Емкость занятия (-1: Емкость скрыта)"
                         course:
-                          type: object
-                          properties:
-                            id:
-                              type: string
-                            title:
-                              type: string
-                            cycle_period:
-                              type: object
-                              properties:
-                                id:
-                                  type: string
-                                title:
-                                  type: string
-                                start_date:
-                                  type: string
-                                end_date:
-                                  type: string
-                            color:
-                              type: string
+                          $ref: '#/components/schemas/CourseWithSchedule'
+                        course_activity:
+                          type: boolean
+                          description: Признак секционного занятия
                         service:
-                          type: object
-                          properties:
-                            title:
-                              type: string
-                            id:
-                              type: string
-                            description:
-                              x-nullable: true
-                            color:
-                              type: string
-                            course:
-                              type: object
-                              properties:
-                                title:
-                                  type: string
-                                id:
-                                  type: string
-                            strength:
-                              type: number
-                            endurance:
-                              type: number
-                            cardio:
-                              type: number
-                            flexibility:
-                              type: number
-                            sort_index:
-                              type: number
+                          description: Услуга занятия
+                          $ref: '#/components/schemas/ServiceSchedule'
                         service_replacement:
-                          type: object
-                          properties:
-                            title:
-                              type: string
-                            id:
-                              type: string
-                            description:
-                              x-nullable: true
+                          description: Услуга до изменения (null при отключенном отображение изменений в расписании)
+                          $ref: '#/components/schemas/IDTitle'
                         group:
-                          type: object
-                          properties:
-                            title:
-                              type: string
-                            id:
-                              type: string
+                          description: Группа услуги занятия
+                          $ref: '#/components/schemas/IDTitle'
                         room:
-                          type: object
-                          properties:
-                            title:
-                              type: string
-                            id:
-                              type: string
+                          description: Помещение занятия
+                          $ref: '#/components/schemas/IDTitleSortOrder'
                         room_replacement:
-                          type: object
-                          properties:
-                            title:
-                              type: string
-                            id:
-                              type: string
+                          description: Помещение до изменения (null при отключенном отображение изменений в расписании)
+                          $ref: '#/components/schemas/IDTitle'
+                        resources:
+                          $ref: '#/components/schemas/ResourcesObject'
+                        resources_title:
+                          type: string
+                          description: Наименование ресурсов через запятую
+                        direction:
+                          description: Направление занятия
+                          $ref: '#/components/schemas/IDTitle'
                         employee:
+                          description: Сотрудник занятия
+                          $ref: '#/components/schemas/EmployeeSchedule'
+                        assistant:
                           type: object
+                          description: Ассистент занятия
                           properties:
                             name:
-                              x-nullable: true
-                            id:
-                              x-nullable: true
-                            position:
-                              type: object
-                              properties:
-                                title:
-                                  x-nullable: true
-                                id:
-                                  x-nullable: true
-                            photo:
+                              description: "ФИО сотрудника"
                               type: string
+                              example: "Иванов Иван Иванович"
+                            id:
+                              $ref: '#/components/schemas/ID'
                         employee_replacement:
                           type: object
                           properties:
                             name:
-                              x-nullable: true
-                            id:
-                              x-nullable: true
-                            position:
-                              type: object
-                              properties:
-                                title:
-                                  x-nullable: true
-                                id:
-                                  x-nullable: true
-                            photo:
+                              description: "ФИО сотрудника"
                               type: string
+                              example: "Иванов Иван Иванович"
+                            id:
+                              $ref: '#/components/schemas/ID'
+                            position:
+                              description: Должность сотрудника
+                              $ref: '#/components/schemas/IDTitle'
                         type:
+                          description: "Тип занятия"
+                          default: "classes"
                           type: string
                         capacity:
+                          description: "Емкость занятия (-1: Емкость скрыта)"
+                          type: number
+                        available_slots:
+                          description: Количество свободных мест
                           type: number
                         start_date:
-                          type: string
+                          $ref: '#/components/schemas/StartDate'
                         start_date_replacement:
-                          type: string
+                          description: Дата начала занятия до изменений (null при отключенном отображение изменений в расписании )
+                          $ref: '#/components/schemas/StartDate'
                         end_date:
-                          type: string
+                          $ref: '#/components/schemas/EndDate'
                         duration:
+                          description: Длительность занятия в минутах
                           type: number
                         commercial:
+                          description: Коммерческий класс
                           type: boolean
                         booking_online:
+                          description: Флаг предварительной записи (**true** - бронирование занятия доступно)
                           type: boolean
                         booking_window:
-                          type: object
-                          properties:
-                            start_date_time:
-                              type: string
-                            end_date_time:
-                              type: string
+                          $ref: '#/components/schemas/BookingWindow'
                         badges:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              title:
-                                type: string
-                              unicode:
-                                type: string
+                          $ref: '#/components/schemas/Badges'
+                        use_waiting_list:
+                          description: Возможна запись в лист ожидания
+                          type: boolean
               example:
                 result: true
                 data:
@@ -5066,26 +4940,20 @@ paths:
                       - title: Популярное занятие
                         unicode: U+1F3A5
         "400":
-          description: Bad Request
-          headers: {}
+          description: Некорректный запрос
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  result:
-                    type: boolean
-                  error:
-                    type: number
-                  error_message:
-                    type: string
-              example:
-                result: false
-                error: 1064
-                error_message: Описание ошибки
+                $ref: "#/components/schemas/BadRequest"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
       summary: Получить расписание занятий за период
-      operationId: Получить расписание занятий за период
-      description: ""
+      operationId: classes
+      description: "Метод возвращает массив групповых занятий в указанном периоде"
       tags:
         - Групповые занятия
       parameters:
@@ -5117,21 +4985,14 @@ paths:
           required: true
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121
-          required: false
-          schema:
-            type: string
-          example: 110132e6-ba129-4120-ac33-fcd612380121
         - name: usertoken
           in: header
-          description: e.g. 580392-e6ba49428-0ac67fcd-f2180121
+          description: Идентификатор клиента
           required: false
           schema:
             type: string
           example: 580392-e6ba49428-0ac67fcd-f2180121
-  /hs/api/v3/class_descriptions/:
+  /hs/api/v3/class_descriptions:
     get:
       responses:
         "200":
@@ -5143,218 +5004,9 @@ paths:
                 type: object
                 properties:
                   result:
-                    type: boolean
+                    $ref: "#/components/schemas/ResultResponse"
                   data:
-                    type: object
-                    properties:
-                      appointment_id:
-                        type: string
-                      already_booked:
-                        x-nullable: true
-                      online:
-                        type: boolean
-                      url_online_training:
-                        type: object
-                        properties:
-                          title:
-                            type: string
-                          url:
-                            type: string
-                      payment_required:
-                        type: boolean
-                      canceled:
-                        type: boolean
-                      reason_for_cancellation:
-                        x-nullable: true
-                      status:
-                        x-nullable: true
-                      service:
-                        type: object
-                        properties:
-                          title:
-                            type: string
-                          id:
-                            type: string
-                          description:
-                            x-nullable: true
-                          color:
-                            type: string
-                          course:
-                            type: object
-                            properties:
-                              title:
-                                x-nullable: true
-                              id:
-                                x-nullable: true
-                          strength:
-                            type: number
-                          endurance:
-                            type: number
-                          cardio:
-                            type: number
-                          flexibility:
-                            type: number
-                          price:
-                            type: number
-                      service_replacement:
-                        type: object
-                        properties:
-                          title:
-                            type: string
-                          id:
-                            type: string
-                          description:
-                            x-nullable: true
-                      course:
-                        type: object
-                        properties:
-                          id:
-                            type: string
-                          title:
-                            type: string
-                          cycle_period:
-                            type: object
-                            properties:
-                              id:
-                                type: string
-                              title:
-                                type: string
-                              start_date:
-                                type: string
-                              end_date:
-                                type: string
-                          color:
-                            type: string
-                          schedule:
-                            type: object
-                            properties:
-                              rooms:
-                                type: array
-                                items:
-                                  type: object
-                                  properties:
-                                    id:
-                                      type: string
-                                    title:
-                                      type: string
-                                  required:
-                                    - id
-                                    - title
-                              days:
-                                type: array
-                                items:
-                                  type: number
-                              detail:
-                                type: array
-                                items:
-                                  type: object
-                                  properties:
-                                    day:
-                                      type: number
-                                    time:
-                                      type: string
-                                    room:
-                                      type: object
-                                      properties:
-                                        id:
-                                          type: string
-                                        title:
-                                          type: string
-                                  required:
-                                    - day
-                                    - time
-                                    - room
-                      group:
-                        type: object
-                        properties:
-                          title:
-                            type: string
-                          id:
-                            type: string
-                      room:
-                        type: object
-                        properties:
-                          title:
-                            type: string
-                          id:
-                            type: string
-                      room_replacement:
-                        type: object
-                        properties:
-                          title:
-                            type: string
-                          id:
-                            type: string
-                      employee:
-                        type: object
-                        properties:
-                          name:
-                            type: string
-                          id:
-                            type: string
-                          biography:
-                            type: string
-                          awards:
-                            type: string
-                          description:
-                            x-nullable: true
-                          photo:
-                            type: string
-                          position:
-                            type: object
-                            properties:
-                              title:
-                                type: string
-                              id:
-                                type: string
-                      employee_replacement:
-                        type: object
-                        properties:
-                          name:
-                            type: string
-                          id:
-                            type: string
-                          position:
-                            type: object
-                            properties:
-                              title:
-                                type: string
-                              id:
-                                type: string
-                      type:
-                        type: string
-                      capacity:
-                        type: number
-                      start_date:
-                        type: string
-                      start_date_replacement:
-                        type: string
-                      end_date:
-                        type: string
-                      duration:
-                        type: number
-                      commercial:
-                        type: boolean
-                      booking_online:
-                        type: boolean
-                      available_slots:
-                        type: string
-                      booking_window:
-                        x-nullable: true
-                      cost:
-                        type: number
-                      badges:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            title:
-                              type: string
-                            unicode:
-                              type: string
-                      relatives:
-                        type: array
-                        items: {}
+                    $ref: "#/components/schemas/AppointmentObject"
               example:
                 result: true
                 data:
@@ -5461,26 +5113,20 @@ paths:
                       unicode: U+1F3A5
                   relatives: []
         "400":
-          description: Bad Request
-          headers: {}
+          description: Некорректный запрос
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  result:
-                    type: boolean
-                  error:
-                    type: number
-                  error_message:
-                    type: string
-              example:
-                result: false
-                error: 1064
-                error_message: Описание ошибки
+                $ref: "#/components/schemas/BadRequest"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
       summary: Получить информацию о занятии
-      operationId: Получить информацию о занятии
-      description: ""
+      operationId: class_descriptions
+      description: "Метод возвращает информацию о занятии и записи на него клиента."
       tags:
         - Групповые занятия
       parameters:
@@ -5491,13 +5137,6 @@ paths:
           example: 76ab371e3e2f4e6ea1d13cb959e88d57
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121
-          required: false
-          schema:
-            type: string
-          example: 110132e6-ba129-4120-ac33-fcd612380121
         - name: usertoken
           in: header
           description: e.g. 580392-e6ba49428-0ac67fcd-f2180121
@@ -11574,7 +11213,79 @@ paths:
             type: string
           example: 110132e6-ba129-4120-ac33-fcd612380121
 components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    apiKey:
+      type: apiKey
+      in: header
+      name: apikey
+      description: "Ключ приложения (Example: **110132e6-ba129-4120-ac33-fcd612380121**)"
+    userToken:
+      type: apiKey
+      in: header
+      name: usertoken
+      description: Ключ клиента
+    tokenMaster:
+      type: apiKey
+      in: header
+      name: token_master
+      description: Ключ родственника
   schemas:
+    AuthorizationError:
+      description: Ошибка авторизации
+      type: object
+      properties:
+        result:
+          type: boolean
+          description: Результат запроса
+          default: false
+        data:
+          type: string
+      required:
+        - result
+        - data
+    BadRequest:
+      description: Некорректный запрос
+      type: object
+      properties:
+        result:
+          $ref: "#/components/schemas/ResultResponse"
+        error:
+          type: number
+          description: Код ошибки
+        error_message:
+          type: string
+          description: Описание ошибки
+      required:
+        - result
+        - error
+        - error_message
+      example:
+        result: false
+        error: 1063
+        error_message: "Неверный ключ авторизации внешнего приложения"
+    InternalServerError:
+      description: Внутренняя ошибка сервера
+      type: object
+      properties:
+        result:
+           $ref: "#/components/schemas/ResultResponse"
+        error:
+          type: number
+          description: Код ошибки
+        error_message:
+          type: string
+          description: Описание ошибки
+      required:
+        - result
+        - error
+        - error_message
+      example:
+        result: false
+        error: 9999
+        error_message: "Произошла внутренняя ошибка..."
     PaymentLinkStatus:
       description: Статус оплаты заказа
       type: integer
@@ -11617,6 +11328,571 @@ components:
         - passport
         - drivers_license
         - birth_certificate
+
+    ResultResponse:
+      default: true
+      description: Результат запроса
+
+    IDTitle:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ID'
+        title:
+          $ref: '#/components/schemas/Title'
+      required:
+        - id
+        - title
+    IDTitleSortOrder:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ID'
+        title:
+          $ref: '#/components/schemas/Title'
+        sort_order:
+          $ref: '#/components/schemas/SortOrder'
+      required:
+        - id
+        - title
+    ID:
+      description: "Идентификатор объекта"
+      type: string
+      format: uuid
+      example: "689c34d8-79ee-11ec-b13e-f02f7488d897"
+    Title:
+      type: string
+      example: "Наменование элемента"
+      description: "Наименование"
+    SortOrder:
+      type: integer
+      example: 0
+      description: "Индекс сортировки"
+    CourseWithSchedule:
+      type: object
+      description: Информация о секции занятия. Возвращается, только если занятие является секционным
+      properties:
+        id:
+          $ref: '#/components/schemas/ID'
+        title:
+          $ref: '#/components/schemas/Title'
+        cycle_period:
+          $ref: '#/components/schemas/CyclePeriod'
+        color:
+          type: string
+          format: hex-color
+          example: "#FFC0CB"
+        schedule:
+          $ref: '#/components/schemas/CourseSchedule'
+    CyclePeriod:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ID'
+        title:
+          $ref: '#/components/schemas/Title'
+        start_date:
+          description: Дата начала цикла
+          type: string
+          format: date-time
+          example: "2026-02-01T00:00:00"
+        end_date:
+          description: Дата окончания цикла
+          type: string
+          format: date-time
+          example: "2026-02-28T00:00:00"
+      required:
+        - id
+        - title
+        - start_date
+        - end_date
+    CourseSchedule:
+      type: [object, "null"]
+      description: Расписание секции по дням недели (понедельник = 1, воскресенье = 7)
+      properties:
+        rooms:
+          type: array
+          description: Список помещений
+          items:
+            $ref: '#/components/schemas/IDTitle'
+        services:
+          type: array
+          description: Список связанных услуг
+          items:
+              description: Услуга занятия
+              items:
+                $ref: '#/components/schemas/IDTitle'
+        employees:
+          type: array
+          description: Список тренеров
+          items:
+              description: Услуга занятия
+              items:
+                $ref: '#/components/schemas/IDTitle'
+        days:
+          type: array
+          description: Дни недели, в которые проводятся занятия (1 = понедельник, ..., 7 = воскресенье)
+          items:
+            type: integer
+            minimum: 1
+            maximum: 7
+          example: [1, 2, 3, 4, 5]
+        detail:
+          type: array
+          description: Подробное расписание по каждому дню недели
+          items:
+            $ref: '#/components/schemas/ScheduleDetailItem'
+      required:
+        - rooms
+        - days
+        - detail
+    ScheduleDetailItem:
+      type: object
+      properties:
+        day:
+          type: integer
+          description: День недели (1–7)
+          minimum: 1
+          maximum: 7
+          example: 1
+        time:
+          type: string
+          description: Время начала занятия (формат HH:MM)
+          example: "15:30"
+        room:
+          description: Помещение занятия
+          $ref: '#/components/schemas/IDTitle'
+        service:
+          description: Услуга занятия
+          $ref: '#/components/schemas/IDTitle'
+        employee:
+          description: Тренер
+          $ref: '#/components/schemas/IDTitle'
+        resources:
+          type: [array, "null"]
+          description: Список требуемых ресурсов
+          items:
+            $ref: '#/components/schemas/IDTitle'
+      required:
+        - day
+        - time
+    BookingWindow:
+      type: [object, "null"]
+      properties:
+        start_date_time:
+          description: Дата начала интервала (yyyy-mm-dd HH:MM)
+          type: string
+          format: date-time
+          example: "2026-02-01T00:00:00"
+        end_date_time:
+          description: Дата окончания интервала (yyyy-mm-dd HH:MM)
+          type: string
+          format: date-time
+          example: "2026-02-01T00:00:00"
+    Badges:
+      type: array
+      items:
+        type: object
+        properties:
+          title:
+            $ref: '#/components/schemas/Title'
+          unicode:
+            description: unicode бейджа
+            type: string
+    ServiceSchedule:
+      description: Структура услуги
+      type: object
+      properties:
+        title:
+          $ref: '#/components/schemas/Title'
+        id:
+          $ref: '#/components/schemas/ID'
+        description:
+          description: Описание услуги
+          type: string
+        color:
+          description: Цвет услуги
+          type: string
+        course:
+          description: Подразделение услуги
+          $ref: '#/components/schemas/IDTitle'
+        strength:
+          description: "Физические показалетели: Сила"
+          type: number
+        endurance:
+          description: "Физические показалетели: Выносливость"
+          type: number
+        cardio:
+          description: "Физические показалетели: Кардио"
+          type: number
+        flexibility:
+          description: "Физические показалетели: Гибкость"
+          type: number
+        sort_index:
+          description: Индекс сортировки
+          type: [number, "null"]
+        pictures:
+          description: Массив изображений
+          oneOf:
+            - type: array
+              items:
+                type: string
+                format: url
+              description: Массив изображений
+            - type: "null"
+        price:
+          description: Цена услуги
+          type: [number, "null"]
+    PaginationResponse:
+      description: Структура пагинации
+      type: object
+      properties:
+        requested_offset:
+          description: Смещение выгрузки
+          type: number
+        page_size:
+          description: Размер выгрузки
+          type: number
+        total_results:
+          description: Общее количество объектов
+          type: number
+    StartDate:
+      description: Дата начала (yyyy-mm-dd HH:MM)
+      type: string
+      format: date-time
+      example: "2026-02-01T00:00:00"
+    EndDate:
+      description: Дата окончания (yyyy-mm-dd HH:MM)
+      type: string
+      format: date-time
+      example: "2026-02-01T00:00:00"
+    AppointmentObject:
+      description: Структура занятия
+      type: object
+      properties:
+        appointment_id:
+          $ref: '#/components/schemas/ID'
+        online:
+          type: boolean
+          description: Признак онлайн тренировки
+        url_online_training:
+          $ref: '#/components/schemas/UrlOnlineTraining'
+        already_booked:
+          type: [boolean, "null"]
+          description: Признак записи клиента на занятие
+        payment_required:
+          description: Признак необходимости основания для записи
+          type: boolean
+        canceled:
+          type: boolean
+          description: Признак отмены занятия
+        reason_for_cancellation:
+          type: [string, "null"]
+          description: Причина отмены занятия
+        status:
+          description: >-
+            Статус занятия (null когда клиент не записан):
+            <ul> <li>"temporarily_reserved_need_payment" - Временная бронь </li>
+            <li> "reserved" - Записан без оплаты </li>
+            <li> "reserved_and_payed" - Записан и оплачено </li>
+          type: [string, "null"]
+        service:
+          $ref: '#/components/schemas/ServiceSchedule'
+        service_replacement:
+          description: Услуга до изменения (null при отключенном отображение изменений в расписании)
+          type: object
+          properties:
+            title:
+              $ref: '#/components/schemas/Title'
+            id:
+              $ref: '#/components/schemas/ID'
+            description:
+              description: Описание услуги
+              oneOf:
+                - type: string
+                - type: "null"
+        group:
+          description: Группа номенклатуры
+          $ref: '#/components/schemas/IDTitle'
+        room:
+          description: Помещение занятия
+          $ref: '#/components/schemas/RoomObject'
+        room_replacement:
+          description: Помещение до изменения (null при отключенном отображение изменений в расписании)
+          $ref: '#/components/schemas/IDTitle'
+        resources:
+          $ref: '#/components/schemas/ResourcesObject'
+        resources_title:
+          description: Наименование ресурсов
+        employee:
+          $ref: '#/components/schemas/EmployeeObject'
+        assistant:
+          description: Ассистент занятия
+          $ref: '#/components/schemas/EmployeeSchedule'
+        employee_replacement:
+          $ref: '#/components/schemas/EmployeeSchedule'
+        type:
+          $ref: '#/components/schemas/TypeAppointment'
+        start_date:
+          $ref: '#/components/schemas/StartDate'
+        start_date_replacement:
+          $ref: '#/components/schemas/StartDate'
+        end_date:
+          $ref: '#/components/schemas/EndDate'
+        duration:
+          description: Продолжительность занятия в минутах
+          type: number
+        commercial:
+          description: Коммерческий класс
+          type: boolean
+        booking_online:
+          description: Флаг предварительной записи (если true, то можно записаться на занятие)
+          type: boolean
+        booking_window:
+          description: Интервалы онлайн записи на занятие
+          oneOf:
+            - type: object
+            - type: "null"
+          properties:
+            start_date_time:
+              description: Дата время начала открытия онлайн записи на занятие
+              $ref: '#/components/schemas/StartDate'
+            end_date_time:
+              description: Дата время закрытия онлайн записи на занятие
+              $ref: '#/components/schemas/EndDate'
+        cost:
+          description: Цена услуги
+          type: number
+        count:
+          description: Количество услуг
+          default: 1
+          type: number
+        badges:
+          $ref: '#/components/schemas/Badges'
+        course_activity:
+          description: Признак секционного занятия
+          type: boolean
+        available_slots:
+          description: Количество свободных мест в занятии ("unlimited" - неограничено). Возвращается только в групповых занятиях
+          oneOf:
+            - type: string
+            - type: "null"
+        capacity:
+          description: Количество мест в занятии. Возвращается только в групповых занятиях
+          oneOf:
+            - type: string
+            - type: "null"
+        waiting_list_client_status:
+          $ref: '#/components/schemas/WaitingListClientStatus'
+        waiting_list_message:
+          $ref: '#/components/schemas/WaitingListMessage'
+        waiting_list_record_id:
+          $ref: '#/components/schemas/WaitingListRecordId'
+        course:
+          $ref: '#/components/schemas/CourseWithSchedule'
+        relatives:
+          description: Массив родственников
+          oneOf:
+            - type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    $ref: '#/components/schemas/ID'
+                  name:
+                    $ref: '#/components/schemas/Title'
+                  already_booked:
+                    description: Родственник записан на занятие
+                    type: boolean
+                  status:
+                    description: >-
+                      Статус записи родственника
+                      <ul> <li> "temporarily_reserved_need_payment" </li>
+                      <li> "reserved" </li>
+                      <li> "reserved_and_payed" </li> </ul>
+                    type: string
+                  waiting_list_client_status:
+                    $ref: '#/components/schemas/WaitingListClientStatus'
+                  waiting_list_message:
+                    $ref: '#/components/schemas/WaitingListMessage'
+                  waiting_list_record_id:
+                    $ref: '#/components/schemas/WaitingListRecordId'
+              description: Массив изображений
+            - type: "null"
+
+    WaitingListRecordId:
+      description: Идентификатор записи пользователя. Null - лист ожидания отключен
+      oneOf:
+        - type: string
+        - type: "null"
+    WaitingListMessage:
+      description: Сообщение для пользователя. Null - лист ожидания отключен
+      oneOf:
+        - type: string
+        - type: "null"
+    WaitingListClientStatus:
+      description: >-
+        Статус клиента в листе ожидания
+        <ul> <li> "record_confirmation" - Подтверждение записи</li>
+        <li> "cancel_waiting_list_record" - Возможность отмены из листа ожидания (если клиент записан) </li>
+        <li> "adding_to_waiting_list" - Возможность записаться в лист ожидания </li>
+        <li> null - Лист ожидания отключен </li></ul>
+      oneOf:
+        - type: string
+        - type: "null"
+    ResourcesObject:
+      description: Ресурсы помещения в занятии
+      oneOf:
+        - type: array
+          items:
+            type: object
+        - type: "null"
+      items:
+        $ref: '#/components/schemas/IDTitle'
+    TypeAppointment:
+      description: >-
+        Тип занятия
+        <ul> <li> classes - групповое </li>
+        <li> personal - персональное </li>
+        <li> rental - аренда </li>
+        </ul>
+      type: string
+    EmployeeObject:
+      description: Структура сотрудника
+      type: object
+      properties:
+        name:
+          description: "ФИО сотрудника"
+          type: string
+          example: "Иванов Иван Иванович"
+        id:
+          $ref: '#/components/schemas/ID'
+        description:
+          description: Описание сотрудника
+          oneOf:
+            - type: string
+            - type: "null"
+        photo:
+          description: Изображение сотрдуника
+          oneOf:
+            - type: string
+              format: url
+            - type: "null"
+        position:
+          description: Должность сотрдуника
+          $ref: '#/components/schemas/IDTitle'
+        biography:
+          description: Биография сотрудника
+          oneOf:
+            - type: string
+            - type: "null"
+        awards:
+          description: Регалии сотрудника
+          oneOf:
+            - type: string
+            - type: "null"
+        ratings:
+          $ref: '#/components/schemas/EmployeeRatings'
+        reviews:
+          $ref: '#/components/schemas/EmployeeReviews'
+    EmployeeRatings:
+      description: Оценки сотрудника
+      oneOf:
+        - type: object
+        - type: "null"
+      properties:
+        rating:
+          description: Средняя оценка
+          type: number
+        count:
+          description: Количество оценок
+          type: integer
+        max_rating:
+          description: Максимальный бал оценок (5 или 10)
+          default: 5
+          type: integer
+    EmployeeReviews:
+      description: Комментарии сотрудника
+      oneOf:
+        - type: object
+        - type: "null"
+      properties:
+        ratings:
+          description: Оценка
+          type: number
+        review:
+          description: Комментарий оценки
+          type: string
+        client_name:
+          description: Наименование клиента
+          type: string
+    EmployeeSchedule:
+      description: Сотрудник занятия
+      type: object
+      properties:
+        name:
+          description: "ФИО сотрудника"
+          type: string
+          example: "Иванов Иван Иванович"
+        id:
+          $ref: '#/components/schemas/ID'
+        position:
+          description: Должность сотрудника
+          $ref: '#/components/schemas/IDTitle'
+        photo:
+          description: Ссылка на фото сотрудника
+          type: string
+    RoomObject:
+      description: Структура помещения
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ID'
+        title:
+          $ref: '#/components/schemas/Title'
+        description:
+          description: Описание помещения
+          type: string
+        photo:
+          description: Ссылка на основное изображение
+          format: url
+          oneOf:
+            - type: string
+            - type: "null"
+        capacity:
+          description: Емкость помещения
+          oneOf:
+            - type: integer
+            - type: "null"
+        area:
+          description: Площадь помещения
+          oneOf:
+            - type: number
+            - type: "null"
+        pictures:
+          description: Массив изображений
+          oneOf:
+            - type: array
+              items:
+                type: string
+                format: url
+              description: Массив изображений
+            - type: "null"
+        sort_order:
+          description: Индекс сортировки
+          oneOf:
+            - type: integer
+            - type: "null"
+    UrlOnlineTraining:
+      description: Структура данных для онлайн трансляции
+      type: object
+      properties:
+        title:
+          description: Наименование ссылки
+          type: string
+        url:
+          description: Ссылка
+          type: string
     cart:
       type: object
       required:
