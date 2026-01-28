@@ -1476,6 +1476,11 @@ paths:
           description: Конец периода в формате iso8601. Автоматически берется конец дня
           schema:
             type: string
+        - name: ticket_id
+          in: query
+          description: Идентификатор пакета услуг
+          schema:
+            type: string
         - name: apikey
           in: header
           description: e.g. 147556
@@ -1604,6 +1609,11 @@ paths:
         - name: end_date
           in: query
           description: Конец периода в формате iso8601. Автоматически берется конец дня
+          schema:
+            type: string
+        - name: ticket_id
+          in: query
+          description: Идентификатор пакета услуг
           schema:
             type: string
         - name: apikey
