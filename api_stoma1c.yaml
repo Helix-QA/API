@@ -424,6 +424,9 @@ paths:
                         sort_index:
                           type: integer
                           description: Индекс сортировки (для порядка отображения)
+                        code_nmu:
+                          type: string
+                          description: Код номенклатуры медицинских услуг
               example:
                 Parameters:
                   - id: 140df5b4-5a58-11e7-82e7-0050568b5c8d
@@ -444,8 +447,9 @@ paths:
                       - af41caf5-5b0d-11e7-82e7-0050568b5c8d
                       - bd9d179c-5b0d-11e7-82e7-0050568b5c8d
                     sort_index: 0
+                    code_nmu: "A02.07.004"
       summary: Получить список доступных для записи услуг
-      operationId: Получить список доступных для записи услуг
+      operationId: book_services
       description: |-
         Возвращается массив доступных для записи услуг.
 
@@ -507,18 +511,43 @@ paths:
                           type: string
                           description: ФИО сотрудника
                         specialization:
+                          description: Данные должности сотрудника
                           type: object
                           properties:
                             id:
                               type: string
                               format: uuid
-                              description: ID специализации
+                              description: ID должности
                             title:
                               type: string
-                              description: Название специализации
+                              description: Название должности
+                            code_oid:
+                              type: string
+                              description: Код ОИД
                           required:
                             - id
                             - title
+                        specializations:
+                          description: Данные специализаций сотрудника
+                          type: array
+                          items:
+                            properties:
+                              id:
+                                type: string
+                                format: uuid
+                                description: ID специализации
+                              title:
+                                type: string
+                                description: Название специализации
+                              code_oid:
+                                type: string
+                                description: Код ОИД
+                            required:
+                              - id
+                              - title
+                        snils:
+                          type: string
+                          description: СНИЛС сотрудника
                         weight:
                           type: integer
                           description: Вес для сортировки (чем меньше — тем выше в списке)
@@ -595,6 +624,7 @@ paths:
                     specialization:
                       id: 98340848-0658-11e7-a757-001d7d5c01d0
                       title: Косметолог
+                      code_oid: 100
                     weight: 0
                     information: ""
                     avatar: http://localhost/Spa3/hs/api/files/123456/24ed443d-9a02-11e7-8931-2c4d546557dd-94953.jpg
@@ -602,6 +632,11 @@ paths:
                       - 2025-12-29T00:00:00
                       - 2025-12-30T00:00:00
                       - 2025-12-31T00:00:00
+                    specializations:
+                      - id: a19ee94b-1c00-11ef-b1bf-f02f7488d897
+                        title: "Пародонтология"
+                        code_oid: 210
+                    snils: "123-456-789 12"
                     ratings:
                       - rating_parameter:
                           id: 50a4f2a5-cdc4-11e7-893b-2c4d546557dd
@@ -619,6 +654,12 @@ paths:
                     specialization:
                       id: 12345678-abcd-efgh-ijkl-123456789012
                       title: Терапевт
+                      code_oid: 124
+                    specializations:
+                      - id: a19ee94b-1c00-11ef-b1bf-f02f7488d897
+                        title: "Пародонтология"
+                        code_oid: 210
+                    snils: "123-456-789 12"
                     weight: 1
                     information: Врач высшей категории
                     avatar: ""
@@ -631,7 +672,7 @@ paths:
                   code: 0
                   message: null
       summary: Получить список доступных для записи сотрудников
-      operationId: Получить список доступных для записи сотрудников
+      operationId: book_staff
       description: |-
         Возвращается массив доступных для записи врача.
 
