@@ -240,7 +240,7 @@ paths:
                             description: Имя клиента
                           second_name:
                             type: string
-                            description: 	Отчество клиента
+                            description: Отчество клиента
                           email:
                             type: string
                             description: Адрес электронной почты клиента
@@ -346,12 +346,12 @@ paths:
                 $ref: "#/components/schemas/InternalServerError"
       summary: Установка пароля {password}
       operationId: password
-      description:  Метод выполняет установку пароля при предоставлении
-                    верного токена смены пароля `pass_token`. В случае
-                    отсутствия клиента в базе 1С по номеру телефона, `user_token`
-                    и `client` не возвращаются.
-                      Атрибут pass_token получается в при помощи методов [Подтверждение номера телефона {confirm_phone}](#operation/confirm_phone),
-                     либо  [Токен установки пароля {pass_token}](#operation/pass_token)
+      description: Метод выполняет установку пароля при предоставлении
+        верного токена смены пароля `pass_token`. В случае
+        отсутствия клиента в базе 1С по номеру телефона, `user_token`
+        и `client` не возвращаются.
+        Атрибут pass_token получается в при помощи методов [Подтверждение номера телефона {confirm_phone}](#operation/confirm_phone),
+        либо  [Токен установки пароля {pass_token}](#operation/pass_token)
       tags:
         - Авторизация
 
@@ -421,9 +421,10 @@ paths:
                 $ref: "#/components/schemas/InternalServerError"
       summary: Авторизация {auth_client}
       operationId: auth_client
-      description: "Метод предназначен для авторизации клиента по номеру телефона и паролю,
-                    взамен клиент получает временный ключ `user_token` для инициализация клиента
-                    во время произведения операций."
+      description:
+        "Метод предназначен для авторизации клиента по номеру телефона и паролю,
+        взамен клиент получает временный ключ `user_token` для инициализация клиента
+        во время произведения операций."
       tags:
         - Авторизация
       requestBody:
@@ -489,10 +490,11 @@ paths:
                 $ref: "#/components/schemas/InternalServerError"
       summary: Регистрация и авторизация {reg_and_auth_client}
       operationId: reg_and_auth_client
-      description: Метод предназначен для авторизации клиента по номеру телефона и паролю,
-                   взамен клиент получает ключ `user_token` для инициализация клиента во время
-                   произведения операций. Если клиент с переданным номером не найден в базе 1С,
-                   будет создан новый клиент.
+      description:
+        Метод предназначен для авторизации клиента по номеру телефона и паролю,
+        взамен клиент получает ключ `user_token` для инициализация клиента во время
+        произведения операций. Если клиент с переданным номером не найден в базе 1С,
+        будет создан новый клиент.
       tags:
         - Авторизация
       requestBody:
@@ -724,8 +726,9 @@ paths:
                 $ref: "#/components/schemas/InternalServerError"
       summary: Согласие на получение сообщений рекламного характера {receive_promotional_messages}
       operationId: receive_promotional_messages
-      description: Метод возвращает html код, содержащий форму с описанием соглашения
-                   на получение сообщений рекламного характера.
+      description:
+        Метод возвращает html код, содержащий форму с описанием соглашения
+        на получение сообщений рекламного характера.
       tags:
         - Авторизация
   /hs/api/v3/pass_token/:
@@ -767,13 +770,13 @@ paths:
       summary: Токен установки пароля {pass_token}
       operationId: pass_token
       description: |
-                   Метод возвращает токен для установки или смены пароля.Цифровая подпись
-                   sing представляет собой хеш, полученный при помощи алгоритма хеширования SHA256.
-                   Цифровая подпись состоит из переданных данных и имеет вид:
-                   "phone: 79876543210; key: IjRjlaL",
-                   где:
-                   - phone - номер телефона,
-                   - key - секретный ключ из настроек внешней системы.
+        Метод возвращает токен для установки или смены пароля.Цифровая подпись
+        sing представляет собой хеш, полученный при помощи алгоритма хеширования SHA256.
+        Цифровая подпись состоит из переданных данных и имеет вид:
+        "phone: 79876543210; key: IjRjlaL",
+        где:
+        - phone - номер телефона,
+        - key - секретный ключ из настроек внешней системы.
       tags:
         - Авторизация
       parameters:
@@ -909,14 +912,14 @@ paths:
       summary: Запрос на подтверджения номера телефона {auth_request}
       operationId: auth_request
       description: Осуществляется подтверждение номера телефона клиента.
-                   При вызове метода будет сформирован запрос на подтверждения номера телефона.
-                    Клиенту необходимо написать сообщение в мессенджер, либо позвонить по указанному номеру.
-                    В параметре __link__ возвращается ссылка по которой необходимо перейти и подтвердить номер.
-                    Атрибут __method__ определяет каким именно способом будет происходить подтверждение.
-                    Варианты авторизации получаются в методе [Методы авторизации](#operation/auth_methods")
-                    В ответе в `outgoing_id` в
-                    зависимости от переданого атрибута __method__ будет возвращаться номер телефона,
-                    либо идентификатор бота в telegtam
+        При вызове метода будет сформирован запрос на подтверждения номера телефона.
+        Клиенту необходимо написать сообщение в мессенджер, либо позвонить по указанному номеру.
+        В параметре __link__ возвращается ссылка по которой необходимо перейти и подтвердить номер.
+        Атрибут __method__ определяет каким именно способом будет происходить подтверждение.
+        Варианты авторизации получаются в методе [Методы авторизации](#operation/auth_methods")
+        В ответе в `outgoing_id` в
+        зависимости от переданого атрибута __method__ будет возвращаться номер телефона,
+        либо идентификатор бота в telegtam
       tags:
         - Авторизация
       requestBody:
@@ -984,12 +987,13 @@ paths:
                 $ref: "#/components/schemas/InternalServerError"
       summary: Токен клиента при исходящей авторизации {auth_token}
       operationId: auth_token
-      description: "Метод возвращает токен клиента, если он подтвердил свой номер телефона.
-                    В случае, если номер телефона не подтвержден вернется ошибка с кодом 4034.
-                    Атрибут __method__ определяет каким именно способом будет происходить подтверждение.
-                    Варианты авторизации получаются в методе
+      description:
+        "Метод возвращает токен клиента, если он подтвердил свой номер телефона.
+        В случае, если номер телефона не подтвержден вернется ошибка с кодом 4034.
+        Атрибут __method__ определяет каким именно способом будет происходить подтверждение.
+        Варианты авторизации получаются в методе
 
-                    Возвращаемый объект содержит следующие поля:"
+        Возвращаемый объект содержит следующие поля:"
       tags:
         - Авторизация
       requestBody:
@@ -1135,8 +1139,8 @@ paths:
                             type: string
                             description: АдресЭП менеджера
                       photo:
-                            type: string
-                            description: Изображение клиента (base64)
+                        type: string
+                        description: Изображение клиента (base64)
                       appointments_to_rate:
                         type: array
                         description: Массив неоцененных занятий клиента
@@ -1155,13 +1159,13 @@ paths:
                               properties:
                                 id:
                                   type: string
-                                  description: 	Идентификатор тренера
+                                  description: Идентификатор тренера
                                 name:
                                   type: string
-                                  description: 	Наименование тренера
+                                  description: Наименование тренера
                                 tips_url:
                                   type: string
-                                  description: 	URL чаевых тренера
+                                  description: URL чаевых тренера
                             start_date:
                               type: string
                               description: Дата и время начала занятия
@@ -1894,7 +1898,7 @@ paths:
                           description: "Дата и время окончания занятия yyyy-mm-dd HH:MM"
                         duration:
                           type: number
-                          description: 	Продолжительность занятия в минутах
+                          description: Продолжительность занятия в минутах
                         commercial:
                           type: boolean
                           description: Коммерческий класс
@@ -1916,22 +1920,22 @@ paths:
                           type: boolean
                           description: Тренировка онлайн
                         cost:
-                            type: integer
-                            description: Стоимость занятия
+                          type: integer
+                          description: Стоимость занятия
                         resources:
-                            type: array
-                            description: Массив ресурсов помещений (возвращается при type = rental)
-                            properties:
-                                  title:
-                                    $ref: "#/components/schemas/Title"
-                                  id:
-                                    $ref: "#/components/schemas/ID"
+                          type: array
+                          description: Массив ресурсов помещений (возвращается при type = rental)
+                          properties:
+                            title:
+                              $ref: "#/components/schemas/Title"
+                            id:
+                              $ref: "#/components/schemas/ID"
                         resources_title:
-                            type: string
-                            description: 	Наименование ресурсов
+                          type: string
+                          description: Наименование ресурсов
                         url_online_training:
-                            type: string
-                            description: Ссылка на тренировку
+                          type: string
+                          description: Ссылка на тренировку
                   pagination_response:
                     type: object
                     description: Структура пагинации
@@ -1992,9 +1996,9 @@ paths:
                   page_size: 1
                   total_results: 15
                 online:
-                      title: Истина
+                  title: Истина
                 url_online_training:
-                      title: Ссылка
+                  title: Ссылка
 
         "400":
           description: Некорректный запрос
@@ -2192,9 +2196,9 @@ paths:
                           description: Идентификатор посещения
                           $ref: "#/components/schemas/ID"
                         start_date:
-                          $ref: '#/components/schemas/StartDate'
+                          $ref: "#/components/schemas/StartDate"
                         end_date:
-                          $ref: '#/components/schemas/EndDate'
+                          $ref: "#/components/schemas/EndDate"
                         is_visit:
                           description: Посещение состоялось (клиент находился в клубе)
                           type: boolean
@@ -2214,9 +2218,9 @@ paths:
                                 description: "Статус занятия: <ul><li> planned - запланировано </li><li> canceled - отменено </li><li> ended - проведено</li><li>passes - проводится</li></ul>"
                                 type: string
                               start_date:
-                                $ref: '#/components/schemas/StartDate'
+                                $ref: "#/components/schemas/StartDate"
                               end_date:
-                                $ref: '#/components/schemas/EndDate'
+                                $ref: "#/components/schemas/EndDate"
                               duration:
                                 description: Продолжительность занятия в минутах
                                 type: number
@@ -2228,7 +2232,7 @@ paths:
                                 type: string
                               service:
                                 description: Услуга занятия
-                                $ref: '#/components/schemas/IDTitle'
+                                $ref: "#/components/schemas/IDTitle"
                               room:
                                 description: Помещение
                                 $ref: "#/components/schemas/IDTitle"
@@ -2241,15 +2245,15 @@ paths:
                                     type: string
                                     example: "Иванов Иван Иванович"
                                   id:
-                                    $ref: '#/components/schemas/ID'
+                                    $ref: "#/components/schemas/ID"
                                   position:
                                     description: Должность сотрудника
-                                    $ref: '#/components/schemas/IDTitle'
+                                    $ref: "#/components/schemas/IDTitle"
                               resources:
                                 description: Ресурсы помещения в занятии
                                 type: [array, "null"]
                                 items:
-                                  $ref: '#/components/schemas/IDTitle'
+                                  $ref: "#/components/schemas/IDTitle"
                   club:
                     description: Структура клуба
                     $ref: "#/components/schemas/IDTitle"
@@ -2561,9 +2565,9 @@ paths:
                       type:
                         type: string
                         description: |
-                         Тип оборудования:
-                         - default
-                         - pocketkey
+                          Тип оборудования:
+                          - default
+                          - pocketkey
                 example:
                   result: true
                   data:
@@ -2571,11 +2575,11 @@ paths:
                     valid_time: 20
                     valid_thru: "2023-08-18T09:22:14"
         "400":
-            description: Некорректный запрос
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/BadRequest"
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -2638,8 +2642,8 @@ paths:
       summary: Создать лид
       operationId: Создать лид
       description: |
-       Метод создает заявку и возвращает идентификатор созданной заявки `lead_id`.
-        При передаче `lead_id` данные в заявке будут обновлены.
+        Метод создает заявку и возвращает идентификатор созданной заявки `lead_id`.
+         При передаче `lead_id` данные в заявке будут обновлены.
       tags:
         - Лиды
       requestBody:
@@ -2775,7 +2779,7 @@ paths:
                           items: {}
                         freeze_list:
                           type: array
-                          description: 	Массив структур будущих заморозок. Возвращается только для членств и пакетов услуг
+                          description: Массив структур будущих заморозок. Возвращается только для членств и пакетов услуг
                           items:
                             type: object
                             properties:
@@ -2875,7 +2879,7 @@ paths:
                                 - "not_active" - Договор будет активирован после активации членства
                             payment_date:
                               type: string
-                              description: 	Дата следующего платежа (yyyy-mm-dd). Если договор закрыт вернет null
+                              description: Дата следующего платежа (yyyy-mm-dd). Если договор закрыт вернет null
                             payment_amount:
                               type: number
                               description: Сумма следующего платежа. Если договор закрыт вернет null
@@ -4437,34 +4441,35 @@ paths:
                 type: object
                 properties:
                   result:
-                    type: boolean
+                    $ref: "#/components/schemas/ResultResponse"
                   data:
                     type: array
                     items:
                       type: object
                       properties:
                         id:
-                          type: string
+                          $ref: "#/components/schemas/ID"
                         name:
-                          type: string
+                          description: ФИО сотрудника
+                          $ref: "#/components/schemas/Title"
                         position:
-                          type: object
-                          properties:
-                            title:
-                              type: string
-                            id:
-                              type: string
+                          description: Должность сотрудника
+                          $ref: "#/components/schemas/IDTitle"
                         department:
-                          type: object
-                          properties:
-                            title:
-                              x-nullable: true
-                            id:
-                              x-nullable: true
+                          description: Подразделение
+                          $ref: "#/components/schemas/IDTitle"
                         photo:
+                          description: Ссылка на фото
                           x-nullable: true
                         favourite:
+                          description: Флаг любимого тренера (клиент часто занимается с этим тренером)
                           type: boolean
+                        price:
+                          description: Цена за 1 услугу (расчитывается, если выгружаются сотрудники в пределах дня)
+                          type: number
+                        cost:
+                          description: Стоимость с учетом интервала (расчитывается, если выгружаются сотрудники в пределах дня)
+                          type: number
                       required:
                         - id
                         - name
@@ -4495,24 +4500,38 @@ paths:
                       id: null
                     photo: null
                     favourite: true
-      summary: Получить тренеров для записи
-      operationId: Получить тренеров для записи
-      description: ""
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Тренеры для записи {appointment_trainers}
+      operationId: appointment_trainers
+      description: "Метод возвращает массив структур сотрудников"
       tags:
         - Персональные занятия
       parameters:
+        - name: club_id
+          in: query
+          description: Идентификатор структурной единицы
+          required: true
+          schema:
+            type: string
         - name: start_date
           in: query
-          description: >-
-            Дата начала периода (если не передана, то будет использоваться
-            текущая дата)
+          description: Дата начала периода (если не передана, то будет использоваться текущая дата)
           schema:
             type: string
         - name: end_date
           in: query
-          description: >-
-            Дата окончания периода (если не передана, то будет использоваться
-            текущая дата плюс месяц)
+          description: Дата окончания периода (если не передана, то будет использоваться текущая дата плюс месяц)
           schema:
             type: string
         - name: service_id
@@ -4520,27 +4539,14 @@ paths:
           description: Идентификатор услуги
           schema:
             type: string
-        - name: club_id
-          in: query
-          description: Идентификатор структурной единицы
-          required: true
-          schema:
-            type: string
         - name: direction_id
           in: query
           description: Идентификатор программы занятий
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121
-          required: false
-          schema:
-            type: string
-          example: 110132e6-ba129-4120-ac33-fcd612380121
         - name: usertoken
           in: header
-          description: e.g. 580392-e6ba49428-0ac67fcd-f2180121
+          description: Ключ клиента
           required: false
           schema:
             type: string
@@ -5195,7 +5201,7 @@ paths:
                       type: object
                       properties:
                         appointment_id:
-                          $ref: '#/components/schemas/ID'
+                          $ref: "#/components/schemas/ID"
                         already_booked:
                           type: [boolean, "null"]
                           description: Признак записи клиента на занятие
@@ -5218,36 +5224,36 @@ paths:
                           type: string
                           description: "Емкость занятия (-1: Емкость скрыта)"
                         course:
-                          $ref: '#/components/schemas/CourseWithSchedule'
+                          $ref: "#/components/schemas/CourseWithSchedule"
                         course_activity:
                           type: boolean
                           description: Признак секционного занятия
                         service:
                           description: Услуга занятия
-                          $ref: '#/components/schemas/ServiceSchedule'
+                          $ref: "#/components/schemas/ServiceSchedule"
                         service_replacement:
                           description: Услуга до изменения (null при отключенном отображение изменений в расписании)
-                          $ref: '#/components/schemas/IDTitle'
+                          $ref: "#/components/schemas/IDTitle"
                         group:
                           description: Группа услуги занятия
-                          $ref: '#/components/schemas/IDTitle'
+                          $ref: "#/components/schemas/IDTitle"
                         room:
                           description: Помещение занятия
-                          $ref: '#/components/schemas/IDTitleSortOrder'
+                          $ref: "#/components/schemas/IDTitleSortOrder"
                         room_replacement:
                           description: Помещение до изменения (null при отключенном отображение изменений в расписании)
-                          $ref: '#/components/schemas/IDTitle'
+                          $ref: "#/components/schemas/IDTitle"
                         resources:
-                          $ref: '#/components/schemas/ResourcesObject'
+                          $ref: "#/components/schemas/ResourcesObject"
                         resources_title:
                           type: string
                           description: Наименование ресурсов через запятую
                         direction:
                           description: Направление занятия
-                          $ref: '#/components/schemas/IDTitle'
+                          $ref: "#/components/schemas/IDTitle"
                         employee:
                           description: Сотрудник занятия
-                          $ref: '#/components/schemas/EmployeeSchedule'
+                          $ref: "#/components/schemas/EmployeeSchedule"
                         assistant:
                           type: object
                           description: Ассистент занятия
@@ -5257,7 +5263,7 @@ paths:
                               type: string
                               example: "Иванов Иван Иванович"
                             id:
-                              $ref: '#/components/schemas/ID'
+                              $ref: "#/components/schemas/ID"
                         employee_replacement:
                           type: object
                           properties:
@@ -5266,10 +5272,10 @@ paths:
                               type: string
                               example: "Иванов Иван Иванович"
                             id:
-                              $ref: '#/components/schemas/ID'
+                              $ref: "#/components/schemas/ID"
                             position:
                               description: Должность сотрудника
-                              $ref: '#/components/schemas/IDTitle'
+                              $ref: "#/components/schemas/IDTitle"
                         type:
                           description: "Тип занятия"
                           default: "classes"
@@ -5281,12 +5287,12 @@ paths:
                           description: Количество свободных мест
                           type: number
                         start_date:
-                          $ref: '#/components/schemas/StartDate'
+                          $ref: "#/components/schemas/StartDate"
                         start_date_replacement:
                           description: Дата начала занятия до изменений (null при отключенном отображение изменений в расписании )
-                          $ref: '#/components/schemas/StartDate'
+                          $ref: "#/components/schemas/StartDate"
                         end_date:
-                          $ref: '#/components/schemas/EndDate'
+                          $ref: "#/components/schemas/EndDate"
                         duration:
                           description: Длительность занятия в минутах
                           type: number
@@ -5297,9 +5303,9 @@ paths:
                           description: Флаг предварительной записи (**true** - бронирование занятия доступно)
                           type: boolean
                         booking_window:
-                          $ref: '#/components/schemas/BookingWindow'
+                          $ref: "#/components/schemas/BookingWindow"
                         badges:
-                          $ref: '#/components/schemas/Badges'
+                          $ref: "#/components/schemas/Badges"
                         use_waiting_list:
                           description: Возможна запись в лист ожидания
                           type: boolean
@@ -6334,7 +6340,7 @@ paths:
                                 $ref: "#/components/schemas/IDTitle"
                               included_resources:
                                 type: array
-                                items: {$ref: "#/components/schemas/IDTitle"}
+                                items: { $ref: "#/components/schemas/IDTitle" }
                             required:
                               - resource
                               - included_resources
@@ -10538,11 +10544,11 @@ paths:
                         status:
                           type: string
                           description: |
-                                    Статус секции:
-                                    - "planned" - планируется
-                                    - "announced" - набирается
-                                    - "active" - активна
-                                    - "closed" - закрыта
+                            Статус секции:
+                            - "planned" - планируется
+                            - "announced" - набирается
+                            - "active" - активна
+                            - "closed" - закрыта
                         already_booked:
                           type: boolean
                           description: Клиент уже записан в секцию
@@ -10560,7 +10566,7 @@ paths:
                           $ref: "#/components/schemas/IDTitle"
                           description: Структура уровня подготовки
                         age:
-                          $ref: '#/components/schemas/CourseAge'
+                          $ref: "#/components/schemas/CourseAge"
                         capacity:
                           type: number
                           description: Ёмкость секции
@@ -10589,12 +10595,12 @@ paths:
                         record_status:
                           type: string
                           description: |
-                                      Статус записи клиента:
-                                      - "buy" - "купить"
-                                      - "send_application" - "отправить заявку"
-                                      - "need_to_pay" - "необходимо оплатить"
-                                      - "application_approval" - "одобрение заявки"
-                                      - "recorded" - "вы записаны"
+                            Статус записи клиента:
+                            - "buy" - "купить"
+                            - "send_application" - "отправить заявку"
+                            - "need_to_pay" - "необходимо оплатить"
+                            - "application_approval" - "одобрение заявки"
+                            - "recorded" - "вы записаны"
                         description:
                           type: string
                           description: Описание секции
@@ -10614,12 +10620,12 @@ paths:
                             record_status:
                               type: string
                               description: |
-                                          Статус записи родственника:
-                                          - "buy" - "купить"
-                                          - "send_application" - "отправить заявку"
-                                          - "need_to_pay" - "необходимо оплатить"
-                                          - "application_approval" - "одобрение заявки"
-                                          - "recorded" - "вы записаны"
+                                Статус записи родственника:
+                                - "buy" - "купить"
+                                - "send_application" - "отправить заявку"
+                                - "need_to_pay" - "необходимо оплатить"
+                                - "application_approval" - "одобрение заявки"
+                                - "recorded" - "вы записаны"
 
               example:
                 result: true
@@ -10758,11 +10764,11 @@ paths:
                         status:
                           type: string
                           description: |
-                                    Статус секции:
-                                    - "planned" - планируется
-                                    - "announced" - набирается
-                                    - "active" - активна
-                                    - "closed" - закрыта
+                            Статус секции:
+                            - "planned" - планируется
+                            - "announced" - набирается
+                            - "active" - активна
+                            - "closed" - закрыта
                         already_booked:
                           type: boolean
                           description: Клиент уже записан в секцию
@@ -10780,7 +10786,7 @@ paths:
                           $ref: "#/components/schemas/IDTitle"
                           description: Структура уровня подготовки
                         age:
-                          $ref: '#/components/schemas/CourseAge'
+                          $ref: "#/components/schemas/CourseAge"
                         capacity:
                           type: number
                           description: Ёмкость секции
@@ -10809,12 +10815,12 @@ paths:
                         record_status:
                           type: string
                           description: |
-                                      Статус записи клиента:
-                                      - "buy" - "купить"
-                                      - "send_application" - "отправить заявку"
-                                      - "need_to_pay" - "необходимо оплатить"
-                                      - "application_approval" - "одобрение заявки"
-                                      - "recorded" - "вы записаны"
+                            Статус записи клиента:
+                            - "buy" - "купить"
+                            - "send_application" - "отправить заявку"
+                            - "need_to_pay" - "необходимо оплатить"
+                            - "application_approval" - "одобрение заявки"
+                            - "recorded" - "вы записаны"
                         description:
                           type: string
                           description: Описание секции
@@ -10834,12 +10840,12 @@ paths:
                             record_status:
                               type: string
                               description: |
-                                          Статус записи родственника:
-                                          - "buy" - "купить"
-                                          - "send_application" - "отправить заявку"
-                                          - "need_to_pay" - "необходимо оплатить"
-                                          - "application_approval" - "одобрение заявки"
-                                          - "recorded" - "вы записаны"
+                                Статус записи родственника:
+                                - "buy" - "купить"
+                                - "send_application" - "отправить заявку"
+                                - "need_to_pay" - "необходимо оплатить"
+                                - "application_approval" - "одобрение заявки"
+                                - "recorded" - "вы записаны"
                         room:
                           description: Помещения, в которых проводятся занятия секции
                           $ref: "#/components/schemas/IDTitle"
@@ -10908,8 +10914,8 @@ paths:
           required: true
           description: Идентификатор занятия
           schema:
-              type: string
-              format: uuid
+            type: string
+            format: uuid
 
   /hs/api/v3/client_courses/:
     get:
@@ -10939,11 +10945,11 @@ paths:
                         status:
                           type: string
                           description: |
-                                    Статус секции:
-                                    - "planned" - планируется
-                                    - "announced" - набирается
-                                    - "active" - активна
-                                    - "closed" - закрыта
+                            Статус секции:
+                            - "planned" - планируется
+                            - "announced" - набирается
+                            - "active" - активна
+                            - "closed" - закрыта
                         already_booked:
                           type: boolean
                           description: Клиент уже записан в секцию
@@ -10961,7 +10967,7 @@ paths:
                           $ref: "#/components/schemas/IDTitle"
                           description: Структура уровня подготовки
                         age:
-                          $ref: '#/components/schemas/CourseAge'
+                          $ref: "#/components/schemas/CourseAge"
                         capacity:
                           type: number
                           description: Ёмкость секции
@@ -10989,7 +10995,7 @@ paths:
                           description: Требуется подтверждение для записи в секции
                         purchased_cycle_periods:
                           type: array
-                          description: 	Массив приобретенных периодоа
+                          description: Массив приобретенных периодоа
                           properties:
                             id:
                               type: string
@@ -11009,12 +11015,12 @@ paths:
                         record_status:
                           type: string
                           description: |
-                                      Статус записи клиента:
-                                      - "buy" - "купить"
-                                      - "send_application" - "отправить заявку"
-                                      - "need_to_pay" - "необходимо оплатить"
-                                      - "application_approval" - "одобрение заявки"
-                                      - "recorded" - "вы записаны"
+                            Статус записи клиента:
+                            - "buy" - "купить"
+                            - "send_application" - "отправить заявку"
+                            - "need_to_pay" - "необходимо оплатить"
+                            - "application_approval" - "одобрение заявки"
+                            - "recorded" - "вы записаны"
                         description:
                           type: string
                           description: Описание секции
@@ -11034,12 +11040,12 @@ paths:
                             record_status:
                               type: string
                               description: |
-                                          Статус записи родственника:
-                                          - "buy" - "купить"
-                                          - "send_application" - "отправить заявку"
-                                          - "need_to_pay" - "необходимо оплатить"
-                                          - "application_approval" - "одобрение заявки"
-                                          - "recorded" - "вы записаны"
+                                Статус записи родственника:
+                                - "buy" - "купить"
+                                - "send_application" - "отправить заявку"
+                                - "need_to_pay" - "необходимо оплатить"
+                                - "application_approval" - "одобрение заявки"
+                                - "recorded" - "вы записаны"
                         room:
                           description: Помещения, в которых проводятся занятия секции
                           $ref: "#/components/schemas/IDTitle"
@@ -11749,7 +11755,7 @@ components:
       type: object
       properties:
         result:
-           $ref: "#/components/schemas/ResultResponse"
+          $ref: "#/components/schemas/ResultResponse"
         error:
           type: number
           description: Код ошибки
@@ -11822,9 +11828,9 @@ components:
       type: object
       properties:
         id:
-          $ref: '#/components/schemas/ID'
+          $ref: "#/components/schemas/ID"
         title:
-          $ref: '#/components/schemas/Title'
+          $ref: "#/components/schemas/Title"
       required:
         - id
         - title
@@ -11832,11 +11838,11 @@ components:
       type: object
       properties:
         id:
-          $ref: '#/components/schemas/ID'
+          $ref: "#/components/schemas/ID"
         title:
-          $ref: '#/components/schemas/Title'
+          $ref: "#/components/schemas/Title"
         sort_order:
-          $ref: '#/components/schemas/SortOrder'
+          $ref: "#/components/schemas/SortOrder"
       required:
         - id
         - title
@@ -11859,24 +11865,24 @@ components:
       description: Информация о секции занятия. Возвращается, только если занятие является секционным
       properties:
         id:
-          $ref: '#/components/schemas/ID'
+          $ref: "#/components/schemas/ID"
         title:
-          $ref: '#/components/schemas/Title'
+          $ref: "#/components/schemas/Title"
         cycle_period:
-          $ref: '#/components/schemas/CyclePeriod'
+          $ref: "#/components/schemas/CyclePeriod"
         color:
           type: string
           format: hex-color
           example: "#FFC0CB"
         schedule:
-          $ref: '#/components/schemas/CourseSchedule'
+          $ref: "#/components/schemas/CourseSchedule"
     CyclePeriod:
       type: object
       properties:
         id:
-          $ref: '#/components/schemas/ID'
+          $ref: "#/components/schemas/ID"
         title:
-          $ref: '#/components/schemas/Title'
+          $ref: "#/components/schemas/Title"
         start_date:
           description: Дата начала цикла
           type: string
@@ -11907,7 +11913,7 @@ components:
           type: array
           description: Подробное расписание по каждому дню недели
           items:
-            $ref: '#/components/schemas/CourseScheduleDetailItem'
+            $ref: "#/components/schemas/CourseScheduleDetailItem"
         service:
           description: Услуги занятий секции
           $ref: "#/components/schemas/IDTitle"
@@ -11924,21 +11930,21 @@ components:
           type: array
           description: Список помещений
           items:
-            $ref: '#/components/schemas/IDTitle'
+            $ref: "#/components/schemas/IDTitle"
         services:
           type: array
           description: Список связанных услуг
           items:
-              description: Услуга занятия
-              items:
-                $ref: '#/components/schemas/IDTitle'
+            description: Услуга занятия
+            items:
+              $ref: "#/components/schemas/IDTitle"
         employees:
           type: array
           description: Список тренеров
           items:
-              description: Услуга занятия
-              items:
-                $ref: '#/components/schemas/IDTitle'
+            description: Услуга занятия
+            items:
+              $ref: "#/components/schemas/IDTitle"
         days:
           type: array
           description: Дни недели, в которые проводятся занятия (1 = понедельник, ..., 7 = воскресенье)
@@ -11951,7 +11957,7 @@ components:
           type: array
           description: Подробное расписание по каждому дню недели
           items:
-            $ref: '#/components/schemas/ScheduleDetailItem'
+            $ref: "#/components/schemas/ScheduleDetailItem"
       required:
         - rooms
         - days
@@ -11971,18 +11977,18 @@ components:
           example: "15:30"
         room:
           description: Помещение занятия
-          $ref: '#/components/schemas/IDTitle'
+          $ref: "#/components/schemas/IDTitle"
         service:
           description: Услуга занятия
-          $ref: '#/components/schemas/IDTitle'
+          $ref: "#/components/schemas/IDTitle"
         employee:
           description: Тренер
-          $ref: '#/components/schemas/IDTitle'
+          $ref: "#/components/schemas/IDTitle"
         resources:
           type: [array, "null"]
           description: Список требуемых ресурсов
           items:
-            $ref: '#/components/schemas/IDTitle'
+            $ref: "#/components/schemas/IDTitle"
       required:
         - day
         - time
@@ -12002,18 +12008,18 @@ components:
           example: "15:30"
         room:
           description: Помещение занятия
-          $ref: '#/components/schemas/IDTitle'
+          $ref: "#/components/schemas/IDTitle"
         service:
           description: Услуга занятия
-          $ref: '#/components/schemas/IDTitle'
+          $ref: "#/components/schemas/IDTitle"
         employee:
           description: Тренер
-          $ref: '#/components/schemas/CourseEmployee'
+          $ref: "#/components/schemas/CourseEmployee"
         resources:
           type: [array, "null"]
           description: Список требуемых ресурсов
           items:
-            $ref: '#/components/schemas/IDTitle'
+            $ref: "#/components/schemas/IDTitle"
       required:
         - day
         - time
@@ -12072,7 +12078,7 @@ components:
         type: object
         properties:
           title:
-            $ref: '#/components/schemas/Title'
+            $ref: "#/components/schemas/Title"
           unicode:
             description: unicode бейджа
             type: string
@@ -12081,9 +12087,9 @@ components:
       type: object
       properties:
         title:
-          $ref: '#/components/schemas/Title'
+          $ref: "#/components/schemas/Title"
         id:
-          $ref: '#/components/schemas/ID'
+          $ref: "#/components/schemas/ID"
         description:
           description: Описание услуги
           type: string
@@ -12092,7 +12098,7 @@ components:
           type: string
         course:
           description: Подразделение услуги
-          $ref: '#/components/schemas/IDTitle'
+          $ref: "#/components/schemas/IDTitle"
         strength:
           description: "Физические показалетели: Сила"
           type: number
@@ -12148,12 +12154,12 @@ components:
       type: object
       properties:
         appointment_id:
-          $ref: '#/components/schemas/ID'
+          $ref: "#/components/schemas/ID"
         online:
           type: boolean
           description: Признак онлайн тренировки
         url_online_training:
-          $ref: '#/components/schemas/UrlOnlineTraining'
+          $ref: "#/components/schemas/UrlOnlineTraining"
         already_booked:
           type: [boolean, "null"]
           description: Признак записи клиента на занятие
@@ -12174,15 +12180,15 @@ components:
             - "reserved_and_payed" - Записан и оплачено
           type: [string, "null"]
         service:
-          $ref: '#/components/schemas/ServiceSchedule'
+          $ref: "#/components/schemas/ServiceSchedule"
         service_replacement:
           description: Услуга до изменения (null при отключенном отображение изменений в расписании)
           type: object
           properties:
             title:
-              $ref: '#/components/schemas/Title'
+              $ref: "#/components/schemas/Title"
             id:
-              $ref: '#/components/schemas/ID'
+              $ref: "#/components/schemas/ID"
             description:
               description: Описание услуги
               oneOf:
@@ -12190,32 +12196,32 @@ components:
                 - type: "null"
         group:
           description: Группа номенклатуры
-          $ref: '#/components/schemas/IDTitle'
+          $ref: "#/components/schemas/IDTitle"
         room:
           description: Помещение занятия
-          $ref: '#/components/schemas/RoomObject'
+          $ref: "#/components/schemas/RoomObject"
         room_replacement:
           description: Помещение до изменения (null при отключенном отображение изменений в расписании)
-          $ref: '#/components/schemas/IDTitle'
+          $ref: "#/components/schemas/IDTitle"
         resources:
-          $ref: '#/components/schemas/ResourcesObject'
+          $ref: "#/components/schemas/ResourcesObject"
         resources_title:
           description: Наименование ресурсов
         employee:
-          $ref: '#/components/schemas/EmployeeObject'
+          $ref: "#/components/schemas/EmployeeObject"
         assistant:
           description: Ассистент занятия
-          $ref: '#/components/schemas/EmployeeSchedule'
+          $ref: "#/components/schemas/EmployeeSchedule"
         employee_replacement:
-          $ref: '#/components/schemas/EmployeeSchedule'
+          $ref: "#/components/schemas/EmployeeSchedule"
         type:
-          $ref: '#/components/schemas/TypeAppointment'
+          $ref: "#/components/schemas/TypeAppointment"
         start_date:
-          $ref: '#/components/schemas/StartDate'
+          $ref: "#/components/schemas/StartDate"
         start_date_replacement:
-          $ref: '#/components/schemas/StartDate'
+          $ref: "#/components/schemas/StartDate"
         end_date:
-          $ref: '#/components/schemas/EndDate'
+          $ref: "#/components/schemas/EndDate"
         duration:
           description: Продолжительность занятия в минутах
           type: number
@@ -12233,10 +12239,10 @@ components:
           properties:
             start_date_time:
               description: Дата время начала открытия онлайн записи на занятие
-              $ref: '#/components/schemas/StartDate'
+              $ref: "#/components/schemas/StartDate"
             end_date_time:
               description: Дата время закрытия онлайн записи на занятие
-              $ref: '#/components/schemas/EndDate'
+              $ref: "#/components/schemas/EndDate"
         cost:
           description: Цена услуги
           type: number
@@ -12245,7 +12251,7 @@ components:
           default: 1
           type: number
         badges:
-          $ref: '#/components/schemas/Badges'
+          $ref: "#/components/schemas/Badges"
         course_activity:
           description: Признак секционного занятия
           type: boolean
@@ -12260,13 +12266,13 @@ components:
             - type: string
             - type: "null"
         waiting_list_client_status:
-          $ref: '#/components/schemas/WaitingListClientStatus'
+          $ref: "#/components/schemas/WaitingListClientStatus"
         waiting_list_message:
-          $ref: '#/components/schemas/WaitingListMessage'
+          $ref: "#/components/schemas/WaitingListMessage"
         waiting_list_record_id:
-          $ref: '#/components/schemas/WaitingListRecordId'
+          $ref: "#/components/schemas/WaitingListRecordId"
         course:
-          $ref: '#/components/schemas/CourseWithSchedule'
+          $ref: "#/components/schemas/CourseWithSchedule"
         relatives:
           description: Массив родственников
           oneOf:
@@ -12275,9 +12281,9 @@ components:
                 type: object
                 properties:
                   id:
-                    $ref: '#/components/schemas/ID'
+                    $ref: "#/components/schemas/ID"
                   name:
-                    $ref: '#/components/schemas/Title'
+                    $ref: "#/components/schemas/Title"
                   already_booked:
                     description: Родственник записан на занятие
                     type: boolean
@@ -12289,11 +12295,11 @@ components:
                       <li> "reserved_and_payed" </li> </ul>
                     type: string
                   waiting_list_client_status:
-                    $ref: '#/components/schemas/WaitingListClientStatus'
+                    $ref: "#/components/schemas/WaitingListClientStatus"
                   waiting_list_message:
-                    $ref: '#/components/schemas/WaitingListMessage'
+                    $ref: "#/components/schemas/WaitingListMessage"
                   waiting_list_record_id:
-                    $ref: '#/components/schemas/WaitingListRecordId'
+                    $ref: "#/components/schemas/WaitingListRecordId"
               description: Массив изображений
             - type: "null"
 
@@ -12325,7 +12331,7 @@ components:
             type: object
         - type: "null"
       items:
-        $ref: '#/components/schemas/IDTitle'
+        $ref: "#/components/schemas/IDTitle"
     TypeAppointment:
       description: >-
         Тип занятия
@@ -12343,7 +12349,7 @@ components:
           type: string
           example: "Иванов Иван Иванович"
         id:
-          $ref: '#/components/schemas/ID'
+          $ref: "#/components/schemas/ID"
         description:
           description: Описание сотрудника
           oneOf:
@@ -12357,7 +12363,7 @@ components:
             - type: "null"
         position:
           description: Должность сотрдуника
-          $ref: '#/components/schemas/IDTitle'
+          $ref: "#/components/schemas/IDTitle"
         biography:
           description: Биография сотрудника
           oneOf:
@@ -12369,9 +12375,9 @@ components:
             - type: string
             - type: "null"
         ratings:
-          $ref: '#/components/schemas/EmployeeRatings'
+          $ref: "#/components/schemas/EmployeeRatings"
         reviews:
-          $ref: '#/components/schemas/EmployeeReviews'
+          $ref: "#/components/schemas/EmployeeReviews"
     EmployeeRatings:
       description: Оценки сотрудника
       oneOf:
@@ -12412,10 +12418,10 @@ components:
           type: string
           example: "Иванов Иван Иванович"
         id:
-          $ref: '#/components/schemas/ID'
+          $ref: "#/components/schemas/ID"
         position:
           description: Должность сотрудника
-          $ref: '#/components/schemas/IDTitle'
+          $ref: "#/components/schemas/IDTitle"
         photo:
           description: Ссылка на фото сотрудника
           type: string
@@ -12424,9 +12430,9 @@ components:
       type: object
       properties:
         id:
-          $ref: '#/components/schemas/ID'
+          $ref: "#/components/schemas/ID"
         title:
-          $ref: '#/components/schemas/Title'
+          $ref: "#/components/schemas/Title"
         description:
           description: Описание помещения
           type: string
@@ -13017,8 +13023,6 @@ components:
           balance:
             description: "Баланс счета"
             type: number
-
-
 
 tags:
   - name: Авторизация
