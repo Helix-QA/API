@@ -2138,6 +2138,58 @@ paths:
           schema:
             type: string
           example: "110132e6-ba129-4120-ac33-fcd612380121"
+  /hs/api/v2/issue_fine/:
+    post:
+      responses:
+        "200":
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                    description: Признак успешного выполнения операции (true — данные получены)
+                    example: true
+                  data:
+                    type: object
+                    description: Данные ответа
+                    properties:
+                      sum:
+                          type: number
+                          description: Общая сумма штрафа
+                          example: 900
+              example:
+                result: true
+                data:
+                  sum: 900
+      summary: Рассчитать штраф клиенту за задержку в клубе
+      operationId: issue_fine
+      description: Метод рассчитывает штрафы клиенту с учетом настроек штрафов в базе. Возвращает сумму штрафа.
+      tags:
+        - Долги
+      parameters:
+        - name: terminalid
+          in: header
+          description: Идентификатор терминала, с которого выполняется запрос
+          required: false
+          schema:
+            type: string
+          example: "110132e6-ba129-4120-ac33-fcd612380121"
+      requestBody:
+        content:
+          application/json:
+            example:
+              client_id: 97341542-0a05-11eb-89e7-c860000abe74
+            schema:
+              type: object
+              properties:
+                client_id:
+                  type: string
+                  description: Идентификатор клиента
+                  example: b1879ba4-53b0-11ea-89b6-2c4d546557dd
   /hs/api/v2/debt_payment:
     post:
       responses:
