@@ -991,9 +991,7 @@ paths:
         "Метод возвращает токен клиента, если он подтвердил свой номер телефона.
         В случае, если номер телефона не подтвержден вернется ошибка с кодом 4034.
         Атрибут __method__ определяет каким именно способом будет происходить подтверждение.
-        Варианты авторизации получаются в методе
-
-        Возвращаемый объект содержит следующие поля:"
+        Варианты авторизации получаются в методе"
       tags:
         - Авторизация
       requestBody:
@@ -7814,13 +7812,13 @@ paths:
                         properties:
                           time:
                             type: string
-                            description: string
+                            description: Время сеанса
                           seance_length:
                             type: number
-                            description: integer
+                            description: Длительность слота в минутах
                           datetime:
                             type: string
-                            description: string
+                            description: Дата и время сеанса
                         required:
                           - time
                           - seance_length
@@ -8074,28 +8072,21 @@ paths:
             type: string
         - name: record_array
           in: query
-          description: >-
+          description: |-
             Строка Json с массивом структур, содержащих параметры:
+            - "datetime" - время записи: "20240831T1500"
+            - "service_id" - идентификатор номенклатуры
+            - "staff_id" - идентификатор сотрудника
 
+            Пример такой строки:
+            [{"datetime": "20240831T1500","service_id": "9ca0fa6c-48ee-11ea-96bc-38d547b31ac0","staff_id": "663290db-105c-41cc-97d4-ed5151065813"}]
 
-            <ul>
-                <li> "datetime" - время записи: "20240831T1500"</li>
-                <li> "service_id" - идентификатор номенклатуры</li>
-                <li> "staff_id" - идентификатор сотрудника</li>
-            </ul>
-
-
-            <br>Пример такой строки:
-
-            [{"datetime": "20240831T1500","service_id":
-            "9ca0fa6c-48ee-11ea-96bc-38d547b31ac0","staff_id":
-            "663290db-105c-41cc-97d4-ed5151065813"}]
           required: true
           schema:
             type: string
         - name: usertoken
           in: header
-          description: e.g. 256D323401901DB2BD42405FA54509B0
+          description: Ключ клиента
           required: false
           schema:
             type: string
@@ -8155,7 +8146,7 @@ paths:
       parameters:
         - name: usertoken
           in: header
-          description: e.g. 2A3B4CCBA20D3920907B45733E356770
+          description: Ключ клиента
           required: false
           schema:
             type: string
@@ -8247,8 +8238,8 @@ paths:
             type: string
         - name: usertoken
           in: header
-          description: e.g. 256D323401901DB2BD42405FA54509B0
-          required: false
+          description: Ключ клиента
+          required: true
           schema:
             type: string
           example: 256D323401901DB2BD42405FA54509B0
@@ -8422,14 +8413,17 @@ paths:
             type: string
         - name: status
           in: query
-          description: >-
-            Фильтр статуса (planned - Запланировано, ended - Проведено, canceled
-            - Отменено, passes - Проводится)
+          description: |-
+            Фильтр статуса:
+            - planned - Запланировано
+            - ended - Проведено
+            - canceled - Отменено
+            - passes - Проводится
           schema:
             type: string
         - name: usertoken
           in: header
-          description: e.g. 2A3B4CCBA20D3920907B45733E356770
+          description: Ключ клиента
           required: false
           schema:
             type: string
@@ -8485,8 +8479,8 @@ paths:
             type: string
         - name: usertoken
           in: header
-          description: e.g. 256D323401901DB2BD42405FA54509B0
-          required: false
+          description: Ключ клиента
+          required: true
           schema:
             type: string
           example: 256D323401901DB2BD42405FA54509B0
@@ -8566,7 +8560,7 @@ paths:
             type: string
         - name: apikey
           in: header
-          description: e.g. 409265d1-a0af-4ce8-88ec-7e3435024111
+          description: Ключ клиента
           required: false
           schema:
             type: string
@@ -8847,7 +8841,7 @@ paths:
             type: string
         - name: usertoken
           in: header
-          description: e.g. 7e8245d1-574f-4ce8-88ec-7e34358df45
+          description: Ключ клиента
           required: false
           schema:
             type: string
@@ -8951,7 +8945,7 @@ paths:
             type: string
         - name: usertoken
           in: header
-          description: e.g. 7e8245d1-574f-4ce8-88ec-7e34358df45
+          description: Ключ клиента
           required: false
           schema:
             type: string
@@ -9100,30 +9094,22 @@ paths:
       parameters:
         - name: cart
           in: query
-          description: >-
+          description: |
             Строка Json с массивом структур, содержащих параметры:
-
-
-            <ul>
-                <li> "purchase_id" (идентификатор номенклатуры) </li>
-                <li> "count" (количество номенклатур) </li>
-                <li> "price_type_id" (идентификатор вида цен, который можно получить из метода "employee_choice", если не указан, то вид цен будет браться из настроек внешней системы) </li>
-                <li> "employee_id" (идентификатор сотрудника для получения вида цен сотрудника) </li>
-                <li> "start_date" (дата время начала записи) </li>
-                <li> "activation_date" (дата активации ЧПУ, передавать в виде: "2024-10-02") </li>
-                <li> "ticket_id" (идентификатор членств/пакетов услуг, передается при покупке модификаторов) </li>
-                <li> "service_id" (идентификатор услуги, передается при покупке основания для записи в занятие) </li>
-                <li> "cart_pay" (структура с передаваемыми оплатами, если не указан, в структура возврата не будет структуры "cart_pay")</li>
-                <li> "activation_date" (дата активации пакета услуг)
-            </ul>
-
+              - `purchase_id` (идентификатор номенклатуры)
+              - `count` (количество номенклатур)
+              - `price_type_id` (идентификатор вида цен, который можно получить из метода "employee_choice", если не указан, то вид цен будет браться из настроек внешней системы)
+              - `employee_id` (идентификатор сотрудника для получения вида цен сотрудника)
+              - `start_date` (дата время начала записи)
+              - `activation_date` (дата активации ЧПУ, передавать в виде: "2024-10-02")
+              - `ticket_id` (идентификатор членств/пакетов услуг, передается при покупке модификаторов)
+              - `service_id` (идентификатор услуги, передается при покупке основания для записи в занятие)
+              - `cart_pay` (структура с передаваемыми оплатами, если не указан, в структура возврата не будет структуры "cart_pay")
+              - `activation_date` (дата активации пакета услуг)
 
             Пример такой строки:
+            {"cart_array":[{"purchase_id":"9ad49672-a043-11e7-ab37-000c2938171c","count":2, "price_type_id":"11149672-a043-11e7-ab37-000c2938171c"},{"purchase_id":"8bac3895-9e13-11e7-9966-0050568bd50c","count":1, "price_type_id":"33359672-a043-11e7-ab37-000c2938171c"}]}
 
-            {"cart_array":[{"purchase_id":"9ad49672-a043-11e7-ab37-000c2938171c",
-            "count":2,
-            "price_type_id":"11149672-a043-11e7-ab37-000c2938171c"},{"purchase_id":"8bac3895-9e13-11e7-9966-0050568bd50c",
-            "count":1, "price_type_id":"33359672-a043-11e7-ab37-000c2938171c"}]}
           required: true
           schema:
             type: string
@@ -9150,7 +9136,7 @@ paths:
             type: string
         - name: usertoken
           in: header
-          description: e.g. 7e8245d1-574f-4ce8-88ec-7e34358df45
+          description: Ключ клиента
           required: false
           schema:
             type: string
@@ -9327,8 +9313,8 @@ paths:
             type: string
         - name: usertoken
           in: header
-          description: e.g. 7e8245d1-574f-4ce8-88ec-7e34358df45
-          required: false
+          description: Ключ клиента
+          required: true
           schema:
             type: string
           example: 7e8245d1-574f-4ce8-88ec-7e34358df45
@@ -9387,14 +9373,14 @@ paths:
       parameters:
         - name: usertoken
           in: header
-          description: e.g. 7e8245d1-574f-4ce8-88ec-7e34358df45
+          description: Ключ клиента
           required: false
           schema:
             type: string
           example: 7e8245d1-574f-4ce8-88ec-7e34358df45
         - name: token-master
           in: header
-          description: e.g. a62afb1e-97b2-11e7-b142-0050568b93ed
+          description: Ключ родителя
           required: false
           schema:
             type: string
@@ -9531,14 +9517,14 @@ paths:
       parameters:
         - name: usertoken
           in: header
-          description: e.g. 7e8245d1-574f-4ce8-88ec-7e34358df45
+          description: Ключ клиента
           required: false
           schema:
             type: string
           example: 7e8245d1-574f-4ce8-88ec-7e34358df45
         - name: token-master
           in: header
-          description: e.g. a62afb1e-97b2-11e7-b142-0050568b93ed
+          description: Ключ родителя
           required: false
           schema:
             type: string
@@ -9695,6 +9681,7 @@ paths:
           allowReserved: false
         - in: header
           name: usertoken
+          description: Ключ клиента
           required: false
           style: simple
           example: 7e8245d1-574f-4ce8-88ec-7e34358df45
@@ -9706,6 +9693,7 @@ paths:
           name: token-master
           required: false
           style: simple
+          description: Ключ родителя
           example: a62afb1e-97b2-11e7-b142-0050568b93ed
           explode: false
           schema:
@@ -9757,7 +9745,7 @@ paths:
                                 type: number
                                 description: Сумма к оплате с учетом рассрочки
                               org_id:
-                                type: string
+                                $ref: "#/components/schemas/ID"
                                 description: Идентификатор организации
                               installment_plan:
                                 type: array
@@ -9860,8 +9848,8 @@ paths:
       parameters:
         - name: usertoken
           in: header
-          description: e.g. 7e8245d1-574f-4ce8-88ec-7e34358df45
-          required: false
+          description: Ключ клиента
+          required: true
           schema:
             type: string
           example: 7e8245d1-574f-4ce8-88ec-7e34358df45
@@ -9905,14 +9893,14 @@ paths:
       parameters:
         - name: usertoken
           in: header
-          description: e.g. 7e8245d1-574f-4ce8-88ec-7e34358df45
-          required: false
+          description: Ключ клиента
+          required: true
           schema:
             type: string
           example: 7e8245d1-574f-4ce8-88ec-7e34358df45
         - name: token-master
           in: header
-          description: e.g. a62afb1e-97b2-11e7-b142-0050568b93ed
+          description: Ключ родителя
           required: false
           schema:
             type: string
@@ -9969,32 +9957,47 @@ paths:
                 type: object
                 properties:
                   result:
-                    type: boolean
+                    $ref: "#/components/schemas/ResultResponse"
                   data:
+                    description: Данные запроса
                     type: array
                     items:
                       type: object
                       properties:
                         token:
                           type: string
+                          description: Токен связки, переданный банком
                         exp_year:
                           type: number
+                          description: Год срока окончания действия карты, представленный четырьмя цифрами
                         exp_month:
                           type: number
+                          description: Месяц окончания срока действия карты, представленный двумя цифрами
                         holder:
                           type: string
+                          description: Имя владельца карты
                         brand:
                           type: string
+                          description: Определенный бренд карты
                         first_1:
                           type: string
+                          description: Первая цифра карты
                         last_4:
                           type: string
+                          description: Последние 4 цифры карты
                         surname:
                           type: string
+                          description: Фамилия владельца карты
                         name:
                           type: string
+                          description: Имя владельца карты
                         id:
                           type: string
+                          description: Идентификатор связки
+                        use_bank:
+                          type: string
+                          description: Используемый банк
+
               example:
                 result: true
                 data:
@@ -10008,6 +10011,18 @@ paths:
                     surname: Иванов
                     name: Иван
                     id: ec57e5d7-ae8b-11ed-b172-f02f7488d897
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
       summary: Получить привязанные карты клиента {credit_card}
       operationId: credit_card
       description: |
@@ -10044,25 +10059,31 @@ paths:
                 type: object
                 properties:
                   result:
-                    type: boolean
+                    $ref: "#/components/schemas/ResultResponse"
                   data:
+                    description: Данные запроса
                     x-nullable: true
               example:
                 result: true
                 data: null
-      summary: Привязать карту
-      operationId: Привязать карту
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Привязать карту {post_credit_card}
+      operationId: post_credit_card
       description: ""
       tags:
         - Оплаты
       parameters:
-        - name: apikey
-          in: header
-          description: e.g. 409265d1-a0af-4ce8-88ec-7e3435024111
-          required: false
-          schema:
-            type: string
-          example: 409265d1-a0af-4ce8-88ec-7e3435024111
         - name: usertoken
           in: header
           description: e.g. 7e8245d1-574f-4ce8-88ec-7e34358df45
@@ -10131,14 +10152,27 @@ paths:
                 type: object
                 properties:
                   result:
-                    type: boolean
+                    $ref: "#/components/schemas/ResultResponse"
                   data:
+                    description: Данные запроса
                     x-nullable: true
               example:
                 result: true
                 data: null
-      summary: Удалить привязанную карту
-      operationId: Удалить привязанную карту
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Удалить привязанную карту {delete_credit_card}
+      operationId: delete_credit_card
       description: ""
       tags:
         - Оплаты
@@ -10175,34 +10209,47 @@ paths:
                 type: object
                 properties:
                   result:
-                    type: boolean
+                    $ref: "#/components/schemas/ResultResponse"
                   data:
+                    description: Данные запроса
                     type: array
                     items:
                       type: object
                       properties:
                         id:
-                          type: string
+                          $ref: "#/components/schemas/ID"
+                          description: Идентификатор сотрудника
                         name:
-                          type: string
+                          $ref: "#/components/schemas/Title"
+                          description: Наименование сотрудника
                         position:
-                          type: object
-                          properties:
-                            id:
-                              type: string
-                              x-nullable: true
-                            title:
-                              type: string
-                              x-nullable: true
+                          description: Должность сотрудника
+                          $ref: "#/components/schemas/IDTitle"
                         department:
-                          type: object
-                          properties:
-                            id:
-                              x-nullable: true
-                            title:
-                              x-nullable: true
+                          description: Подразделение сотрудника
+                          $ref: "#/components/schemas/IDTitle"
                         photo:
+                          description: Ссылка на фото тренера, с размером файла в конце идентификатора
+                          type: string
                           x-nullable: true
+                        description:
+                          type: string
+                          description: Описание сотрудника
+                        ratings:
+                          type: array
+                          description: Структура рейтинга сотрудника
+                          items:
+                            type: object
+                            properties:
+                              rating:
+                                type: number
+                                description: Средняя оценка сотрудника
+                              count:
+                                type: number
+                                description: Количество комментарией
+                              max_rating:
+                                type: number
+                                description: Максимальный рейтинг
                       required:
                         - id
                         - name
@@ -10230,19 +10277,23 @@ paths:
                       id: null
                       title: null
                     photo: null
-      summary: Получить список сотрудников
-      operationId: Получить список сотрудников
-      description: ""
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Получить список сотрудников {trainers}
+      operationId: trainers
+      description: Метод возвращает массив сотрудников (только роли - спортивный врач, старший тренер, тренер)
       tags:
         - Сотрудники
-      parameters:
-        - name: apikey
-          in: header
-          description: e.g. 409265d1-a0af-4ce8-88ec-7e3435024111
-          required: false
-          schema:
-            type: string
-          example: 409265d1-a0af-4ce8-88ec-7e3435024111
       requestBody:
         content:
           application/json:
@@ -10274,53 +10325,70 @@ paths:
                 type: object
                 properties:
                   result:
-                    type: boolean
+                    $ref: "#/components/schemas/ResultResponse"
                   data:
+                    description: Данные запроса
                     type: object
                     properties:
                       id:
                         type: string
+                        description: Идентификатор сотрудника
                       name:
                         type: string
+                        description: ФИО сотрудника
                       description:
                         type: string
+                        description: Описание сотрудника
                       photo:
                         x-nullable: true
+                        description: Ссылка на фото сотрудника
                       position:
-                        type: object
-                        properties:
-                          title:
-                            type: string
-                          id:
-                            x-nullable: true
+                        description: Ссылка на фото сотрудника
+                        $ref: "#/components/schemas/IDTitle"
                       biography:
                         type: string
+                        description: Биография сотрудника
                       awards:
                         type: string
+                        description: Регалии(заслуги) сотрудника
                       ratings:
                         type: object
+                        description: Массив c данными ценок сотрудника
                         properties:
                           rating:
                             type: number
+                            description: Средняя оценка сотрудника
                           count:
                             type: number
+                            description: Количество оценок
                           max_rating:
                             type: number
+                            description: Максимальная оценка
                       reviews:
                         type: array
+                        description: Массив с отзывами клиентов
                         items:
                           type: object
                           properties:
                             rating:
                               type: number
+                              description: Оценка клиента
                             review:
                               type: string
+                              description: Текст отзыва
                             client_name:
                               type: string
-                          required:
-                            - rating
-                            - review
-                            - client_name
+                              description: Предсталение клиента
+                      can_train_groups:
+                        type: boolean
+                        description: Сотрудник проводит групповые тренировки
+                      can_train_personally:
+                        type: boolean
+                        description: Сотрудник проводит персональные тренировки
+                    required:
+                      - rating
+                      - review
+                      - client_name
               example:
                 result: true
                 data:
@@ -10344,9 +10412,21 @@ paths:
                     - rating: 4
                       review: ""
                       client_name: Тихомиров Евгений Васильевич
-      summary: Получить информацию по сотруднику
-      operationId: Получить информацию по сотруднику
-      description: ""
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Получить информацию по сотруднику {employee}
+      operationId: employee
+      description: В случае, если сотрудник является тренером, возвращается информация о нем и его рейтинге.
       tags:
         - Сотрудники
       parameters:
@@ -10356,16 +10436,9 @@ paths:
           required: true
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: e.g. 409265d1-a0af-4ce8-88ec-7e3435024111
-          required: false
-          schema:
-            type: string
-          example: 409265d1-a0af-4ce8-88ec-7e3435024111
         - name: usertoken
           in: header
-          description: e.g. 7e8245d1-574f-4ce8-88ec-7e34358df45
+          description: Ключ клиента
           required: false
           schema:
             type: string
@@ -10382,48 +10455,62 @@ paths:
                 type: object
                 properties:
                   result:
-                    type: boolean
+                    $ref: "#/components/schemas/ResultResponse"
                   data:
+                    description: Данные запроса
                     type: array
                     items:
                       type: object
                       properties:
                         staff:
                           type: object
+                          description: Структура сотрудника
                           properties:
                             id:
-                              type: string
+                              $ref: "#/components/schemas/ID"
                             name:
                               type: string
+                              description: ФИО сотрудника
                         text:
                           type: string
+                          description: Комментарий к оценке
                         date:
                           type: string
+                          description: Дата оценки
                         client:
                           type: object
+                          description: Структура клиента
                           properties:
                             id:
-                              type: string
+                              $ref: "#/components/schemas/ID"
                             name:
                               type: string
+                              description: ФИО клиента
                         ratings:
                           type: array
+                          description: Массив оценок сотрудника
                           items:
                             type: object
                             properties:
                               rating:
                                 type: number
+                                description: Оценка
                   pagination:
                     type: object
+                    description: Структура сотрудника
                     properties:
                       items_count:
                         type: number
+                        description: Количество элементов
                       pages_count:
                         type: number
+                        description: Количество страниц
                       page_current:
                         type: number
+                        description: Текущая страница
                       page_size:
                         type: number
+                        description: Количество элементов на странице
               example:
                 result: true
                 data:
@@ -10442,9 +10529,21 @@ paths:
                   pages_count: 2
                   page_current: 1
                   page_size: 5
-      summary: Получить комментарии по сотруднику
-      operationId: Получить комментарии по сотруднику
-      description: ""
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Получить комментарии по сотруднику {comments}
+      operationId: comments
+      description: Метод возвращает следующую структуру данных
       tags:
         - Сотрудники
       parameters:
@@ -10484,30 +10583,32 @@ paths:
             элементов, по умолчанию 10)
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: e.g. 147556
-          required: false
-          schema:
-            type: string
-          example: "147556"
         - name: usertoken
           in: header
-          description: e.g. 256D323401901DB2BD42405FA54509B0
+          description: Ключ клиента
           required: false
           schema:
             type: string
           example: 256D323401901DB2BD42405FA54509B0
-  /hs/api/v3/room/{room_id}:
+  /hs/api/v3/room:
     get:
       responses:
         "200":
           description: OK
           headers: {}
-          content: {}
-      summary: Получить информацию о помещении
-      operationId: Получить информацию о помещении
-      description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    $ref: "#/components/schemas/ResultResponse"
+                  data:
+                    description: Данные запроса
+                    $ref: "#/components/schemas/RoomObject"
+      summary: Получить информацию о помещении {room}
+      operationId: room
+      description: Метод возвращает информацию о помещении.
       tags:
         - Помещения
       parameters:
@@ -10517,14 +10618,7 @@ paths:
           description: Идентификатор помещения
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121
-          required: false
-          schema:
-            type: string
-          example: 110132e6-ba129-4120-ac33-fcd612380121
-  /hs/api/v3/courses/{statuses},{already_booked},{services_ids},{employees_ids},{training_level_ids},{age_ids},{days},{rooms_ids},{club_id}:
+  /hs/api/v3/courses:
     get:
       responses:
         "200":
@@ -10680,15 +10774,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/InternalServerError"
-      summary: Получить секции для записи
-      operationId: Получить секции для записи
+      summary: Получить секции для записи {courses}
+      operationId: courses
       description: Метод возвращает информацию о секциях.
       tags:
         - Секции
       parameters:
         - name: statuses
-          in: path
-          required: true
+          in: query
           description: >
             Строка Json со статусами занятий ("planned" - запланировано,
             "canceled" - отменено, "ended" - проведено, "passes" - проводится).
@@ -10697,54 +10790,47 @@ paths:
           schema:
             type: string
         - name: already_booked
-          in: path
-          required: true
+          in: query
           description: Вернуть только секции, в которые записан клиент
           schema:
             type: boolean
         - name: services_ids
-          in: path
-          required: true
+          in: query
           description: Строка Json с идентификаторами услуг
           schema:
             type: string
         - name: employees_ids
-          in: path
-          required: true
+          in: query
           description: Строка Json с идентификаторами сотрудников
           schema:
             type: string
         - name: training_level_ids
-          in: path
-          required: true
+          in: query
           description: Строка Json с идентификаторами уровней подготовки
           schema:
             type: string
         - name: age_ids
-          in: path
-          required: true
+          in: query
           description: Строка Json с идентификаторами возрастных групп
           schema:
             type: string
         - name: days
-          in: path
-          required: true
+          in: query
           description: Строка Json с днями недели (1 - понедельник, 7 - воскресенье)
           schema:
             type: string
         - name: rooms_ids
-          in: path
-          required: true
+          in: query
           description: Строка Json с идентификаторами помещений
           schema:
             type: string
         - name: club_id
-          in: path
+          in: query
           required: true
           description: Идентификатор структурной единицы
           schema:
             type: string
-  /hs/api/v3/course_description/{course_id}:
+  /hs/api/v3/course_description:
     get:
       responses:
         "200":
@@ -10902,22 +10988,21 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/InternalServerError"
-      summary: Получить описание секции
-      operationId: Получить описание секции
+      summary: Получить описание секции  {course_description}
+      operationId: course_description
       description: "Метод возвращает информацию о секции."
       tags:
         - Секции
       parameters:
         - name: course_id
-          in: path
+          in: query
           required: true
           description: Идентификатор секции
           schema:
             type: string
             format: uuid
         - name: appointment_id
-          in: path
-          required: true
+          in: query
           description: Идентификатор занятия
           schema:
             type: string
@@ -11102,20 +11187,20 @@ paths:
               schema:
                 $ref: "#/components/schemas/InternalServerError"
 
-      summary: Секции клиента
-      operationId: Получить секции клиента
+      summary: Секции клиента {client_courses}
+      operationId: client_courses
       description: Метод возвращает информацию о секциях, в которые записан клиент.
       tags:
         - Секции
       parameters:
         - name: usertoken
           in: header
-          description: e.g. 7e8245d1-574f-4ce8-88ec-7e34358df45
-          required: false
+          description: Ключ клиента
+          required: true
           schema:
             type: string
           example: 7e8245d1-574f-4ce8-88ec-7e34358df45
-  /hs/api/v3/cycle_periods/{cycle_id}:
+  /hs/api/v3/cycle_periods:
     get:
       responses:
         "200":
@@ -11127,20 +11212,23 @@ paths:
                 type: object
                 properties:
                   result:
-                    type: boolean
+                    $ref: "#/components/schemas/ResultResponse"
                   data:
+                    description: Данные запроса
                     type: array
                     items:
                       type: object
                       properties:
                         id:
-                          type: string
+                          $ref: "#/components/schemas/ID"
                         title:
-                          type: string
+                          $ref: "#/components/schemas/Title"
                         start_date:
                           type: string
+                          description: Начало периода
                         end_date:
                           type: string
+                          description: Окончание периода
                       required:
                         - id
                         - title
@@ -11161,51 +11249,81 @@ paths:
                     title: Апрель 2020 года
                     start_date: "2020-04-09T00:00:00"
                     end_date: "2020-05-08T00:00:00"
-      summary: Получить периоды циклов
-      operationId: Получить периоды циклов
-      description: ""
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Получить периоды циклов {cycle_periods}
+      operationId: cycle_periods
+      description: Метод возвращает структуры периодов циклов.
       tags:
         - Секции
       parameters:
         - name: cycle_id
-          in: path
+          in: query
           description: Идентификатор периода цикла
           required: true
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121
-          required: false
-          schema:
-            type: string
-          example: 110132e6-ba129-4120-ac33-fcd612380121
-  /hs/api/v3/course_choice/{item_id}:
+  /hs/api/v3/course_choice:
     get:
       responses:
         "200":
           description: OK
           headers: {}
-          content: {}
-      summary: Список секций по номенклатуре
-      operationId: Список секций по номенклатуре
-      description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    $ref: "#/components/schemas/ResultResponse"
+                  data:
+                    description: Данные запроса
+                    type: object
+                    properties:
+                      id:
+                        $ref: "#/components/schemas/ID"
+                      title:
+                        $ref: "#/components/schemas/Title"
+                      employee:
+                        description: Данные сотрудника
+                        $ref: "#/components/schemas/IDName"
+                      cycle:
+                        description: Данные периода секции
+                        $ref: "#/components/schemas/IDTitle"
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Список секций по номенклатуре {course_choice}
+      operationId: course_choice
+      description: Метод возвращает секции, в которые можно записаться с переданным пакетом услуг.
       tags:
         - Секции
       parameters:
         - name: item_id
-          in: path
+          in: query
           description: Идентификатор номенклатуры (пакета услуг)
           required: true
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121
-          required: false
-          schema:
-            type: string
-          example: 110132e6-ba129-4120-ac33-fcd612380121
   /hs/api/v3/client_to_course:
     post:
       responses:
@@ -11218,29 +11336,35 @@ paths:
                 type: object
                 properties:
                   result:
-                    type: boolean
+                    $ref: "#/components/schemas/ResultResponse"
                   data:
+                    description: Данные запроса
                     x-nullable: true
               example:
                 result: true
                 data: null
-      summary: Записать клиента в секцию
-      operationId: Записать клиента в секцию
-      description: ""
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Записать клиента в секцию {client_to_course}
+      operationId: client_to_course
+      description: Метод записывает клиента в секцию.
       tags:
         - Секции
       parameters:
-        - name: apikey
-          in: header
-          description: e.g. 409265d1-a0af-4ce8-88ec-7e3435024111
-          required: false
-          schema:
-            type: string
-          example: 409265d1-a0af-4ce8-88ec-7e3435024111
         - name: usertoken
           in: header
-          description: e.g. 7e8245d1-574f-4ce8-88ec-7e34358df45
-          required: false
+          description: Ключ клиента
+          required: true
           schema:
             type: string
           example: 7e8245d1-574f-4ce8-88ec-7e34358df45
@@ -11276,17 +11400,77 @@ paths:
                       type: object
                       properties:
                         id:
-                          type: string
+                          $ref: "#/components/schemas/ID"
                         title:
-                          type: string
+                          $ref: "#/components/schemas/Title"
+                        countries:
+                          type: array
+                          description: Массив стран
                         current:
                           type: boolean
-                      required:
-                        - id
-                        - title
-                        - current
-                  auth_message_to_user:
-                    type: string
+                          description: Текущий клуб клиента, в случае если передан в заголовок usertoken, иначе будет возвращено null
+                        work_time:
+                          type: array
+                          description: Массив графика работы
+                          properties:
+                            day:
+                              type: number
+                              description: День недели (1 - понедельник, 7 - воскресенье)
+                            start:
+                              type: string
+                              description: Время начала работы
+                            end:
+                              type: string
+                              description: Время окончания работы
+                            active:
+                              type: boolean
+                              description: Флаг активности
+                        contact_information:
+                          type: object
+                          description: Контактная информация
+                          properties:
+                            phone:
+                              type: string
+                              description: Номер телефона
+                            email:
+                              type: string
+                              description: Адрес электронной почты
+                            address:
+                              type: string
+                              description: Адрес
+                            website:
+                              type: string
+                              description: Веб-сайт
+                        pictures:
+                          type: array
+                          description: Массив изображений
+                        time_zone:
+                          type: string
+                          description: Часовой пояс клуба
+                        auth_message_to_user:
+                          type: string
+                          description: Сообщение для клиента при авторизации
+                        photo:
+                          type: string
+                          description: Логотип клуба
+                        timestamp:
+                          type: string
+                          description: Временная метка последнего изменения данных клуба
+                        free_registration:
+                          type: boolean
+                          description: Флаг бесплатной регистрации в клубе
+                        auth_methods:
+                          type: object
+                          description: Массив доступных методов авторизации в клубе
+                          items:
+                            type: array
+                            properties:
+                              type:
+                                type: string
+                                description: Тип авторизации
+                              title:
+                                type: string
+                                description: Наименование типа авторизации
               example:
                 result: true
                 data:
@@ -11297,27 +11481,32 @@ paths:
                     title: SPA Салон
                     current: true
                 auth_message_to_user: ""
-      summary: Получить информацию о  дуступных клубах внешней системы
-      operationId: Получить информацию о  дуступных клубах внешней системы
-      description: ""
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Получить информацию о  дуступных клубах внешней системы {clubs}
+      operationId: clubs
+      description: Метод возвращает информацию о дуступных клубах переданной внешней системы.
       tags:
         - Клубы
       parameters:
-        - name: apikey
-          in: header
-          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121
-          required: false
-          schema:
-            type: string
-          example: 110132e6-ba129-4120-ac33-fcd612380121
         - name: usertoken
           in: header
-          description: e.g. 7e8245d1-574f-4ce8-88ec-7e34358df45
+          description: Ключ клиента
           required: false
           schema:
             type: string
           example: 7e8245d1-574f-4ce8-88ec-7e34358df45
-  /hs/api/v3/club_workload/{club_id}:
+  /hs/api/v3/club_workload:
     get:
       responses:
         "200":
@@ -11329,103 +11518,191 @@ paths:
                 type: object
                 properties:
                   result:
-                    type: boolean
+                    $ref: "#/components/schemas/ResultResponse"
                   data:
+                    description: Данные запроса
                     type: object
                     properties:
                       count:
                         type: number
+                        description: Количество клиентов в клубе на текущее время
               example:
                 result: true
                 data:
                   count: 0
-      summary: Получить количество клиентов в клубе
-      operationId: Получить количество клиентов в клубе
-      description: ""
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Получить количество клиентов в клубе {club_workload}
+      operationId: club_workload
+      description: Метод возвращает количество клиентов в клубе на текущее время.
       tags:
         - Клубы
       parameters:
         - name: club_id
-          in: path
+          in: query
           description: Идентификатор клуба
           required: true
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121
-          required: false
-          schema:
-            type: string
-          example: 110132e6-ba129-4120-ac33-fcd612380121
-  /hs/api/v3/club_workload_detail/{club_id},{date}:
+  /hs/api/v3/club_workload_detail:
     get:
       responses:
         "200":
           description: OK
           headers: {}
-          content: {}
-      summary: Получить информацию о клиентах в клубе
-      operationId: Получить информацию о клиентах в клубе
-      description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    $ref: "#/components/schemas/ResultResponse"
+                  data:
+                    description: Данные запроса
+                    type: object
+                    properties:
+                      client:
+                        type: array
+                        description: Клиент
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              $ref: "#/components/schemas/ID"
+                            name:
+                              type: string
+                              description: ФИО клиента
+                            phones:
+                              type: array
+                              description: Массив телефонов клиента
+                      start_date:
+                        type: string
+                        description: Время прихода клиента в клуб
+                      end_date:
+                        type: string
+                        description: Время ухода клиента из клуба
+                      duration:
+                        type: number
+                        description: Длительность пребывания клиента в клубе в минутах
+                      is_guest:
+                        type: boolean
+                        description: Является ли клиент гостем
+                      debt:
+                        type: number
+                        description: Долг клиента
+                      ticket:
+                        type: object
+                        description: Основание входа
+                        properties:
+                          id:
+                            $ref: "#/components/schemas/ID"
+                          title:
+                            $ref: "#/components/schemas/Title"
+                          type:
+                            type: string
+                            description: Тип основания входа
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Получить информацию о клиентах в клубе {club_workload_detail}
+      operationId: club_workload_detail
+      description: Детальная информация по клиентам находящимся в клубе в определенную дату. Метод возвращает массив структур.
       tags:
         - Клубы
       parameters:
         - name: club_id
-          in: path
+          in: query
           description: Идентификатор клуба
           required: true
           schema:
             type: string
         - name: date
-          in: path
+          in: query
           required: true
           description: >-
             Дата для просмотра количества клиентов в клубе за день. Если не
             указана, то будет взята текущая дата.
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121
-          required: false
-          schema:
-            type: string
-          example: 110132e6-ba129-4120-ac33-fcd612380121
-  /hs/api/v3/club_workload_quantity/{club_id},{date}:
+  /hs/api/v3/club_workload_quantity:
     get:
       responses:
         "200":
           description: OK
           headers: {}
-          content: {}
-      summary: Получить информацию о загруженности клуба по часам
-      operationId: Получить информацию о загруженности клуба по часам
-      description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    $ref: "#/components/schemas/ResultResponse"
+                  max:
+                    description: Максимальное кол-во клиентов в клубе в разрезе переданной даты
+                    type: integer
+                  items:
+                    description: Структура с временными интервалами
+                    type: object
+                    items:
+                      type: object
+                      properties:
+                        time:
+                          type: string
+                          description: Время
+                        count:
+                          type: integer
+                          description: Количество клиентов
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Получить информацию о загруженности клуба по часам {club_workload_quantity}
+      operationId: club_workload_quantity
+      description: Метод возвращает данные о загруженности клуба по часам работы клуба.
       tags:
         - Клубы
       parameters:
         - name: club_id
-          in: path
-          description: 'Идентификатор клуба. Example: "849235b6-2bf5-11ec-910f-2c4d546557dd"'
+          in: query
+          description: Идентификатор клуба
           required: true
           schema:
             type: string
         - name: date
-          in: path
+          in: query
           required: true
           description: >-
             Дата для просмотра количества клиентов в клубе за день. Если не
             указана, то будет взята текущая дата. Example: "2023-02-08"
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121
-          required: false
-          schema:
-            type: string
-          example: 110132e6-ba129-4120-ac33-fcd612380121
   /hs/api/v3/progress/:
     get:
       responses:
@@ -11437,44 +11714,62 @@ paths:
               schema:
                 type: object
                 properties:
-                  id:
-                    type: string
-                  title:
-                    type: string
-                  unit:
-                    type: string
-                  min_value:
-                    type: number
-                  max_value:
-                    type: number
-                  dynamic:
-                    type: boolean
-                  deviation_all:
-                    type: number
-                  array_values:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        date:
-                          type: string
-                        value:
-                          type: number
-                        deviation:
-                          type: number
-                        deviation_norm:
-                          type: number
-                        id_pattern:
-                          type: string
-                        title_pattern:
-                          type: string
-                      required:
-                        - date
-                        - value
-                        - deviation
-                        - deviation_norm
-                        - id_pattern
-                        - title_pattern
+                  result:
+                    $ref: "#/components/schemas/ResultResponse"
+                  data:
+                    description: Данные запроса
+                    type: object
+                    properties:
+                      id:
+                        $ref: "#/components/schemas/ID"
+                      title:
+                        $ref: "#/components/schemas/Title"
+                      unit:
+                        type: string
+                        description: Единица измерения
+                      min_value:
+                        type: number
+                        description: Минимальное значение
+                      max_value:
+                        type: number
+                        description: Максимальное значение
+                      dynamic:
+                        type: boolean
+                        description: Положительная/отрицательная динамика
+                      deviation_all:
+                        type: number
+                        description: Отклонение за все время
+                      array_values:
+                        type: array
+                        description: Массив значений
+                        items:
+                          type: object
+                          properties:
+                            date:
+                              type: string
+                              description: Дата измерения
+                            value:
+                              type: number
+                              description: Значение измерения
+                            deviation:
+                              type: number
+                              description: Отклонение от передыдущего измерения
+                            deviation_norm:
+                              type: number
+                              description: Отклонение от нормы
+                            id_pattern:
+                              type: string
+                              description: Идентификатор шаблона измерений
+                            title_pattern:
+                              type: string
+                              description: Наименование шаблона измерений
+                          required:
+                            - date
+                            - value
+                            - deviation
+                            - deviation_norm
+                            - id_pattern
+                            - title_pattern
               example:
                 id: 9a99c9c4-e129-11ea-9ccd-04d4c44bd377
                 title: Вес
@@ -11502,9 +11797,21 @@ paths:
                     deviation_norm: -25
                     id_pattern: 00000000-0000-0000-0000-000000000000
                     title_pattern: ""
-      summary: Получить информацию о достижениях клиента
-      operationId: Получить информацию о достижениях клиента
-      description: ""
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Получить информацию о достижениях клиента {progress}
+      operationId: progress
+      description: Метод возвращает информацию о достижениях клиента.
       tags:
         - Достижения
       parameters:
@@ -11520,17 +11827,10 @@ paths:
           required: true
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121
-          required: false
-          schema:
-            type: string
-          example: 110132e6-ba129-4120-ac33-fcd612380121
         - name: usertoken
           in: header
-          description: e.g. 7e8245d1-574f-4ce8-88ec-7e34358df45
-          required: false
+          description: Ключ клиента
+          required: true
           schema:
             type: string
           example: 7e8245d1-574f-4ce8-88ec-7e34358df45
@@ -11546,18 +11846,20 @@ paths:
                 type: object
                 properties:
                   result:
-                    type: boolean
+                    $ref: "#/components/schemas/ResultResponse"
                   data:
+                    description: Данные запроса
                     type: array
                     items:
                       type: object
                       properties:
                         id:
-                          type: string
+                          $ref: "#/components/schemas/ID"
                         title:
-                          type: string
+                          $ref: "#/components/schemas/Title"
                         unit:
                           type: string
+                          description: Единица измерения
                       required:
                         - id
                         - title
@@ -11571,19 +11873,11 @@ paths:
                   - id: 9a99c9c5-e129-11ea-9ccd-04d4c44bd377
                     title: Размер ноги
                     unit: ""
-      summary: Получить список измерений
-      operationId: Получить список измерений
-      description: ""
+      summary: Получить список измерений {measurements}
+      operationId: measurements
+      description: Метод получает список всех измерений.
       tags:
         - Достижения
-      parameters:
-        - name: apikey
-          in: header
-          description: e.g. 110132e6-ba129-4120-ac33-fcd612380121
-          required: false
-          schema:
-            type: string
-          example: 110132e6-ba129-4120-ac33-fcd612380121
   /hs/api/v3/measurement_record:
     post:
       responses:
@@ -11596,26 +11890,34 @@ paths:
                 type: object
                 properties:
                   result:
-                    type: boolean
+                    $ref: "#/components/schemas/ResultResponse"
+                  data:
+                    description: Данные запроса
+                    type: object
               example:
                 result: true
-      summary: Записать значения измерений
-      operationId: Записать значения измерений
-      description: ""
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Записать значения измерений {measurement_record}
+      operationId: measurement_record
+      description: Метод добавляет и изменяет значения измерений в регистр сведений "ЗначенияИзмерений".
       tags:
         - Достижения
       parameters:
-        - name: apikey
-          in: header
-          description: e.g. 409265d1-a0af-4ce8-88ec-7e3435024111
-          required: false
-          schema:
-            type: string
-          example: 409265d1-a0af-4ce8-88ec-7e3435024111
         - name: usertoken
           in: header
-          description: e.g. 7e8245d1-574f-4ce8-88ec-7e34358df45
-          required: false
+          description: Ключ клиента
+          required: true
           schema:
             type: string
           example: 7e8245d1-574f-4ce8-88ec-7e34358df45
@@ -11693,8 +11995,20 @@ paths:
                         title: Мессенджер
                         version: "2.3"
                     slk: false
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
       summary: Информация о конфигурации {info}
-      operationId: get_info
+      operationId: info
       description: "Метод возвращает данные о конфигурации: расширения, релиз"
       tags:
         - Прочее
@@ -11947,6 +12261,16 @@ components:
       required:
         - id
         - title
+    IDName:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/ID"
+        name:
+          $ref: "#/components/schemas/Title"
+      required:
+        - id
+        - title
     IDTitleSortOrder:
       type: object
       properties:
@@ -12137,7 +12461,7 @@ components:
         - day
         - time
     CourseAge:
-      description: Струткруа возрастной группы
+      description: Структура возрастной группы
       type: object
       properties:
         id:
@@ -13352,6 +13676,13 @@ components:
         temporary_pass:
           type: string
           description: Доступно получение временного пропуска СКУД
+        visit:
+          type: object
+          description: Данные посещения клиетнта. Null - если клиент не находится в клубе
+          properties:
+            time:
+              type: number
+              description: Время нахождения в клубе в секундах
         user_token:
           type: string
           description: Измененный ключ клиента, возвращается только в методе PUT
