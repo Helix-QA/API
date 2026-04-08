@@ -12012,6 +12012,67 @@ paths:
       description: "Метод возвращает данные о конфигурации: расширения, релиз"
       tags:
         - Прочее
+  /hs/api/v3/rating_nps/:
+    post:
+      responses:
+        "200":
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    $ref: "#/components/schemas/ResultResponse"
+                  data:
+                    x-nullable: true
+              example:
+                result: true
+                data: null
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Установить оценку NPS {rating_nps}
+      operationId: rating_nps
+      description: Метод устанавливает оценку NPS и комментарии.
+      tags:
+        - Клиенты
+      requestBody:
+        content:
+          application/json:
+            example:
+              club_id: 1a00a739-3d1b-11ea-96b5-38d547b31ac0
+              phone: 79999999999
+              rating: 5
+              comment: Всё отлично!
+            schema:
+              type: object
+              required:
+                - phone
+                - rating
+              properties:
+                phone:
+                  type: string
+                  description: Номер телефона клиента
+                rating:
+                  type: number
+                  description: Оценка от 0 до 10
+                comment:
+                  type: string
+                  description: Комментарий
+                club_id:
+                  type: string
+                  description: Идентификатор клуба. Если не передавать возьмется автоматически из внешней системы
 components:
   securitySchemes:
     basicAuth:
