@@ -6000,6 +6000,10 @@ paths:
                       resources_count:
                         type: string
                         description: Количество ресурсов
+                      is_busy:
+                        type: boolean
+                        description: Занятость слота
+
                     required:
                       - time
                       - seance_length
@@ -6108,6 +6112,11 @@ paths:
           required: true
           schema:
             type: string
+        - name: show_unavailable
+          in: query
+          description: Возвращать занятые слоты
+          schema:
+            type: boolean
         - name: resources
           in: query
           description: Массив с идентификаторами ресурсов
@@ -6259,6 +6268,11 @@ paths:
           required: true
           schema:
             type: string
+        - name: show_unavailable
+          in: query
+          description: Возвращать занятые слоты
+          schema:
+            type: boolean
         - name: resources
           in: query
           description: Массив с идентификаторами ресурсов
@@ -6412,6 +6426,11 @@ paths:
           required: true
           schema:
             type: string
+        - name: show_unavailable
+          in: query
+          description: Возвращать занятые слоты
+          schema:
+            type: boolean
         - name: resources
           in: query
           description: Массив с идентификаторами ресурсов
@@ -14137,6 +14156,9 @@ components:
         price:
           type: number
           description: Цена услуга в данном слоте
+        is_busy:
+          type: boolean
+          description: Занятость слота
   examples:
     ClientExample:
       summary: "Пример структуры клиента"
