@@ -7,7 +7,9 @@ info:
   description: |-
     Документация API для 1С:Fitness, редакция 4.0 v3
 
-    Для получения данных во всех методах используйте Basic авторизацию (Логин и пароль пользователя 1С)
+    Для получения данных во всех методах используйте Basic авторизацию (Логин и пароль пользователя 1С).
+
+    У пользователя должны быть доступны роли: "Удаленный доступ внешнее приложение" и "Запуск внешнего соединения"
 
     **usertoken** - Токен клиента
 
@@ -72,6 +74,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -82,7 +90,7 @@ paths:
       operationId: auth_types
       description: "Метод возвращает массив структур с доступными вариантами авторизации."
       tags:
-        - Авторизация
+        - authorization
       parameters: []
   /hs/api/v3/confirm_phone:
     post:
@@ -140,6 +148,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -159,7 +173,7 @@ paths:
         Если передать в метод верный код подтверждения, будет возвращён ключ для установки пароля `pass_token`.
         **apikey и usertoken передается в HEADERS**.
       tags:
-        - Авторизация
+        - authorization
       requestBody:
         content:
           application/json:
@@ -338,6 +352,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -353,7 +373,7 @@ paths:
         Атрибут pass_token получается в при помощи методов [Подтверждение номера телефона {confirm_phone}](#operation/confirm_phone),
         либо  [Токен установки пароля {pass_token}](#operation/pass_token)
       tags:
-        - Авторизация
+        - authorization
 
       requestBody:
         content:
@@ -403,6 +423,8 @@ paths:
                         description: Временный ключ клиента
                       id:
                         $ref: "#/components/schemas/ID"
+                      club:
+                        $ref: "#/components/schemas/IDTitle"
               example:
                 result: true
                 data:
@@ -413,6 +435,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -426,7 +454,7 @@ paths:
         взамен клиент получает временный ключ `user_token` для инициализация клиента
         во время произведения операций."
       tags:
-        - Авторизация
+        - authorization
       requestBody:
         content:
           application/json:
@@ -482,6 +510,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -496,7 +530,7 @@ paths:
         произведения операций. Если клиент с переданным номером не найден в базе 1С,
         будет создан новый клиент.
       tags:
-        - Авторизация
+        - authorization
       requestBody:
         content:
           application/json:
@@ -602,6 +636,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -612,7 +652,7 @@ paths:
       operationId: agreement
       description: Метод возвращает html код, содержащий форму согласия на обработку персональных данных.
       tags:
-        - Авторизация
+        - authorization
   /hs/api/v3/public_offer/:
     get:
       responses:
@@ -631,6 +671,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -641,7 +687,7 @@ paths:
       operationId: public_offer
       description: Метод возвращает html код, содержащий форму публичной оферты.
       tags:
-        - Авторизация
+        - authorization
   /hs/api/v3/privacy_policy/:
     get:
       responses:
@@ -660,6 +706,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -670,7 +722,7 @@ paths:
       operationId: privacy_policy
       description: Метод возвращает html код, содержащий форму описание политиики конфиденциальности.
       tags:
-        - Авторизация
+        - authorization
   /hs/api/v3/site_rules/:
     get:
       responses:
@@ -689,6 +741,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -699,7 +757,7 @@ paths:
       operationId: site_rules
       description: Метод возвращает html код, содержащий форму описание правил.
       tags:
-        - Авторизация
+        - authorization
   /hs/api/v3/receive_promotional_messages/:
     get:
       responses:
@@ -718,6 +776,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -730,7 +794,7 @@ paths:
         Метод возвращает html код, содержащий форму с описанием соглашения
         на получение сообщений рекламного характера.
       tags:
-        - Авторизация
+        - authorization
   /hs/api/v3/pass_token/:
     get:
       responses:
@@ -761,6 +825,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -778,7 +848,7 @@ paths:
         - phone - номер телефона,
         - key - секретный ключ из настроек внешней системы.
       tags:
-        - Авторизация
+        - authorization
       parameters:
         - name: phone
           in: query
@@ -846,6 +916,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -856,7 +932,7 @@ paths:
       operationId: auth_methods
       description: Метод возвращает массив структур с доступными вариантами авторизации.
       tags:
-        - Авторизация
+        - authorization
   /hs/api/v3/auth_request/:
     post:
       responses:
@@ -903,6 +979,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -916,12 +998,12 @@ paths:
         Клиенту необходимо написать сообщение в мессенджер, либо позвонить по указанному номеру.
         В параметре __link__ возвращается ссылка по которой необходимо перейти и подтвердить номер.
         Атрибут __method__ определяет каким именно способом будет происходить подтверждение.
-        Варианты авторизации получаются в методе [Методы авторизации](#operation/auth_methods")
+        Варианты авторизации получаются в методе [Методы авторизации](#operation/auth_methods)
         В ответе в `outgoing_id` в
         зависимости от переданого атрибута __method__ будет возвращаться номер телефона,
         либо идентификатор бота в telegtam
       tags:
-        - Авторизация
+        - authorization
       requestBody:
         content:
           application/json:
@@ -979,6 +1061,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -993,7 +1081,7 @@ paths:
         Атрибут __method__ определяет каким именно способом будет происходить подтверждение.
         Варианты авторизации получаются в методе"
       tags:
-        - Авторизация
+        - authorization
       requestBody:
         content:
           application/json:
@@ -1020,6 +1108,68 @@ paths:
                   description: >-
                     Способ получения кода подтверждения. см. метод "Доступные
                     способы исходящей авторизации"
+  /hs/api/v3/client_usertoken/:
+    get:
+      responses:
+        "200":
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    $ref: "#/components/schemas/ResultResponse"
+                  data:
+                    type: object
+                    description: Данные запроса
+                    properties:
+                      usertoken:
+                        type: string
+                        description: Ключ клиента
+
+              example:
+                result: true
+                data:
+                  usertoken: "720D6E2AEBC000FFC376966D5573D38F"
+
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Получить токен клиента {client_usertoken}
+      operationId: client_usertoken
+      description: Метод возвращает токен клиента, если клиент существует в базе. Принимает либо номер телефона, либо идентификатор клиента
+      tags:
+        - authorization
+      parameters:
+        - name: phone
+          in: query
+          description: Номер телефона клиента. Должен передаваться в формате
+          example: "79876543210"
+          schema:
+            type: string
+        - name: client_id
+          in: query
+          description: Идентификатор клиента
+          example: 195235961fdb4f2a24d
+          schema:
+            type: string
   /hs/api/v3/client/:
     get:
       responses:
@@ -1043,6 +1193,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -1053,7 +1209,7 @@ paths:
       operationId: get_client
       description: "Возвращает данные по клиенту. Клиент определяется по переданному `user_token`"
       tags:
-        - Клиенты
+        - clients
       parameters:
         - name: usertoken
           in: header
@@ -1091,6 +1247,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -1101,7 +1263,7 @@ paths:
       operationId: post_client
       description: "Создание клиента"
       tags:
-        - Клиенты
+        - clients
       requestBody:
         content:
           application/json:
@@ -1205,6 +1367,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -1215,7 +1383,7 @@ paths:
       operationId: put_client
       description: "Изменение данных клиента"
       tags:
-        - Клиенты
+        - clients
       parameters:
         - name: usertoken
           in: header
@@ -1320,6 +1488,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -1330,7 +1504,7 @@ paths:
       operationId: tags
       description: "Метод возвращает список тегов."
       tags:
-        - Клиенты
+        - clients
   /hs/api/v3/tag/:
     post:
       responses:
@@ -1355,6 +1529,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -1365,7 +1545,7 @@ paths:
       operationId: tag
       description: "Добавление нового тега клиенту"
       tags:
-        - Клиенты
+        - clients
       requestBody:
         content:
           application/json:
@@ -1409,6 +1589,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -1419,7 +1605,7 @@ paths:
       operationId: delete_tag
       description: ""
       tags:
-        - Клиенты
+        - clients
       parameters:
         - name: tag
           in: query
@@ -1459,6 +1645,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -1469,7 +1661,7 @@ paths:
       operationId: additional_client_parameter
       description: ""
       tags:
-        - Клиенты
+        - clients
       parameters:
         - name: usertoken
           in: header
@@ -1707,6 +1899,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -1717,7 +1915,7 @@ paths:
       operationId: appointments
       description: Метод возвращает массив объектов занятий, на которые записан клиент и значения пагинации
       tags:
-        - Клиенты
+        - clients
       parameters:
         - name: appointment_id
           in: query
@@ -1827,6 +2025,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -1837,7 +2041,7 @@ paths:
       operationId: purchase_history
       description: "Метод возвращает массив покупок клиента. Покупки возвращаются в порядке от новых к старым."
       tags:
-        - Клиенты
+        - clients
       parameters:
         - name: club_id
           in: query
@@ -1992,6 +2196,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -2006,7 +2216,7 @@ paths:
         1. `service_id`
         2. `type`
       tags:
-        - Клиенты
+        - clients
       parameters:
         - name: service_id
           in: query
@@ -2103,6 +2313,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -2113,7 +2329,7 @@ paths:
       operationId: guest_visits_history
       description: "Метод возвращает массив гостевых посещений клиента по членству, пакету услуг."
       tags:
-        - Клиенты
+        - clients
       parameters:
         - name: ticket_id
           in: query
@@ -2206,6 +2422,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -2216,7 +2438,7 @@ paths:
       operationId: relatives
       description: "Метод возвращает массив объектов родственников клиента c информацией о степени родства."
       tags:
-        - Клиенты
+        - clients
       parameters:
         - name: usertoken
           in: header
@@ -2269,6 +2491,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -2279,7 +2507,7 @@ paths:
       operationId: pass
       description: "Метод возвращает объект с данными пропуска."
       tags:
-        - Клиенты
+        - clients
       parameters:
         - name: usertoken
           in: header
@@ -2322,6 +2550,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -2335,7 +2569,7 @@ paths:
          При передаче `lead_id` данные в заявке будут обновлены.
          На один номер в пределах для создается одна заявка
       tags:
-        - Лиды
+        - leads
       requestBody:
         content:
           application/json:
@@ -2612,6 +2846,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -2626,7 +2866,7 @@ paths:
           Параметр `type` определяет тип ЧПУ, который будет содержаться в возвращаемом списке.
            Если параметр не указан, будет возвращён список, содержащий все типы ЧПУ.
       tags:
-        - Членства, пакеты услуг, разовые услуги
+        - memberships
       parameters:
         - name: type
           in: query
@@ -2688,6 +2928,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -2700,7 +2946,7 @@ paths:
         Метод возвращает подробное описание членства, пакета услуг.
         Доступ к методу осуществляется с использованием ключа клиента 'user_token'.
       tags:
-        - Членства, пакеты услуг, разовые услуги
+        - memberships
       parameters:
         - name: ticket_id
           in: query
@@ -2740,6 +2986,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -2750,7 +3002,7 @@ paths:
       operationId: activate_ticket
       description: ""
       tags:
-        - Членства, пакеты услуг, разовые услуги
+        - memberships
       parameters:
         - name: usertoken
           in: header
@@ -2804,6 +3056,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -2814,7 +3072,7 @@ paths:
       operationId: post_freeze_ticket
       description: "Метод замораживает членство (пакет услуг)"
       tags:
-        - Членства, пакеты услуг, разовые услуги
+        - memberships
       parameters:
         - name: usertoken
           in: header
@@ -2868,6 +3126,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -2881,7 +3145,7 @@ paths:
          заморозки).Для удаления документа заморозки, необходимо передать только freeze_id.
           Если передан только ticket_id, будет удален ближайший документ заморозки к текущей дате.
       tags:
-        - Членства, пакеты услуг, разовые услуги
+        - memberships
       parameters:
         - name: ticket_id
           in: query
@@ -2933,6 +3197,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -2943,7 +3213,7 @@ paths:
       operationId: post_unfreeze_ticket
       description: "Метод выполняет разморозку членства, пакета услуг (отмену заморозки можно делать только членствам, пакетам услуг)."
       tags:
-        - Членства, пакеты услуг, разовые услуги
+        - memberships
       parameters:
         - name: usertoken
           in: header
@@ -3000,6 +3270,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -3019,7 +3295,7 @@ paths:
          - "adding_visits" - добавление посещений;
          - "adding_services" - добавление услуг.
       tags:
-        - Членства, пакеты услуг, разовые услуги
+        - memberships
       parameters:
         - name: id
           in: query
@@ -3071,6 +3347,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -3088,7 +3370,7 @@ paths:
           - "adding_visits" - добавление посещений;
           - "adding_services" - добавление услуг.
       tags:
-        - Членства, пакеты услуг, разовые услуги
+        - memberships
       parameters:
         - name: ticket_id
           in: query
@@ -3133,6 +3415,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -3148,7 +3436,7 @@ paths:
       operationId: contracts_cancellation_reason
       description: Возвращает данные о причинах отказа рекуррентных платежей.
       tags:
-        - Членства, пакеты услуг, разовые услуги
+        - memberships
       parameters:
         - name: usertoken
           in: header
@@ -3182,6 +3470,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -3196,7 +3490,7 @@ paths:
          - `id` - Идентификатор рекуррентого членства, можно получить в методе {tickets}
          - `reason_id` - Идентификатор причины отказа рекуррентного договора, можно получить в методе {contracts_cancellation_reason}
       tags:
-        - Членства, пакеты услуг, разовые услуги
+        - memberships
       parameters:
         - name: id
           in: query
@@ -3332,6 +3626,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -3342,7 +3642,7 @@ paths:
       operationId: deposits
       description: Метод возвращает лицевые счета с балансом
       tags:
-        - Лицевые и бонусные счета клиента
+        - accounts
       parameters:
         - name: club_id
           in: query
@@ -3406,6 +3706,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -3416,7 +3722,7 @@ paths:
       operationId: deposit_history
       description: Метод возвращает историю операций.
       tags:
-        - Лицевые и бонусные счета клиента
+        - accounts
       parameters:
         - name: deposit_id
           in: query
@@ -3505,6 +3811,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -3515,7 +3827,7 @@ paths:
       operationId: bonuses
       description: Метод возвращает бонусные счета с балансом
       tags:
-        - Лицевые и бонусные счета клиента
+        - accounts
       parameters:
         - name: usertoken
           in: header
@@ -3574,6 +3886,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -3584,7 +3902,7 @@ paths:
       operationId: bonus_history
       description: Метод возвращает историю операций.
       tags:
-        - Лицевые и бонусные счета клиента
+        - accounts
       parameters:
         - name: bonus_id
           in: query
@@ -3630,6 +3948,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -3640,7 +3964,7 @@ paths:
       operationId: refill_deposit
       description: "Метод начисняет деньги на лицевой счет"
       tags:
-        - Лицевые и бонусные счета клиента
+        - accounts
       parameters:
         - name: usertoken
           in: header
@@ -3762,6 +4086,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -3772,7 +4102,7 @@ paths:
       operationId: get_temporary_reservations
       description: "Метод возвращает временные брони клиента"
       tags:
-        - Временные брони
+        - temporary-bookings
       parameters:
         - name: lead_id
           in: query
@@ -3820,6 +4150,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -3830,7 +4166,7 @@ paths:
       operationId: delete_temporary_reservations
       description: "Метод отменяет временные брони клиентов"
       tags:
-        - Временные брони
+        - temporary-bookings
       parameters:
         - name: lead_id
           in: query
@@ -3877,6 +4213,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -3887,7 +4229,7 @@ paths:
       operationId: extend_reservation
       description: "Метод продлевает время действия временной брони клиента"
       tags:
-        - Временные брони
+        - temporary-bookings
       parameters:
         - name: usertoken
           in: header
@@ -4008,6 +4350,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -4018,7 +4366,7 @@ paths:
       operationId: appointment_trainers
       description: "Метод возвращает массив структур сотрудников"
       tags:
-        - Персональные занятия
+        - personal
       parameters:
         - name: club_id
           in: query
@@ -4141,6 +4489,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -4151,7 +4505,7 @@ paths:
       operationId: appointment_services
       description: Метод возвращает массив структур услуг, доступных для записи.
       tags:
-        - Персональные занятия
+        - personal
       parameters:
         - name: start_date
           in: query
@@ -4215,6 +4569,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -4225,7 +4585,7 @@ paths:
       operationId: appointment_dates
       description: Метод возвращает массив дат, доступных для записи, в формате iso8601.
       tags:
-        - Персональные занятия
+        - personal
       parameters:
         - name: start_date
           in: query
@@ -4357,6 +4717,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -4367,7 +4733,7 @@ paths:
       operationId: appointment_times
       description: Метод возвращает массив структур слотов, доступных для записи. Реквизит `usertoken` в заголовках является необязательным.
       tags:
-        - Персональные занятия
+        - personal
       parameters:
         - name: start_date
           in: query
@@ -4429,6 +4795,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -4439,7 +4811,7 @@ paths:
       operationId: get_appointment
       description: Метод возвращает информацию о занятии.
       tags:
-        - Персональные занятия
+        - personal
       parameters:
         - name: appointment_id
           in: query
@@ -4476,6 +4848,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -4486,7 +4864,7 @@ paths:
       operationId: post_appointment
       description: Метод осуществляет запись на персональное занятие и возвращает структуру с данными о созданном занятии.
       tags:
-        - Персональные занятия
+        - personal
       parameters:
         - name: usertoken
           in: header
@@ -4550,6 +4928,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -4560,7 +4944,7 @@ paths:
       operationId: delete_appointment
       description: ""
       tags:
-        - Персональные занятия
+        - personal
       parameters:
         - name: appointment_id
           in: query
@@ -4784,6 +5168,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -4794,7 +5184,7 @@ paths:
       operationId: classes
       description: "Метод возвращает массив групповых занятий в указанном периоде"
       tags:
-        - Групповые занятия
+        - group
       parameters:
         - name: start_date
           in: query
@@ -4957,6 +5347,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -4967,7 +5363,7 @@ paths:
       operationId: class_descriptions
       description: "Метод возвращает информацию о занятии и записи на него клиента."
       tags:
-        - Групповые занятия
+        - group
       parameters:
         - name: appointment_id
           in: query
@@ -5023,6 +5419,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -5033,7 +5435,7 @@ paths:
       operationId: get_available_slots
       description: Метод возвращает массив структур
       tags:
-        - Групповые занятия
+        - group
       parameters: []
       requestBody:
         content:
@@ -5081,7 +5483,7 @@ paths:
       operationId: post_available_slots
       description: ""
       tags:
-        - Групповые занятия
+        - group
       requestBody:
         content:
           application/json:
@@ -5121,6 +5523,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -5134,7 +5542,7 @@ paths:
         посредством ключа клиента `user_token``. В случае отстутствия основания оплаты (`ticket_id``),
         будет взято первое возможное основание оплаты.
       tags:
-        - Групповые занятия
+        - group
       parameters:
         - name: usertoken
           in: header
@@ -5190,6 +5598,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -5200,7 +5614,7 @@ paths:
       operationId: client_from_class
       description: Метод осуществляет отмену записи клиента на групповое занятие. Доступ к методу осуществляется по средством ключа клиента(`user_token`).
       tags:
-        - Групповые занятия
+        - group
       parameters:
         - name: appointment_id
           in: query
@@ -5258,6 +5672,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -5268,7 +5688,7 @@ paths:
       operationId: directions
       description: Метод возвращает все направления занятий.
       tags:
-        - Направления
+        - directions
       parameters:
         - name: club_id
           in: query
@@ -5373,6 +5793,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -5383,7 +5809,7 @@ paths:
       operationId: direction_descriptions
       description: Метод возвращает детальную информацию о направлении занятий.
       tags:
-        - Направления
+        - directions
       parameters:
         - name: direction_id
           in: query
@@ -5437,6 +5863,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -5447,7 +5879,7 @@ paths:
       operationId: hidden_client_auth
       description: Метод неявной авторизации клиента. В случае успеха возвращает `user_token` авторизованного клиента.
       tags:
-        - Лист ожидания
+        - waitlist
       parameters: []
       requestBody:
         content:
@@ -5485,6 +5917,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -5495,7 +5933,7 @@ paths:
       operationId: client_to_waiting_list
       description: Метод добавляет клиента в лист ожидания занятия.
       tags:
-        - Лист ожидания
+        - waitlist
       parameters:
         - name: usertoken
           in: header
@@ -5542,6 +5980,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -5552,7 +5996,7 @@ paths:
       operationId: client_from_waiting_list
       description: Метод удаляет клиента из листа ожидания занятия.
       tags:
-        - Лист ожидания
+        - waitlist
       parameters:
         - name: appointment_id
           in: query
@@ -5607,6 +6051,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -5624,7 +6074,7 @@ paths:
       operationId: waiting_list_confirmation
       description: Метод для подтверждения записи клиентом из листа ожидания в состав занятия.
       tags:
-        - Лист ожидания
+        - waitlist
       requestBody:
         content:
           application/json:
@@ -5760,6 +6210,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -5770,7 +6226,7 @@ paths:
       operationId: rental_services
       description: "Метод возвращает массив структур услуг, доступных для записи аренды"
       tags:
-        - Аренда зала
+        - rental
       parameters:
         - name: start_date
           in: query
@@ -5922,6 +6378,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -5932,7 +6394,7 @@ paths:
       operationId: rental_rooms
       description: Метод возвращает массив структур помещений, доступных для аренды.
       tags:
-        - Аренда зала
+        - rental
       parameters:
         - name: start_date
           in: query
@@ -6069,6 +6531,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -6079,7 +6547,7 @@ paths:
       operationId: rental_times
       description: Метод возвращает массив структур слотов, доступных для аренды.
       tags:
-        - Аренда зала
+        - rental
       parameters:
         - name: start_date
           in: query
@@ -6225,6 +6693,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -6235,7 +6709,7 @@ paths:
       operationId: rental_rooms_times
       description: Метод возвращает массив структур слотов, доступных для аренды по помещениям (не учитывает ресурсы).
       tags:
-        - Аренда зала
+        - rental
       parameters:
         - name: start_date
           in: query
@@ -6387,6 +6861,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -6397,7 +6877,7 @@ paths:
       operationId: rental_resources_times
       description: Метод возвращает массив структур слотов, доступных для аренды по помещениям учитывает ресурсы.
       tags:
-        - Аренда зала
+        - rental
       parameters:
         - name: start_date
           in: query
@@ -6500,6 +6980,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -6510,7 +6996,7 @@ paths:
       operationId: rental_resources
       description: Метод возвращает массив структур слотов, доступных для аренды. Реквизит `usertoken` в заголовках является необязательным.
       tags:
-        - Аренда зала
+        - rental
       parameters:
         - name: room_id
           in: query
@@ -6593,6 +7079,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -6603,7 +7095,7 @@ paths:
       operationId: possible_durations
       description: Метод возвращает временные промежутки, на которые можно записаться в конкретное время.
       tags:
-        - Аренда зала
+        - rental
       parameters:
         - name: start_date
           in: query
@@ -6654,6 +7146,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -6664,7 +7162,7 @@ paths:
       operationId: rental
       description: Метод возвращает информацию об аренде.
       tags:
-        - Аренда зала
+        - rental
       parameters:
         - name: rental_id
           in: path
@@ -6701,6 +7199,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -6711,7 +7215,7 @@ paths:
       operationId: post_rental
       description: Метод осуществляет аренду помещения и возвращает структуру с данными о созданной аренде.
       tags:
-        - Аренда зала
+        - rental
       parameters:
         - name: usertoken
           in: header
@@ -6778,6 +7282,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -6788,7 +7298,7 @@ paths:
       operationId: delete_rental
       description: Метод осуществляет отмену аренды и возвращает структуру с данными об отменённой аренде.
       tags:
-        - Аренда зала
+        - rental
       parameters:
         - name: rental_id
           in: query
@@ -6871,6 +7381,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -6882,7 +7398,7 @@ paths:
       operationId: interval_rental
       description: "Метод осуществляет аренду помещения и возвращает структуру с данными о созданной аренде. Отличается от метода [{rental}](#operation/post_rental) тем, что принимает сразу несколько интевалов для создания аренды. В результате выполнения может быть создано несколько занятий"
       tags:
-        - Аренда зала
+        - rental
       parameters:
         - name: usertoken
           in: header
@@ -6998,6 +7514,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -7008,7 +7530,7 @@ paths:
       operationId: rental_cart_cost
       description: "Метод возвращает структуру с ценой для оплаты. Учитывает все маркетинговые акции, если передан токен клиента"
       tags:
-        - Аренда зала
+        - rental
       parameters:
         - name: cart
           in: query
@@ -7075,6 +7597,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -7085,7 +7613,7 @@ paths:
       operationId: rental_payment
       description: "Метод создает основания оплаты для занятий с типом аренда"
       tags:
-        - Аренда зала
+        - rental
       parameters:
         - name: usertoken
           in: header
@@ -7181,6 +7709,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -7197,7 +7731,7 @@ paths:
       operationId: visit_rooms
       description: Метод возвращает массив структур помещений, доступных для аренды.
       tags:
-        - Посещения
+        - visits
       parameters:
         - name: start_date
           in: query
@@ -7273,6 +7807,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -7283,7 +7823,7 @@ paths:
       operationId: visit_times
       description: Метод возвращает массив структур слотов, доступных для аренды. Реквизит `usertoken` в заголовках является необязательным.
       tags:
-        - Посещения
+        - visits
       parameters:
         - name: start_date
           in: query
@@ -7346,6 +7886,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -7356,7 +7902,7 @@ paths:
       operationId: visit
       description: Метод осуществляет бронирование слота и возвращает result (флаг успешности бронирования).
       tags:
-        - Посещения
+        - visits
       parameters:
         - name: usertoken
           in: header
@@ -7411,6 +7957,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -7421,7 +7973,7 @@ paths:
       operationId: delete_visit
       description: Метод осуществляет отмену бронирования слота и возвращает result (флаг успешности отмены).
       tags:
-        - Посещения
+        - visits
       parameters:
         - name: date_time
           in: query
@@ -7466,6 +8018,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -7476,7 +8034,7 @@ paths:
       operationId: appointment_rating
       description: Метод устанавливает оценку и комментарии к занятию.
       tags:
-        - Посещения
+        - visits
       parameters:
         - name: usertoken
           in: header
@@ -7589,6 +8147,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -7605,7 +8169,7 @@ paths:
           Будут выведены только услуги, которые могут быть оказаны в установленное время.Если параметры отбора не указаны,
           то будут выведены все услуги, которые может оказать любой сотрудник за всё время своей работы, начиная с текущей даты сеанса.
       tags:
-        - Запись в салон красоты
+        - salon
       parameters:
         - name: club_id
           in: query
@@ -7664,6 +8228,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -7680,7 +8250,7 @@ paths:
            у которых есть свободные сеансы в указанное время.Если параметры отбора не указаны, то будут выведены все сотрудники,
             которые могут оказать хотя бы одну услугу за всё время своей работы, начиная с текущей даты сеанса.
       tags:
-        - Запись в салон красоты
+        - salon
       parameters:
         - name: club_id
           in: query
@@ -7747,6 +8317,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -7762,7 +8338,7 @@ paths:
         Будут выведены даты, для записи на выбранную услугу.staff_id: Идентификатор сотрудника.
         Будут выведены даты, для записи на выбранного сотрудника.
       tags:
-        - Запись в салон красоты
+        - salon
       parameters:
         - name: club_id
           in: query
@@ -7869,6 +8445,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -7886,7 +8468,7 @@ paths:
         - `datetime`: Дата (в формате iso8601). Будут выведены слоты для записи в указанный день после установленного времени.
         Если параметры отбора не указаны, то будут выведены все свободные слоты по всем сотрудникам с текущей даты сеанса и до конца дня.
       tags:
-        - Запись в салон красоты
+        - salon
       parameters:
         - name: club_id
           in: query
@@ -8068,6 +8650,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -8080,7 +8668,7 @@ paths:
         Метод выполняет расчет стоимости визита с учетом предоставленных услуг записи и действующих маркетинговых акций, настроенных в системе.
          Для корректного применения скидок требуется передача заголовка запроса `usertoken`.
       tags:
-        - Запись в салон красоты
+        - salon
       parameters:
         - name: club_id
           in: query
@@ -8144,6 +8732,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -8161,7 +8755,7 @@ paths:
          (если в течении 5 минут не будет произведена оплата, то визит будет автоматически отменен) и требуется предоплата
          - "reserved_and_payed" - визит зарезервирован и оплачен
       tags:
-        - Запись в салон красоты
+        - salon
       parameters:
         - name: usertoken
           in: header
@@ -8237,6 +8831,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -8247,7 +8847,7 @@ paths:
       operationId: cancel_record
       description: Отменяет запись на визит
       tags:
-        - Запись в салон красоты
+        - salon
       parameters:
         - name: record_id
           in: query
@@ -8402,6 +9002,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -8412,7 +9018,7 @@ paths:
       operationId: visites
       description: Возвращается массив оконченных визитов.
       tags:
-        - Запись в салон красоты
+        - salon
       parameters:
         - name: club_id
           in: query
@@ -8471,6 +9077,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -8481,7 +9093,7 @@ paths:
       operationId: change_record
       description: Проверяет возможность переноса визита и изменят время визита, если это возможно.
       tags:
-        - Запись в салон красоты
+        - salon
       parameters:
         - name: datetime
           in: query
@@ -8550,6 +9162,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -8564,7 +9182,7 @@ paths:
         - Параметр `view` указывает вид отображения разделов. По умолчанию "list". При view = list, параметр `childs`
          вернет массив с идентификаторами подчиненных элементов. При view = tree, параметр `childs` вернет массив с полной структурой элементов, как у родителя.
       tags:
-        - Каталог
+        - catalog
       parameters:
         - name: club_id
           in: query
@@ -8786,6 +9404,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -8813,7 +9437,7 @@ paths:
         - adding_visits - добавление посещений;
         - adding_services - добавление услуг.
       tags:
-        - Каталог
+        - catalog
       parameters:
         - name: type
           in: query
@@ -8938,6 +9562,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -8948,7 +9578,7 @@ paths:
       operationId: employee_choice
       description: Метод возвращает массив структур цен номенклатуры по сотрудникам.
       tags:
-        - Каталог
+        - catalog
       parameters:
         - name: item_id
           in: query
@@ -9099,6 +9729,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -9109,7 +9745,7 @@ paths:
       operationId: cart_cost
       description: Метод возвращает массив цен номенклатур.
       tags:
-        - Оплаты
+        - payments
       parameters:
         - name: cart
           in: query
@@ -9297,6 +9933,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -9307,7 +9949,7 @@ paths:
       operationId: debts_cart_cost
       description: Метод возвращает массив цен номенклатур.
       tags:
-        - Оплаты
+        - payments
       parameters:
         - name: debts_ids
           in: query
@@ -9362,6 +10004,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -9388,7 +10036,7 @@ paths:
          - paygine - Paygine
          - sbp - СБП
       tags:
-        - Оплаты
+        - payments
       parameters:
         - name: usertoken
           in: header
@@ -9516,6 +10164,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -9527,12 +10181,12 @@ paths:
       description: |
         Метод создает и возвращает ссылку для оплаты клиентом. Метод работает для пополнения лицевого счета, покупок и оплат задолженностей. Возвращается флаг успешности оплаты 'Result' типа bool.
         - Для создания покупки необходимо передать параметры: club_id, transaction_id, payment_info, payment_list, cart, lead_id, promocode.
-        - Для создания ссылка на оплату интервалов аренды необходимо передавать параметры:  club_id, transaction_id, payment_info, payment_list, cart_rental, lead_id, promocode.
+        - Для создания ссылки на оплату интервалов аренды необходимо передавать параметры:  club_id, transaction_id, payment_info, payment_list, cart_rental, lead_id, promocode.
         - Для пополнения лицевого счета необходимо передавать: club_id, transaction_id, deposit_id, cost.
-        - Для оплаты задолженностей неободимо передавать: club_id, transaction_id, sales, payment_list.
+        - Для оплаты задолженностей необходимо передавать: club_id, transaction_id, sales, payment_list.
 
       tags:
-        - Оплаты
+        - payments
       parameters:
         - name: usertoken
           in: header
@@ -9571,8 +10225,10 @@ paths:
                 value:
                   transaction_id: 1211
                   cart_rental:
-                    - purchase_id: a62afb1e-97b2-11e7-b142-0050568b93ed
-                      count: 1
+                    - record_array:
+                        - date_time: "2026-02-17T10:00:00"
+                      service_id: a62afb1e-97b2-11e7-b142-0050568b93ed
+                      room_id: a62afb1e-97b2-11e7-b142-0050568b93ed
                   payment_list:
                     - type: cash
                       amount: 11000
@@ -9660,19 +10316,25 @@ paths:
                     properties:
                       status:
                         description: Текущий статус оплаты по ссылке
-                        type: string
+                        type: number
               examples:
                 example1:
                   value:
                     result: true
                     data:
-                      status: 1 — ожидает оплаты или колбэка от банка
+                      status: 1
         "400":
           description: Некорректный запрос
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -9687,7 +10349,7 @@ paths:
         - 2 — оплачен
         - 3 — отказ от банка (не оплачен)
       tags:
-        - Оплаты
+        - payments
       parameters:
         - in: query
           name: id
@@ -9853,6 +10515,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -9863,7 +10531,7 @@ paths:
       operationId: debts
       description: Метод возвращает массив структур долгов клиента.
       tags:
-        - Оплаты
+        - payments
       parameters:
         - name: usertoken
           in: header
@@ -9898,6 +10566,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -9908,7 +10582,7 @@ paths:
       operationId: debts_payment
       description: Метод оплачивает массив переданных реализаций.
       tags:
-        - Оплаты
+        - payments
       parameters:
         - name: usertoken
           in: header
@@ -10036,6 +10710,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -10058,11 +10738,11 @@ paths:
             Соблюдение указанного порядка гарантирует использование актуальных
             данных и корректную работу рекуррентных платежей.
       tags:
-        - Оплаты
+        - payments
       parameters:
         - name: usertoken
           in: header
-          description: e.g. 7e8245d1-574f-4ce8-88ec-7e34358df45
+          description: Ключ клиента
           required: false
           schema:
             type: string
@@ -10091,6 +10771,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -10101,11 +10787,11 @@ paths:
       operationId: post_credit_card
       description: ""
       tags:
-        - Оплаты
+        - payments
       parameters:
         - name: usertoken
           in: header
-          description: e.g. 7e8245d1-574f-4ce8-88ec-7e34358df45
+          description: Ключ клиента
           required: false
           schema:
             type: string
@@ -10184,6 +10870,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -10194,7 +10886,7 @@ paths:
       operationId: delete_credit_card
       description: ""
       tags:
-        - Оплаты
+        - payments
       parameters:
         - name: id
           in: query
@@ -10202,16 +10894,9 @@ paths:
           required: true
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: e.g. 409265d1-a0af-4ce8-88ec-7e3435024111
-          required: false
-          schema:
-            type: string
-          example: 409265d1-a0af-4ce8-88ec-7e3435024111
         - name: usertoken
           in: header
-          description: e.g. 7e8245d1-574f-4ce8-88ec-7e34358df45
+          description: Ключ клиента
           required: false
           schema:
             type: string
@@ -10302,6 +10987,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -10312,7 +11003,7 @@ paths:
       operationId: trainers
       description: Метод возвращает массив сотрудников (только роли - спортивный врач, старший тренер, тренер)
       tags:
-        - Сотрудники
+        - employees
       requestBody:
         content:
           application/json:
@@ -10437,6 +11128,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -10447,7 +11144,7 @@ paths:
       operationId: employee
       description: В случае, если сотрудник является тренером, возвращается информация о нем и его рейтинге.
       tags:
-        - Сотрудники
+        - employees
       parameters:
         - name: employee_id
           in: query
@@ -10554,6 +11251,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -10564,7 +11267,7 @@ paths:
       operationId: comments
       description: Метод возвращает следующую структуру данных
       tags:
-        - Сотрудники
+        - employees
       parameters:
         - name: start_date
           in: query
@@ -10625,11 +11328,29 @@ paths:
                   data:
                     description: Данные запроса
                     $ref: "#/components/schemas/RoomObject"
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
       summary: Получить информацию о помещении {room}
       operationId: room
       description: Метод возвращает информацию о помещении.
       tags:
-        - Помещения
+        - rooms
       parameters:
         - name: room_id
           in: path
@@ -10787,6 +11508,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -10797,7 +11524,7 @@ paths:
       operationId: courses
       description: Метод возвращает информацию о секциях.
       tags:
-        - Секции
+        - courses
       parameters:
         - name: statuses
           in: query
@@ -11001,6 +11728,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -11011,7 +11744,7 @@ paths:
       operationId: course_description
       description: "Метод возвращает информацию о секции."
       tags:
-        - Секции
+        - courses
       parameters:
         - name: course_id
           in: query
@@ -11199,6 +11932,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -11210,7 +11949,7 @@ paths:
       operationId: client_courses
       description: Метод возвращает информацию о секциях, в которые записан клиент.
       tags:
-        - Секции
+        - courses
       parameters:
         - name: usertoken
           in: header
@@ -11274,6 +12013,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -11284,7 +12029,7 @@ paths:
       operationId: cycle_periods
       description: Метод возвращает структуры периодов циклов.
       tags:
-        - Секции
+        - courses
       parameters:
         - name: cycle_id
           in: query
@@ -11325,6 +12070,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -11335,7 +12086,7 @@ paths:
       operationId: course_choice
       description: Метод возвращает секции, в которые можно записаться с переданным пакетом услуг.
       tags:
-        - Секции
+        - courses
       parameters:
         - name: item_id
           in: query
@@ -11368,6 +12119,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -11378,7 +12135,7 @@ paths:
       operationId: client_to_course
       description: Метод записывает клиента в секцию.
       tags:
-        - Секции
+        - courses
       parameters:
         - name: usertoken
           in: header
@@ -11506,6 +12263,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -11516,7 +12279,7 @@ paths:
       operationId: clubs
       description: Метод возвращает информацию о дуступных клубах переданной внешней системы.
       tags:
-        - Клубы
+        - clubs
       parameters:
         - name: usertoken
           in: header
@@ -11555,6 +12318,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -11565,7 +12334,7 @@ paths:
       operationId: club_workload
       description: Метод возвращает количество клиентов в клубе на текущее время.
       tags:
-        - Клубы
+        - clubs
       parameters:
         - name: club_id
           in: query
@@ -11636,6 +12405,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -11646,7 +12421,7 @@ paths:
       operationId: club_workload_detail
       description: Детальная информация по клиентам находящимся в клубе в определенную дату. Метод возвращает массив структур.
       tags:
-        - Клубы
+        - clubs
       parameters:
         - name: club_id
           in: query
@@ -11696,6 +12471,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -11706,7 +12487,7 @@ paths:
       operationId: club_workload_quantity
       description: Метод возвращает данные о загруженности клуба по часам работы клуба.
       tags:
-        - Клубы
+        - clubs
       parameters:
         - name: club_id
           in: query
@@ -11822,6 +12603,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -11832,7 +12619,7 @@ paths:
       operationId: progress
       description: Метод возвращает информацию о достижениях клиента.
       tags:
-        - Достижения
+        - achievements
       parameters:
         - name: start_date
           in: query
@@ -11892,11 +12679,29 @@ paths:
                   - id: 9a99c9c5-e129-11ea-9ccd-04d4c44bd377
                     title: Размер ноги
                     unit: ""
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
       summary: Получить список измерений {measurements}
       operationId: measurements
       description: Метод получает список всех измерений.
       tags:
-        - Достижения
+        - achievements
   /hs/api/v3/measurement_record:
     post:
       responses:
@@ -11921,6 +12726,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -11931,7 +12742,7 @@ paths:
       operationId: measurement_record
       description: Метод добавляет и изменяет значения измерений в регистр сведений "ЗначенияИзмерений".
       tags:
-        - Достижения
+        - achievements
       parameters:
         - name: usertoken
           in: header
@@ -12020,6 +12831,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -12030,7 +12847,7 @@ paths:
       operationId: info
       description: "Метод возвращает данные о конфигурации: расширения, релиз"
       tags:
-        - Прочее
+        - other
   /hs/api/v3/rating_nps/:
     post:
       responses:
@@ -12055,6 +12872,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
         "500":
           description: Внутренняя ошибка сервера
           content:
@@ -12065,7 +12888,7 @@ paths:
       operationId: rating_nps
       description: Метод устанавливает оценку NPS и комментарии.
       tags:
-        - Клиенты
+        - clients
       requestBody:
         content:
           application/json:
@@ -12225,18 +13048,8 @@ components:
             type: boolean
 
     AuthorizationError:
-      description: Ошибка авторизации
-      type: object
-      properties:
-        result:
-          type: boolean
-          description: Результат запроса
-          default: false
-        data:
-          type: string
-      required:
-        - result
-        - data
+      description: Ошибка авторизации. Проверьте правильно ли переданы данные авторизации
+      type: string
     BadRequest:
       description: Некорректный запрос
       type: object
@@ -14402,32 +15215,54 @@ components:
           marketing_badges: []
 
 tags:
-  - name: Авторизация
-    description: Список методов предназначенных для авторизации клиентов.
-  - name: Клиенты
+  - name: authorization
+    description: В данном разделе описаны методы, необходимые для авторизации клиентов
+    x-displayName: Авторизация
+  - name: clients
     description: >-
-      Методы предназначены для работы с клиентскими данными. Доступ к методам
-      осуществляется по средством ключа клиента `user_token`.
-  - name: Лиды
-  - name: Членства, пакеты услуг, разовые услуги
-  - name: Лицевые и бонусные счета клиента
-  - name: Временные брони
-  - name: Персональные занятия
-  - name: Групповые занятия
-  - name: Направления
-  - name: Лист ожидания
-  - name: Аренда зала
-  - name: Посещения
-  - name: Запись в салон красоты
-  - name: Каталог
-  - name: Оплаты
-  - name: Сотрудники
-  - name: Помещения
-  - name: Секции
-  - name: Клубы
-  - name: Достижения
-  - name: Прочее
-  - name: Дополнительная информация
+      В данном разделе описаны методы для работы с клиентскими данными. Доступ к методам
+      осуществляется посредством ключа клиента `user_token`.
+    x-displayName: Клиенты
+  - name: leads
+    x-displayName: Лиды
+  - name: memberships
+    x-displayName: Членства, пакеты услуг, разовые услуги
+  - name: accounts
+    x-displayName: Лицевые и бонусные счета клиента
+  - name: temporary-bookings
+    x-displayName: Временные брони
+  - name: personal
+    x-displayName: Персональные занятия
+  - name: group
+    x-displayName: Групповые занятия
+  - name: directions
+    x-displayName: Направления
+  - name: waitlist
+    x-displayName: Лист ожидания
+  - name: rental
+    x-displayName: Аренда зала
+  - name: visits
+    x-displayName: Посещения
+  - name: salon
+    x-displayName: Запись в салон красоты
+  - name: catalog
+    x-displayName: Каталог
+  - name: payments
+    x-displayName: Оплаты
+  - name: employees
+    x-displayName: Сотрудники
+  - name: rooms
+    x-displayName: Помещения
+  - name: courses
+    x-displayName: Секции
+  - name: clubs
+    x-displayName: Клубы
+  - name: achievements
+    x-displayName: Достижения
+  - name: other
+    x-displayName: Прочее
+  - name: information
+    x-displayName: Дополнительная информация
     description: |-
       ## Коды ошибок 1C
 
