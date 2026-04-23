@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.1.0
 info:
   x-logo:
     url: https://stoma1c.ru/local/templates/stoma1c_2025/images/logo.svg
@@ -7,6 +7,9 @@ info:
   description: Документация API для 1С:Медицина. Стоматологическая клиника, ред. 2.1
 servers:
   - url: http://cloud.stoma1c.ru/api/
+security:
+  - basicAuth: []
+    apiKey: []
 paths:
   /hs/api/v1/auth_types/{clinic_id}/:
     get:
@@ -19,57 +22,91 @@ paths:
               schema:
                 type: object
                 properties:
-                  Parameters:
+                  parameters:
+                    description: Данные ответа
                     type: array
-                    description: Массив доступных вариантов авторизации
                     items:
                       type: object
                       properties:
                         type:
                           type: string
-                          description: Тип авторизации
-                          example: whats_app
-                          enum:
-                            - whats_app
+                          description: |
+                            **Тип авторизации**:
                             - sms
-                            - email
+                            - whats_app
+                            - call
+                            - outgoing_telegram
+                            - outgoing_whatsapp
+                            - outgoing_call
                         title:
                           type: string
-                          description: Название варианта авторизации
-                          example: WhatsApp
+                          description: Представление типа авторизации
+                        method:
+                          type: string
+                          description: |
+                            **Способ авторизации:**
+                            - incoming - входящая
+                            - outgoing - исходящая
                       required:
                         - type
                         - title
-                  Errors:
-                    type: object
-                    description: Информация об ошибке (при успехе code = 0)
-                    properties:
-                      code:
-                        type: integer
-                        description: Код ошибки (0 — успех)
-                        example: 0
-                      message:
-                        type: string
-                        description: Описание ошибки или пустая строка при успехе
-                        example: Описание ошибки
-                    required:
-                      - code
-                      - message
-                required:
-                  - Parameters
-                  - Errors
-                example:
-                  parameters:
-                    - type: whats_app
-                      title: WhatsApp
+                        - method
                   errors:
-                    code: 0
-                    message: Описание ошибки
-      summary: Получить доступные варианты авторизации
-      operationId: Получить доступные варианты авторизации
-      description: "Метод возвращает массив доступных вариантов авторизации"
+                    $ref: "#/components/schemas/Errors"
+              example:
+                parameters:
+                  - type: sms
+                    title: СМС
+                  - type: whats_app
+                    title: WhatsApp
+                  - type: email
+                    title: Email
+                errors:
+                  code: 0
+                  message: ""
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Получить доступные варианты авторизации {auth_types}
+      operationId: auth_types
+      description: |
+        **Метод возвращает массив доступных вариантов авторизации**
+        \
+        Метод возвращает массив с информацией о доступных способах авторизации. Поля, включённые в массив, описывают методы и типы авторизации, которые клиент может использовать для подтверждения своей личности.
+
+        ---
+        **Поле `method` — Способ авторизации:**
+        - **`incoming` (входящая)** -  Для авторизации используется код подтверждения, который отправляется на номер телефона клиента.
+         Для подтверждения номера рекомендуется использовать метод: ["Авторизация"](#operation/auth)
+        - **`outgoing` (исходящая)** - Для авторизации требуется исходящее действие от клиента, например, отправка сообщения в бот или звонок на указанный номер.
+         Для подтверждения рекомендуется использовать метод: ["Запрос на подтверджения номера телефона"](#operation/auth_request)
+
+        ---
+        **Поле `type` - Типы доступных авторизаций:**
+        - **`sms`** - Код подтверждения отправляется при помощи *sms* на указанный номер клиента. Относится с способу входящей авторизации (`incoming`)
+        - **`whats_app`** - Код подтверждения отправляется в *WhatsApp* на указанный номер телефона клиента.  Относится с способу входящей авторизации (`incoming`)
+        - **`call`** - Клиенту поступает звонок на указанный номер, после чего необходимо ввести последние цифры звонившего номера.  Относится с способу входящей авторизации (`incoming`)
+        - **`outgoing_telegram`** - Для потверждения номера клиенту необходимо отправить сообщение в *telegram-bot*. Относится с способу исходящей авторизации (`outgoing`)
+        - **`outgoing_whatsapp`** - Для потверждения номера клиенту необходимо отправить сообщение в *Whatsapp*. Относится с способу исходящей авторизации (`outgoing`)
+        - **`outgoing_call`** - Для потверждения номера клиенту необходимо совершить звонок. Относится с способу исходящей авторизации (`outgoing`)
+
       tags:
-        - Авторизация
+        - authorization
       parameters:
         - name: clinic_id
           in: path
@@ -78,13 +115,6 @@ paths:
           example: 6d3f2e84-29a7-11ed-a261-0242ac120002
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: Ключ приложения
-          required: true
-          schema:
-            type: string
-          example: 409265d1-a0af-4ce8-88ec-7e3435024111
   /hs/api/v1/auth/{clinic_id}/:
     post:
       responses:
@@ -101,33 +131,28 @@ paths:
                         type: object
                         properties:
                           sent_SMS:
+                            description: Код авторизации отправлен
                             type: boolean
-                      Error:
-                        type: number
-                      ErrorMessage:
-                        type: string
+                      Errors:
+                        $ref: "#/components/schemas/Errors"
                   - type: object
                     properties:
                       Parameters:
                         type: object
                         properties:
                           UserToken:
+                            description: Ключ клиента
                             type: string
                       Errors:
-                        type: object
-                        properties:
-                          code:
-                            type: number
-                          message:
-                            nullable: true
+                        $ref: "#/components/schemas/Errors"
               examples:
                 example1:
                   value:
-                    Request_id: 580392e6-ba49-4280-ac67-fcd6f2180121
                     Parameters:
                       sent_SMS: true
-                    Error: 0
-                    ErrorMessage: ""
+                    Errors:
+                      code: 0
+                      message: null
                 example2:
                   value:
                     Parameters:
@@ -135,12 +160,37 @@ paths:
                     Errors:
                       code: 0
                       message: null
-      summary: Авторизоваться
-      operationId: Авторизоваться
-      description: |-
-        Осуществляется авторизация клиента с помощью СМС-подтверждения или другого доступного типа авторизации(параметр - auth_type). При вызове метода без передачи кода подтверждения будет сформирован и отправлен по СМС новый код подтверждения. Если передать в метод верный код подтверждения, будет возвращён ключ клиента (UserToken).
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Авторизоваться {auth}
+      operationId: auth
+      description: |
+        Авторизация клиента с использованием СМС-подтверждения или другого метода аутентификации <br>
+        Процесс авторизации клиента осуществляется с применением СМС-подтверждения либо иного доступного метода аутентификации, который определяется параметром `auth_type`. В зависимости от указанного метода, система запрашивает подтверждение личности клиента через соответствующий канал связи. <br>
+        1. **Формирование и отправка кода подтверждения** <br>
+        В случае, если при вызове метода не передан код подтверждения, система автоматически сгенерирует новый одноразовый код. Этот код будет отправлен клиенту по СМС на номер телефона, указанный при регистрации или в текущей сессии или другой выбранный способ авторизации.
+
+        2. **Проверка кода подтверждения**<br>
+        Если клиент передает в метод действительный и правильный код подтверждения, система проверяет его корректность. В случае успешного совпадения предоставленного кода с сгенерированным, клиенту будет возвращён уникальный ключ авторизации — `UserToken`. <br> Этот ключ позволяет идентифицировать клиента и предоставляет доступ к защищённым ресурсам и функциям системы.
+
       tags:
-        - Авторизация
+        - authorization
       parameters:
         - name: clinic_id
           in: path
@@ -148,13 +198,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: Ключ приложения
-          required: true
-          schema:
-            type: string
-          example: 409265d1-a0af-4ce8-88ec-7e3435024111
       requestBody:
         content:
           application/json:
@@ -169,32 +212,31 @@ paths:
               properties:
                 login:
                   type: string
-                  description: >-
-                    Номер телефона пациента. Номер телефона должен передаваться в
-                    формате 79876543210
+                  example: "79876543210"
+                  description: "Номер телефона клиента. Должен передаваться в формате: 79876543210"
                 confirmation_code:
                   type: string
+                  example: "1234"
                   description: Код подтверждения
                 name:
                   type: string
-                  description: Имя пациента
+                  description: Имя клиента
                 last_name:
                   type: string
-                  description: Фамилия пациента
+                  description: Фамилия клиента
                 second_name:
                   type: string
-                  description: Отчество пациента
+                  description: Отчество клиента
                 birthday:
                   type: string
-                  description: 'Дата рождения в формате: "15.11.1995".'
+                  example: 31.12.1990
+                  description: "Дата рождения в формате: 31.12.1990"
                 email:
                   type: string
-                  description: Электронная почта пациента
+                  description: Электронная почта клиента
                 auth_type:
                   type: string
-                  description: >-
-                    Выбранный тип авторизации. По умолчанию тип авторизации -
-                    sms
+                  description: Выбранный тип авторизации. По умолчанию тип авторизации - sms.
   /hs/api/v1/validity_usertoken/{clinic_id}/:
     post:
       responses:
@@ -207,6 +249,7 @@ paths:
                 type: object
                 properties:
                   Result:
+                    description: Результат проверки токена
                     type: boolean
               examples:
                 example1:
@@ -215,31 +258,43 @@ paths:
                 example2:
                   value:
                     Result: false
-      summary: Валидность ключа пользователя
-      operationId: Валидность ключа пользователя
-      description: "Осуществляется проверка валидности ключа пользователя (usertoken)."
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Валидность ключа пользователя {validity_usertoken}
+      operationId: validity_usertoken
+      description: |
+        **Проверка валидности пользовательского ключа (UserToken)** <br><br>
+        Процесс включает проверку корректности и актуальности предоставленного ключа пользователя `UserToken`. Данный ключ используется для идентификации клиента и доступа к защищённым ресурсам системы.<br><br>
+        Если ключ валиден, клиент сохраняет доступ к своим данным и функциональности системы. В противном случае, при выявлении недействительности ключа, потребуется повторное прохождение процедуры аутентификации для получения нового ключа.
       tags:
-        - Авторизация
+        - authorization
       parameters:
         - name: clinic_id
           in: path
-          description: >-
-            ID клиники. Можно передавать ID любой клиники. На авторизацию это не
-            влияет
+          description: ID клиники
           required: true
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: Ключ приложения
-          required: true
-          schema:
-            type: string
-          example: e07e5bc4-2bf9-11ec-910f-2c4d546557dd
         - name: usertoken
           in: header
           description: Ключ клиента
-          required: false
+          required: true
           schema:
             type: string
           example: 5dff0370-ffd9-453c-b116-f09f405f0603
@@ -261,20 +316,7 @@ paths:
                         type: string
                         description: Ключ клиента
                   Errors:
-                    type: object
-                    description: Информация об ошибке (при успехе code = 0)
-                    properties:
-                      code:
-                        type: integer
-                        description: Код ошибки (0 — успех)
-                        example: 0
-                      message:
-                        type: string
-                        description: Описание ошибки или пустая строка при успехе
-                        example: Описание ошибки
-                    required:
-                      - code
-                      - message
+                    $ref: "#/components/schemas/Errors"
                 required:
                   - Parameters
                   - Errors
@@ -284,8 +326,26 @@ paths:
                 Errors:
                   code: 0
                   message: null
-      summary: Авторизация с цифровой подписью
-      operationId: Авторизация с цифровой подписью
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Авторизация с цифровой подписью {private_auth}
+      operationId: private_auth
       description: |-
         Метод возвращает UserToken клиента, необходимый для записи клиента. \
 
@@ -306,23 +366,14 @@ paths:
         `birthday;;email;test@mail.ru;last_name;Иванов;name;Иван;phone;79876543210;second_name;;sex;;key;2693828843`
 
       tags:
-        - Авторизация
+        - authorization
       parameters:
         - name: clinic_id
           in: path
-          description: >-
-            ID клиники. Можно передавать ID любой клиники. На авторизацию это не
-            влияет
+          description: ID клиники. Можно передавать ID любой клиники. На авторизацию это не влияет
           required: true
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: Ключ приложения
-          required: true
-          schema:
-            type: string
-          example: e07e5bc4-2bf9-11ec-910f-2c4d546557dd
       requestBody:
         content:
           application/json:
@@ -378,26 +429,12 @@ paths:
                       description: Массив доступных услуг
                       properties:
                         id:
-                          type: string
-                          description: Идентификатор услуги
-                          format: uuid
+                          $ref: "#/components/schemas/ID"
                         title:
-                          type: string
-                          description: Название услуги
+                          $ref: "#/components/schemas/Title"
                         category:
-                          type: object
                           description: Категория услуги
-                          properties:
-                            id:
-                              type: string
-                              format: uuid
-                              description: ID категории
-                            title:
-                              type: string
-                              description: Название категории
-                          required:
-                            - id
-                            - title
+                          $ref: "#/components/schemas/IDTitle"
                         price_min:
                           type: number
                           format: float
@@ -427,6 +464,8 @@ paths:
                         code_nmu:
                           type: string
                           description: Код номенклатуры медицинских услуг
+                  Errors:
+                    $ref: "#/components/schemas/Errors"
               example:
                 Parameters:
                   - id: 140df5b4-5a58-11e7-82e7-0050568b5c8d
@@ -448,20 +487,38 @@ paths:
                       - bd9d179c-5b0d-11e7-82e7-0050568b5c8d
                     sort_index: 0
                     code_nmu: "A02.07.004"
-      summary: Получить список доступных для записи услуг
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Услуги, доступные для записи {book_services}
       operationId: book_services
       description: |-
         Возвращается массив доступных для записи услуг.
 
         Для получения списка услуг, доступных для записи определённым сотрудником и/или в определённое время, необходимо использовать отборы по врачу и/или времени:
 
-        - staff_id: ID сотрудника. Будут выведены только услуги, которые может оказать указанный сотрудник.
-        - datetime: дата (в формате iso8601). Будут выведены только услуги, которые могут быть оказаны в установленное время.
+        - `staff_id`: ID сотрудника. Будут выведены только услуги, которые может оказать указанный сотрудник.
+        - `datetime`: дата (в формате iso8601). Будут выведены только услуги, которые могут быть оказаны в установленное время.
 
         Если параметры отбора не указаны, то будут выведены все услуги, которые может оказать любой сотрудник за всё время своей работы, начиная с текущей даты сеанса.
 
       tags:
-        - Запись на прием
+        - bookings
       parameters:
         - name: clinic_id
           in: path
@@ -480,13 +537,6 @@ paths:
           example: 20170820T0000
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: Ключ приложения
-          required: true
-          schema:
-            type: string
-          example: 409265d1-a0af-4ce8-88ec-7e3435024111
   /hs/api/v1/book_staff/{clinic_id}/:
     get:
       responses:
@@ -504,22 +554,19 @@ paths:
                       type: object
                       properties:
                         id:
-                          type: string
-                          format: uuid
-                          description: ID сотрудника
+                          $ref: "#/components/schemas/ID"
                         name:
-                          type: string
+                          $ref: "#/components/schemas/Title"
                           description: ФИО сотрудника
                         specialization:
                           description: Данные должности сотрудника
                           type: object
                           properties:
                             id:
-                              type: string
-                              format: uuid
+                              $ref: "#/components/schemas/ID"
                               description: ID должности
                             title:
-                              type: string
+                              $ref: "#/components/schemas/Title"
                               description: Название должности
                             code_oid:
                               type: string
@@ -533,11 +580,10 @@ paths:
                           items:
                             properties:
                               id:
-                                type: string
-                                format: uuid
+                                $ref: "#/components/schemas/ID"
                                 description: ID специализации
                               title:
-                                type: string
+                                $ref: "#/components/schemas/Title"
                                 description: Название специализации
                               code_oid:
                                 type: string
@@ -565,30 +611,20 @@ paths:
                             type: string
                             format: date-time
                         ratings:
+                          description: Массив оценок сотрудника
                           type: array
-                          description: Рейтинги по разным параметрам
                           items:
                             type: object
                             properties:
                               rating_parameter:
-                                type: object
-                                properties:
-                                  id:
-                                    type: string
-                                    format: uuid
-                                  title:
-                                    type: string
-                                    description: Наименование оценки
-                                required:
-                                  - id
-                                  - title
+                                description: Параметр оценки
+                                $ref: "#/components/schemas/IDTitle"
                               rating:
+                                description: Средняя оценка по параметру оценки   (от 0 до 5)
                                 type: number
-                                format: float
-                                description: Средний рейтинг (от 0 до 5)
                               votes_count:
-                                type: integer
                                 description: Количество голосов
+                                type: number
                             required:
                               - rating_parameter
                               - rating
@@ -601,19 +637,7 @@ paths:
                         - name
                         - specialization
                   Errors:
-                    type: object
-                    description: Информация об ошибке
-                    properties:
-                      code:
-                        type: integer
-                        description: Код ошибки (0 — успех)
-                      message:
-                        type: string
-                        nullable: true
-                        description: Сообщение об ошибке или null при успехе
-                    required:
-                      - code
-                      - message
+                    $ref: "#/components/schemas/Errors"
                 required:
                   - Parameters
                   - Errors
@@ -671,20 +695,38 @@ paths:
                 Errors:
                   code: 0
                   message: null
-      summary: Получить список доступных для записи сотрудников
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Сотрудники, доступные для записи {book_staff}
       operationId: book_staff
       description: |-
         Возвращается массив доступных для записи врача.
 
         Для получения списка врачей, доступных для записи определённой услуги и/или в определённое время, необходимо использовать отборы по сотруднику и/или времени:
 
-        - service_id: ID услуги. Будут выведены только сотрудники, которые могут оказать выбранную услугу.
-        - datetime: дата (в формате iso8601). Будут выведены сотрудники, у которых есть свободные сеансы в указанное время.
+        - `service_id`: ID услуги. Будут выведены только сотрудники, которые могут оказать выбранную услугу.
+        - `datetime`: дата (в формате iso8601). Будут выведены сотрудники, у которых есть свободные сеансы в указанное время.
 
         Если параметры отбора не указаны, то будут выведены все сотрудники, которые могут оказать хотя бы одну услугу за всё время своей работы, начиная с текущей даты сеанса.
 
       tags:
-        - Запись на прием
+        - bookings
       parameters:
         - name: clinic_id
           in: path
@@ -700,15 +742,13 @@ paths:
         - name: service_ids
           in: query
           description: >
-            Строка Json с массивом идентификаторов услуг, которые сотрудник
-            должен оказать последовательно
+            Строка Json с массивом идентификаторов услуг, которые сотрудник должен оказать последовательно
 
             Пример такой строки:
 
             {"services_array":["140df5b4-5a58-11e7-82e7-0050568b5c8d","d8329477-5a5a-11e7-82e7-0050568b5c8d"]}
 
-            Если по этому массиву не найдено сотрудников, то будет возвращена
-            ошибка с кодом 1080
+            Если по этому массиву не найдено сотрудников, то будет возвращена ошибка с кодом 1080
           schema:
             type: string
         - name: datetime
@@ -717,13 +757,6 @@ paths:
           example: 20170820T0000
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: Ключ приложения
-          required: true
-          schema:
-            type: string
-          example: 409265d1-a0af-4ce8-88ec-7e3435024111
   /hs/api/v1/book_dates/{clinic_id}/:
     get:
       responses:
@@ -742,19 +775,7 @@ paths:
                       format: date-time
                       example: "2025-12-25T00:00:00"
                   Errors:
-                    type: object
-                    description: Информация об ошибке
-                    properties:
-                      code:
-                        type: integer
-                        description: Код ошибки (0 — успех)
-                      message:
-                        type: string
-                        nullable: true
-                        description: Сообщение об ошибке или null при успехе
-                    required:
-                      - code
-                      - message
+                    $ref: "#/components/schemas/Errors"
                 required:
                   - Parameters
                   - Errors
@@ -769,17 +790,35 @@ paths:
                 Errors:
                   code: 0
                   message: null
-      summary: Получить список доступных для записи дат
-      operationId: Получить список доступных для записи дат
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Даты, доступные для записи {book_dates}
+      operationId: book_dates
       description: |-
         Возвращается массив доступных для записи дат за указанный период, содержащий даты в формате iso8601.
 
         Для получения списка дат, в которые определённый сотрудник может оказывать определённую услугу, необходимо использовать отборы по сотруднику и/или услуге:
 
-        - service_id: ID услуги. Будут выведены даты, в которые можно записаться на выбранную услугу.
-        - staff_id: ID сотрудника. Будут выведены даты, в которые можно записаться на выбранного сотрудника.
+        - `service_id`: ID услуги. Будут выведены даты, в которые можно записаться на выбранную услугу.
+        - `staff_id`: ID сотрудника. Будут выведены даты, в которые можно записаться на выбранного сотрудника.
       tags:
-        - Запись на прием
+        - bookings
       parameters:
         - name: clinic_id
           in: path
@@ -789,18 +828,14 @@ paths:
             type: string
         - name: start_date
           in: query
-          description: >-
-            Дата в формате iso8601. Начало периода. Автоматически берется начало
-            дня
+          description: Дата в формате iso8601. Начало периода. Автоматически берется начало дня
           required: true
           example: 20170820T0000
           schema:
             type: string
         - name: end_date
           in: query
-          description: >-
-            Дата в формате iso8601. Конец периода. Автоматически берется конец
-            дня
+          description: Дата в формате iso8601. Конец периода. Автоматически берется конец дня
           required: true
           example: 20170831T0000
           schema:
@@ -817,29 +852,19 @@ paths:
             type: string
         - name: length
           in: query
-          description: >-
-            Требуемая длительность свободного окна сотрудника. Если передан этот
-            параметр, то ID услуги учитываться не будет
+          description: Требуемая длительность свободного окна сотрудника. Если передан этот параметр, то ID услуги учитываться не будет
           schema:
             type: number
         - name: service_ids
           in: query
           description: >
-            Строка Json с массивом идентификаторов услуг, которые нужно оказать
-            одновременно
-
+            Строка Json с массивом идентификаторов услуг, которые нужно оказать одновременно
+            <br>
             Пример такой строки:
-
-            {"services_array":["140df5b4-5a58-11e7-82e7-0050568b5c8d","d8329477-5a5a-11e7-82e7-0050568b5c8d"]}
+            <br>
+            **{"services_array":["140df5b4-5a58-11e7-82e7-0050568b5c8d","d8329477-5a5a-11e7-82e7-0050568b5c8d"]}**
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: Ключ приложения
-          required: true
-          schema:
-            type: string
-          example: 409265d1-a0af-4ce8-88ec-7e3435024111
   /hs/api/v1/book_times/{clinic_id}/:
     get:
       responses:
@@ -874,19 +899,7 @@ paths:
                         - seance_length
                         - datetime
                   Errors:
-                    type: object
-                    description: Информация об ошибке
-                    properties:
-                      code:
-                        type: integer
-                        description: Код ошибки (0 — успех)
-                      message:
-                        type: string
-                        nullable: true
-                        description: Сообщение об ошибке или null при успехе
-                    required:
-                      - code
-                      - message
+                    $ref: "#/components/schemas/Errors"
                 required:
                   - Parameters
                   - Errors
@@ -913,22 +926,40 @@ paths:
                 Errors:
                   code: 0
                   message: null
-      summary: Получить список слотов доступных для записи
-      operationId: Получить список слотов доступных для записи
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Слоты, доступные для записи {book_times}
+      operationId: book_times
       description: |-
         Возвращается массив доступных для записи слотов с указанного времени до конца дня.
 
         Для получения списка слотов, в которые определённый сотрудник может оказывать определённую услугу, необходимо использовать отборы по сотруднику и/или услуге:
 
-        - service_id: ID услуги. Будут выведены слоты, в которые можно записаться на выбранную услугу.
-        - staff_id: ID сотрудника. Будут выведены даты, в которые можно записаться на выбранного сотрудника.
-        - datetime: дата (в формате iso8601). Будут выведены слоты для записи в указанный день после установленного времени.
+        - `service_id`: ID услуги. Будут выведены слоты, в которые можно записаться на выбранную услугу.
+        - `staff_id`: ID сотрудника. Будут выведены даты, в которые можно записаться на выбранного сотрудника.
+        - `datetime`: дата (в формате iso8601). Будут выведены слоты для записи в указанный день после установленного времени.
 
-        Если параметры отбора не указаны, то будут выведены все свободные слоты по всем сотрудникам с текущей даты сеанса и до конца дня.
+        Если параметры отбора не указаны, то будут выведены все свободные слоты по всем сотрудникам с текущей даты сеанса и до конца дня. <br>
         Настройка длительности слотов производится в Настройках учета 1С:Медицина. Стоматологическая клиника в настройке Интервал онлайн-записи
 
       tags:
-        - Запись на прием
+        - bookings
       parameters:
         - name: clinic_id
           in: path
@@ -948,17 +979,13 @@ paths:
             type: string
         - name: datetime
           in: query
-          description: >-
-            Дата в формате iso8601. Если параметр не заполнен, используется
-            текущая дата сеанса
+          description: Дата в формате iso8601. Если параметр не заполнен, используется текущая дата сеанса
           example: 20170824T0900
           schema:
             type: string
         - name: length
           in: query
-          description: >-
-            Требуемая длительность свободного окна сотрудника. Если передан этот
-            параметр, то ID услуги учитываться не будет
+          description: Требуемая длительность свободного окна сотрудника. Если передан этот параметр, то ID услуги учитываться не будет
           schema:
             type: number
         - name: service_ids
@@ -972,13 +999,6 @@ paths:
             {"services_array":["140df5b4-5a58-11e7-82e7-0050568b5c8d","d8329477-5a5a-11e7-82e7-0050568b5c8d"]}
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: Ключ приложения
-          required: true
-          schema:
-            type: string
-          example: 409265d1-a0af-4ce8-88ec-7e3435024111
   /hs/api/v1/record_marks/{clinic_id}:
     get:
       responses:
@@ -996,15 +1016,14 @@ paths:
                       type: object
                       properties:
                         id:
-                          type: string
-                          format: uuid
+                          $ref: "#/components/schemas/ID"
                           description: Уникальный идентификатор метки
                         title:
-                          type: string
+                          $ref: "#/components/schemas/Title"
                           description: Название метки (отображается пользователю)
                         color:
                           type: string
-                          description: Цвет метки в HEX-формате (с #)
+                          description: Цвет метки в HEX-формате (с '#')
                           pattern: ^#[0-9A-Fa-f]{6}$
                           example: "#FF0000"
                       required:
@@ -1012,18 +1031,7 @@ paths:
                         - title
                         - color
                   Errors:
-                    type: object
-                    description: Информация об ошибке
-                    properties:
-                      code:
-                        type: integer
-                        description: Код ошибки (0 — успех)
-                      message:
-                        type: string
-                        description: Сообщение об ошибке или пустая строка при успехе
-                    required:
-                      - code
-                      - message
+                    $ref: "#/components/schemas/Errors"
                 required:
                   - Parameters
                   - Errors
@@ -1044,11 +1052,29 @@ paths:
                 Errors:
                   code: 0
                   message: ""
-      summary: Метки предварительной записи
-      operationId: Метки предварительной записи
-      description: ""
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Метки предварительной записи {record_marks}
+      operationId: record_marks
+      description: Метод возвращает данные о метках, доступных для выбора при записи
       tags:
-        - Запись на прием
+        - bookings
       parameters:
         - name: clinic_id
           in: path
@@ -1056,13 +1082,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: Ключ приложения
-          required: true
-          schema:
-            type: string
-          example: 85fb1d22-ecd3-4cd1-8d30-007050821060
   /hs/api/v1/recording_dates/{clinic_id}/:
     get:
       responses:
@@ -1080,8 +1099,7 @@ paths:
                       type: object
                       properties:
                         id:
-                          type: string
-                          format: uuid
+                          $ref: "#/components/schemas/ID"
                           description: ID сотрудника
                         date:
                           type: array
@@ -1094,18 +1112,7 @@ paths:
                         - id
                         - date
                   Errors:
-                    type: object
-                    description: Информация об ошибке
-                    properties:
-                      code:
-                        type: integer
-                        description: Код ошибки (0 — успех)
-                      message:
-                        type: string
-                        description: Сообщение об ошибке или пустая строка при успехе
-                    required:
-                      - code
-                      - message
+                    $ref: "#/components/schemas/Errors"
                 required:
                   - Parameters
                   - Errors
@@ -1133,14 +1140,32 @@ paths:
                 Errors:
                   code: 0
                   message: ""
-      summary: Даты записи
-      operationId: Даты записи
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Даты записи {recording_dates}
+      operationId: recording_dates
       description: |-
         Метод возвращает массив дат записей по сотрудникам за указанный период. \
         При передаче только даты начала и даты окончания будут отображены интервалы по всем сотрудникам, доступным для записи.
 
       tags:
-        - Запись на прием
+        - bookings
       parameters:
         - name: clinic_id
           in: path
@@ -1175,13 +1200,6 @@ paths:
           example: ef0fd170-3c83-465d-836b-51d72d208831
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: Ключ приложения
-          required: true
-          schema:
-            type: string
-          example: ec02e377-fb52-4807-a625-39627d38f51b
   /hs/api/v1/record_cost/{clinic_id}/:
     get:
       responses:
@@ -1197,82 +1215,7 @@ paths:
                     description: Результаты расчёта стоимости
                     properties:
                       cart:
-                        type: array
-                        description: Корзина услуг с детальным расчётом
-                        items:
-                          type: object
-                          properties:
-                            purchase:
-                              type: object
-                              properties:
-                                id:
-                                  type: string
-                                  format: uuid
-                                  description: ID услуги
-                                title:
-                                  type: string
-                                  description: Название услуги
-                                type:
-                                  type: string
-                                  description: Тип номенклатуры (обычно "service")
-                                  example: service
-                                description:
-                                  type: string
-                                  description: Описание услуги
-                              required:
-                                - id
-                                - title
-                                - type
-                            count:
-                              type: number
-                              description: Количество (обычно 1 для услуг)
-                            balance:
-                              type: number
-                              description: Остаток на складе/баланс (для товаров)
-                            balance_warning:
-                              type: string
-                              description: Предупреждение о недостаточном остатке
-                            price_type:
-                              type: object
-                              properties:
-                                id:
-                                  type: string
-                                  format: uuid
-                                title:
-                                  type: string
-                                  description: Название типа цены (например, "Розничная цена")
-                              required:
-                                - id
-                                - title
-                            price:
-                              type: number
-                              format: float
-                              description: Базовая цена без скидки
-                            nds:
-                              type: number
-                              description: Ставка НДС (коэффициент, например 1.0 или 1.2)
-                            nds_sum:
-                              type: number
-                              format: float
-                              description: Сумма НДС
-                            price_with_discount:
-                              type: number
-                              format: float
-                              description: Цена с учётом скидки
-                            discount_sum:
-                              type: number
-                              format: float
-                              description: Сумма скидки
-                            payment_amount:
-                              type: number
-                              format: float
-                              description: Итоговая сумма к оплате по позиции
-                          required:
-                            - purchase
-                            - count
-                            - price_type
-                            - price
-                            - payment_amount
+                        $ref: "#/components/schemas/Cart"
                       total_amount:
                         type: number
                         format: float
@@ -1282,48 +1225,9 @@ paths:
                         format: float
                         description: Общая сумма скидок
                       may_be_payment:
-                        type: array
-                        description: Возможные способы оплаты (депозиты, бонусы и т.д.)
-                        items:
-                          type: object
-                          properties:
-                            id:
-                              type: string
-                              format: uuid
-                            title:
-                              type: string
-                            type:
-                              type: string
-                              example: deposit
-                            payment_amount:
-                              type: number
-                              format: float
-                              description: Доступная сумма для оплаты этим способом
-                          required:
-                            - id
-                            - title
-                            - type
-                            - payment_amount
+                        $ref: "#/components/schemas/MayBePayment"
                       promotions:
-                        type: array
-                        description: Применённые акции и скидки
-                        items:
-                          type: object
-                          properties:
-                            type:
-                              type: string
-                              description: Тип акции (например, "discount")
-                            title:
-                              type: string
-                              description: Название акции
-                            amount:
-                              type: number
-                              format: float
-                              description: Сумма скидки по акции
-                          required:
-                            - type
-                            - title
-                            - amount
+                        $ref: "#/components/schemas/Promotions"
                     required:
                       - cart
                       - total_amount
@@ -1331,18 +1235,7 @@ paths:
                       - may_be_payment
                       - promotions
                   Errors:
-                    type: object
-                    description: Информация об ошибке
-                    properties:
-                      code:
-                        type: integer
-                        description: Код ошибки (0 — успех)
-                      message:
-                        type: string
-                        description: Сообщение об ошибке или пустая строка при успехе
-                    required:
-                      - code
-                      - message
+                    $ref: "#/components/schemas/Errors"
                 required:
                   - Parameters
                   - Errors
@@ -1404,13 +1297,31 @@ paths:
                 Errors:
                   code: 0
                   message: ""
-      summary: Расчет стоимости записи
-      operationId: Расчет стоимости записи
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Расчет стоимости записи {record_cost}
+      operationId: record_cost
       description: |-
         Метод выполняет расчет стоимости приема с учетом предоставленных услуг записи и действующих маркетинговых акций, настроенных в системе. \
         Для корректного применения скидок требуется передача заголовка запроса usertoken.Если `usertoken` не передан — расчёт производится по общим (розничным) ценам без персональных предложений.
       tags:
-        - Запись на прием
+        - bookings
       parameters:
         - name: clinic_id
           in: path
@@ -1423,30 +1334,15 @@ paths:
           in: query
           description: >-
             Строка Json с массивом структур, содержащих параметры:
+              - "datetime" - время записи: "20240831T1500"
+              - "service_id" - ID номенклатуры
+              - "staff_id" - ID сотрудника
+            <br>Пример такой строки:<br>
 
-
-            <ul>
-                <li> "datetime" - время записи: "20240831T1500"</li>
-                <li> "service_id" - ID номенклатуры</li>
-                <li> "staff_id" - ID сотрудника</li>
-            </ul>
-
-
-            <br>Пример такой строки:
-
-            [{"datetime": "20240831T1500","service_id":
-            "9ca0fa6c-48ee-11ea-96bc-38d547b31ac0","staff_id":
-            "663290db-105c-41cc-97d4-ed5151065813"}]
+            [{"datetime": "20240831T1500","service_id": "9ca0fa6c-48ee-11ea-96bc-38d547b31ac0","staff_id": "663290db-105c-41cc-97d4-ed5151065813"}]
           required: true
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: Ключ приложения
-          required: true
-          schema:
-            type: string
-          example: 0d44270f-e77f-4e45-a9ad-b4612412a48d
         - name: usertoken
           in: header
           description: Ключ клиента
@@ -1470,8 +1366,14 @@ paths:
                     properties:
                       Result:
                         type: boolean
+                      record_id:
+                        description: Идентификатор записи
+                        $ref: "#/components/schemas/ID"
+                      status:
+                        description: Идентификатор записи, обычно `Reserved`
+                        type: string
                   Errors:
-                    nullable: true
+                    $ref: "#/components/schemas/Errors"
               example:
                 Parameters:
                   Result: true
@@ -1489,14 +1391,32 @@ paths:
                 Errors:
                   code: 0
                   message: ""
-      summary: Запись на прием
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Запись на прием {book_record}
       operationId: book_record
       description: |-
         Осуществляет запись на услугу пациента на указанное время к выбранному сотруднику.
 
         Пациент определяется по ключу клиента (UserToken), получаемому при авторизации и  передаваемому в заголовке запроса.Если передано несколько услуг, время оказания которых пересекается, то считается, что это параллельные услуги. Если эти услуги нельзя оказывать одновременно, то будет возвращена ошибка.
       tags:
-        - Запись на прием
+        - bookings
       parameters:
         - name: clinic_id
           in: path
@@ -1504,17 +1424,10 @@ paths:
           required: true
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: Ключ приложения
-          required: true
-          schema:
-            type: string
-          example: 409265d1-a0af-4ce8-88ec-7e3435024111
         - name: usertoken
           in: header
           description: Ключ клиента
-          required: false
+          required: true
           schema:
             type: string
           example: 256D323401901DB2BD42405FA54509B0
@@ -1539,8 +1452,7 @@ paths:
                 record_array:
                   $ref: "#/components/schemas/Record"
                   description: >-
-                    Массив записей. Является обязательным, если не передан
-                    ID приема
+                    Массив записей. Является обязательным, если не передан ID приема
                 fullname:
                   type: string
                   description: >-
@@ -1579,9 +1491,6 @@ paths:
                 marks:
                   type: string
                   description: Массив с идентификаторами меток
-                promocode:
-                  type: string
-                  description: Промокод
   /hs/api/v1/change_record/{clinic_id}/:
     put:
       responses:
@@ -1599,18 +1508,36 @@ paths:
                       Result:
                         type: boolean
                   Errors:
-                    nullable: true
+                    $ref: "#/components/schemas/Errors"
               example:
                 Parameters:
                   Result: true
                 Errors: null
-      summary: Перенести прием
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Перенести прием {change_record}
       operationId: change_record
       description: |-
         Проверяет возможность переноса записи и изменяет время, если это возможно. \
         При успешном изменении времени будет возвращен параметр "Result": true.
       tags:
-        - Запись на прием
+        - bookings
       parameters:
         - name: clinic_id
           in: path
@@ -1631,17 +1558,10 @@ paths:
           required: true
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: Ключ приложения
-          required: true
-          schema:
-            type: string
-          example: 409265d1-a0af-4ce8-88ec-7e3435024111
         - name: usertoken
           in: header
           description: Ключ клиента
-          required: false
+          required: true
           schema:
             type: string
           example: 256D323401901DB2BD42405FA54509B0
@@ -1660,25 +1580,39 @@ paths:
                     type: object
                     properties:
                       Result:
+                        description: Результат выполнения
                         type: boolean
                   Errors:
-                    type: object
-                    properties:
-                      code:
-                        type: number
-                      message:
-                        nullable: true
+                    $ref: "#/components/schemas/Errors"
               example:
                 Parameters:
                   Result: true
                 Errors:
                   code: 0
                   message: null
-      summary: Отмена записи на прием
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Отмена записи на прием {cancel_record}
       operationId: cancel_record
       description: "Осуществляет отмену записи клиента"
       tags:
-        - Запись на прием
+        - bookings
       parameters:
         - name: clinic_id
           in: path
@@ -1693,17 +1627,10 @@ paths:
           example: ef0fd170-3c83-465d-836b-51d72d208831
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: Ключ приложения
-          required: true
-          schema:
-            type: string
-          example: 409265d1-a0af-4ce8-88ec-7e3435024111
         - name: usertoken
           in: header
           description: Ключ клиента
-          required: false
+          required: true
           schema:
             type: string
           example: 256D323401901DB2BD42405FA54509B0
@@ -1722,27 +1649,23 @@ paths:
                     description: Информация о пациенте
                     properties:
                       full_name:
-                        type: string
-                        description: Полное ФИО пациента
+                        description: ФИО клиента
+                        $ref: "#/components/schemas/Title"
                       name:
-                        type: string
-                        description: Имя
+                        description: Имя клиента
+                        $ref: "#/components/schemas/Title"
                       second_name:
-                        type: string
-                        description: Отчество
+                        description: Отчество клиента
+                        $ref: "#/components/schemas/Title"
                       last_name:
-                        type: string
-                        description: Фамилия
+                        description: Фамилия клиента
+                        $ref: "#/components/schemas/Title"
                       birthday:
+                        description: День рождения клиента
                         type: string
-                        description: Дата рождения в формате DD.MM.YYYY
                       sex:
-                        type: string
-                        nullable: true
-                        description: Пол (может быть null)
-                        enum:
-                          - Мужской
-                          - Женский
+                        description: Пол клиента ("Мужской", "Женский")
+                        type: [string, "null"]
                       email:
                         type: array
                         description: Массив email-адресов пациента
@@ -1756,18 +1679,7 @@ paths:
                       - last_name
                       - birthday
                   Errors:
-                    type: object
-                    properties:
-                      code:
-                        type: integer
-                        description: Код ошибки (0 — успех)
-                      message:
-                        type: string
-                        nullable: true
-                        description: Сообщение об ошибке или null при успехе
-                    required:
-                      - code
-                      - message
+                    $ref: "#/components/schemas/Errors"
                 required:
                   - Parameters
                   - Errors
@@ -1785,11 +1697,29 @@ paths:
                 Errors:
                   code: 0
                   message: null
-      summary: Получить информацию о пациенте
-      operationId: Получить информацию о пациенте
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Получить информацию о пациенте {client}
+      operationId: get_client
       description: Возвращает информацию о клиенте, пациенте определяется по ключу пациента (UserToken), получаемому при авторизации и передаваемому в заголовке запроса.
       tags:
-        - Пациенты
+        - clients
       parameters:
         - name: clinic_id
           in: path
@@ -1797,17 +1727,10 @@ paths:
           required: true
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: Ключ приложения
-          required: true
-          schema:
-            type: string
-          example: 409265d1-a0af-4ce8-88ec-7e3435024111
         - name: usertoken
           in: header
           description: Ключ клиента
-          required: false
+          required: true
           schema:
             type: string
           example: 256D323401901DB2BD42405FA54509B0
@@ -1821,76 +1744,9 @@ paths:
                 type: object
                 properties:
                   Parameters:
-                    type: object
-                    properties:
-                      id:
-                        type: string
-                        description: ID созданного пациента
-                      clinic_id:
-                        type: string
-                        format: uuid
-                        description: Идентификатор клиники
-                      name:
-                        type: string
-                        description: Имя
-                      surname:
-                        type: string
-                        description: Фамилия
-                      patronymic:
-                        type: string
-                        description: Отчество
-                      birth_date:
-                        type: string
-                        nullable: true
-                        description: Дата рождения в формате DD.MM.YYYY
-                      phone:
-                        type: string
-                        description: Телефон
-                      email:
-                        type: string
-                        nullable: true
-                      sold_amount:
-                        type: number
-                        description: Сумма продаж по пациенту
-                      visits_count:
-                        type: number
-                        description: Количество посещений
-                      sex:
-                        type: string
-                        description: Представление пола клиента
-                      sex_id:
-                        type: number
-                        description: Идентификатор пола (0 - не указан, 1- мужской, 2 - женский)
-                        enum:
-                          - 0
-                          - 1
-                          - 2
-                      status:
-                        type: string
-                        description: Представление статуса клиента
-                        enum:
-                          - Потенциальный
-                          - Новый
-                          - Невернувшийся
-                          - Постоянный
-                          - Отказ
-                      status_id:
-                        type: number
-                        description: Идентификатор статуса
-                    required:
-                      - id
-                      - clinic_id
-                      - phone
+                    $ref: "#/components/schemas/Client"
                   Errors:
-                    type: object
-                    properties:
-                      code:
-                        type: integer
-                      message:
-                        type: string
-                    required:
-                      - code
-                      - message
+                    $ref: "#/components/schemas/Errors"
                 required:
                   - Parameters
                   - Errors
@@ -1914,32 +1770,29 @@ paths:
                   code: 0
                   message: ""
         "400":
-          description: Bad Request
+          description: Некорректный запрос
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                  message:
-                    type: string
-              example:
-                code: 1001
-                message: Неверный формат данных или отсутствует apikey
-      summary: Создание пациента
-      operationId: Создание пациента
-      description: ""
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Создание пациента {client}
+      operationId: post_client
+      description: Метод создаёт нового клиента на основе переданных данных.
       tags:
-        - Пациенты
-      parameters:
-        - name: apikey
-          in: header
-          description: Ключ приложения
-          required: true
-          schema:
-            type: string
-          example: 409265d1-a0af-4ce8-88ec-7e3435024111
+        - clients
+      parameters: []
       requestBody:
         required: true
         content:
@@ -1960,16 +1813,14 @@ paths:
                   type: string
                   description: Номер телефона (только цифры, без +7 или 8)
                 email:
-                  type: string
-                  nullable: true
+                  type: [string, "null"]
                   description: Email пациента
                 sex:
                   type: integer
                   description: Пол (0 — не указан, 1 — мужчина, 2 — женщина)
                   enum: [0, 1, 2]
                 birth_date:
-                  type: string
-                  nullable: true
+                  type: [string, "null"]
                   description: Дата рождения в формате YYYY-MM-DD или YYYY
                 clinic_id:
                   type: string
@@ -1995,59 +1846,9 @@ paths:
                 type: object
                 properties:
                   Parameters:
-                    type: object
-                    properties:
-                      id:
-                        type: string
-                      clinic_id:
-                        type: string
-                      name:
-                        type: string
-                      surname:
-                        type: string
-                      patronymic:
-                        type: string
-                      birth_date:
-                        type: string
-                        nullable: true
-                      phone:
-                        type: string
-                      email:
-                        type: string
-                        nullable: true
-                      sold_amount:
-                        type: number
-                      visits_count:
-                        type: number
-                      sex:
-                        type: string
-                        description: Представление пола клиента
-                      sex_id:
-                        type: number
-                        description: Идентификатор пола (0 - не указан, 1- мужской, 2 - женский)
-                        enum:
-                          - 0
-                          - 1
-                          - 2
-                      status:
-                        type: string
-                        description: Представление статуса клиента
-                        enum:
-                          - Потенциальный
-                          - Новый
-                          - Невернувшийся
-                          - Постоянный
-                          - Отказ
-                      status_id:
-                        type: number
-                        description: Идентификатор статуса
+                    $ref: "#/components/schemas/Client"
                   Errors:
-                    type: object
-                    properties:
-                      code:
-                        type: number
-                      message:
-                        type: string
+                    $ref: "#/components/schemas/Errors"
                 required:
                   - Parameters
                   - Errors
@@ -2071,34 +1872,29 @@ paths:
                   code: 0
                   message: Описание ошибки
         "400":
-          description: Bad Request
-          headers: {}
+          description: Некорректный запрос
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  code:
-                    type: number
-                    description: Пример кода ошибки при неверных данных или заголовках
-                  message:
-                    type: string
-              example:
-                code: 1001
-                message: Неверный формат данных или отсутствует apikey
-      summary: Изменение пациента
-      operationId: Изменение пациента
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Изменение пациента {client}
+      operationId: put_client
       description: "Метод создаёт нового клиента на основе переданных данных. Номер телефона передавать в методе PUT не обязательно."
       tags:
-        - Пациенты
-      parameters:
-        - name: apikey
-          in: header
-          description: Ключ приложения
-          required: true
-          schema:
-            type: string
-          example: 409265d1-a0af-4ce8-88ec-7e3435024111
+        - clients
+      parameters: []
       requestBody:
         required: true
         content:
@@ -2111,21 +1907,29 @@ paths:
                   description: ID пациента (обязателен для обновления)
                 name:
                   type: string
+                  description: Имя пациента
                 surname:
                   type: string
+                  description: Фамилия пациента
                 patronymic:
                   type: string
+                  description: Отчество пациента
                 phone:
                   type: string
+                  description: Номер телефона (только цифры, без +7 или 8)
                 email:
-                  type: string
+                  type: [string, "null"]
+                  description: Email пациента
                 sex:
                   type: integer
+                  description: Пол (0 — не указан, 1 — мужчина, 2 — женщина)
                   enum: [0, 1, 2]
                 birth_date:
-                  type: string
+                  type: [string, "null"]
+                  description: Дата рождения в формате YYYY-MM-DD или YYYY
                 clinic_id:
                   type: string
+                  description: ID клиники (дублирует путь, можно оставить пустым)
               required:
                 - id
               example:
@@ -2151,128 +1955,45 @@ paths:
                     type: array
                     description: Массив пациентов
                     items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          description: ID пациента
-                        clinic_id:
-                          type: string
-                          format: uuid
-                          description: ID клиники
-                        name:
-                          type: string
-                          description: Имя
-                        surname:
-                          type: string
-                          description: Фамилия
-                        patronymic:
-                          type: string
-                          description: Отчество
-                        birth_date:
-                          type: string
-                          description: Дата рождения в формате DD.MM.YYYY
-                        phone:
-                          type: string
-                          description: Номер телефона
-                        email:
-                          type: string
-                          nullable: true
-                          description: Email пациента
-                        sold_amount:
-                          type: number
-                          description: Сумма продаж по пациенту
-                        visits_count:
-                          type: number
-                          description: Количество посещений
-                        sex:
-                          type: string
-                          description: Пол текстом (Мужской / Женский)
-                        sex_id:
-                          type: integer
-                          description: Пол кодом (1 — мужчина, 2 — женщина)
-                          enum: [1, 2]
-                        status:
-                          type: string
-                          description: Статус пациента текстом (например, Потенциальный, Постоянный)
-                        status_id:
-                          type: integer
-                          description: Код статуса пациента
-                      required:
-                        - id
-                        - clinic_id
-                        - phone
+                      $ref: "#/components/schemas/Client"
                   Errors:
-                    type: object
-                    description: Информация об ошибке
-                    properties:
-                      code:
-                        type: integer
-                        description: Код ошибки (0 — успех)
-                      message:
-                        type: string
-                        description: Сообщение об ошибке или пустая строка при успехе
-                    required:
-                      - code
-                      - message
+                    $ref: "#/components/schemas/Errors"
                   Meta:
-                    type: object
-                    description: Метаданные пагинации и общего количества
-                    properties:
-                      items_count:
-                        type: integer
-                        description: Общее количество найденных записей
-                      pages_count:
-                        type: integer
-                        description: Общее количество страниц при текущем page_size
-                      page_current:
-                        type: integer
-                        description: Текущая страница
-                      page_size:
-                        type: integer
-                        description: Размер страницы (количество записей на странице)
-                    required:
-                      - items_count
-                      - pages_count
-                      - page_current
-                      - page_size
+                    $ref: "#/components/schemas/Meta"
                 required:
                   - Parameters
                   - Errors
                   - Meta
         "400":
-          description: Bad Request
-          headers: {}
+          description: Некорректный запрос
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  code:
-                    type: number
-                    description: Пример кода ошибки при неверных данных или заголовках
-                  message:
-                    type: string
-              example:
-                code: 1001
-                message: Неверный формат данных или отсутствует apikey
-      summary: Информация о пациентах
-      operationId: Информация о пациентах
-      description: ""
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Информация о пациентах {clients}
+      operationId: clients
+      description: |
+        Метод возвращает информацию о клиентах из базы данных согласно переданным параметрам.
+        Поддерживает фильтрацию, выбор полей, сортировку и пагинацию.
       tags:
-        - Пациенты
+        - clients
       parameters:
-        - name: apikey
-          in: header
-          description: Ключ приложения
-          required: true
-          schema:
-            type: string
-          example: YOUR_API_KEY
         - name: usertoken
           in: header
-          description: Ключ клиента (либо secret key из внешней системы)
-          required: false
+          description: Ключ шифрования (secret key) из внешней системы
+          required: True
           schema:
             type: string
           example: YOUR_USER_TOKEN
@@ -2315,7 +2036,7 @@ paths:
                   description: "Количество записей на странице (по умолчанию: 20)"
                 order_by:
                   type: string
-                  description: "Поле для сортировки (например: `name`, 'surname')"
+                  description: "Поле для сортировки (например: `name`, `surname`)"
                 order_by_direction:
                   type: string
                   enum:
@@ -2323,14 +2044,13 @@ paths:
                   description: "Направление сортировки: `ASC` или `DESC`"
                 fields:
                   type: array
-                  description: Список возвращаемых полей пациента
+                  description: Список возвращаемых полей клиента (id, salon_id, name, surname, patronymic, birth_date, phone, email, sold_amount, visits_count)
                   items: {}
                 filters:
                   type: array
-                  description: Массив фильтров по различным типам данных пациента
-                  items: {}
-              required:
-                - clinic_id
+                  description: Массив фильтров по различным типам данных клиента
+                  items:
+                    $ref: "#/components/schemas/Filter"
   /hs/api/v1/clinics/{clinic_id}/:
     get:
       responses:
@@ -2348,11 +2068,10 @@ paths:
                       type: object
                       properties:
                         id:
-                          type: string
-                          format: uuid
+                          $ref: "#/components/schemas/ID"
                           description: Уникальный идентификатор клиники
                         title:
-                          type: string
+                          $ref: "#/components/schemas/Title"
                           description: Название клиники
                         work_time:
                           type: array
@@ -2399,25 +2118,11 @@ paths:
                               type: string
                               format: uri
                               description: Сайт клиники (может быть пустым)
-                          required:
-                            - phone
-                            - address
                       required:
                         - id
                         - title
                   Errors:
-                    type: object
-                    description: Информация об ошибке
-                    properties:
-                      code:
-                        type: integer
-                        description: Код ошибки (0 — успех)
-                      message:
-                        type: string
-                        description: Сообщение об ошибке или пустая строка при успехе
-                    required:
-                      - code
-                      - message
+                    $ref: "#/components/schemas/Errors"
                 required:
                   - Parameters
                   - Errors
@@ -2438,19 +2143,43 @@ paths:
                 Errors:
                   code: 0
                   message: Описание ошибки
-      summary: Получить список клиник
-      operationId: Получить список клиник
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Информация о клиниках {clinics}
+      operationId: clinics
       description: "Метод возвращает список доступных клиник с расписанием работы и контактной информацией."
       tags:
-        - Клиники
+        - clinics
       parameters:
-        - name: apikey
-          in: header
-          description: Ключ приложения
+        - name: clinic_id
+          in: path
+          description: ID салона
           required: true
           schema:
             type: string
-          example: 409265d1-a0af-4ce8-88ec-7e3435024111
+        - name: usertoken
+          in: header
+          description: Ключ шифрования из внешней системы
+          required: true
+          schema:
+            type: string
+          example: 580392-e6ba49428-0ac67fcd-f2180121
   /hs/api/v1/records/{clinic_id}/:
     get:
       responses:
@@ -2465,176 +2194,11 @@ paths:
                     type: array
                     description: Массив записей на приём
                     items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          description: ID записи
-                        clinic_id:
-                          type: string
-                          format: uuid
-                          description: ID клиники
-                        start_date:
-                          type: string
-                          description: Дата и время начала записи в формате YYYY-MM-DD HH:MM:SS или YYYY
-                        end_date:
-                          type: string
-                          description: Дата и время окончания записи
-                        create_date:
-                          type: string
-                          description: Дата создания записи
-                        client:
-                          type: object
-                          description: Информация о пациенте
-                          properties:
-                            id:
-                              type: string
-                              format: uuid
-                            name:
-                              type: string
-                            surname:
-                              type: string
-                            patronymic:
-                              type: string
-                            display_name:
-                              type: string
-                              description: Полное отображаемое ФИО
-                            phone:
-                              type: string
-                            email:
-                              type: string
-                              nullable: true
-                          required:
-                            - id
-                            - display_name
-                            - phone
-                        staff:
-                          type: object
-                          description: Информация о сотруднике (враче)
-                          properties:
-                            id:
-                              type: string
-                              format: uuid
-                            name:
-                              type: string
-                              description: ФИО сотрудника
-                            specialization:
-                              type: object
-                              properties:
-                                id:
-                                  type: string
-                                  format: uuid
-                                title:
-                                  type: string
-                              required:
-                                - id
-                                - title
-                            weight:
-                              type: integer
-                              description: Вес для сортировки
-                            information:
-                              type: string
-                              description: Дополнительная информация (может содержать HTML)
-                            avatar:
-                              type: string
-                              nullable: true
-                              description: URL аватара или null
-                          required:
-                            - id
-                            - name
-                        services:
-                          type: array
-                          description: Массив оказываемых услуг в рамках записи
-                          items:
-                            type: object
-                            properties:
-                              id:
-                                type: string
-                                format: uuid
-                              title:
-                                type: string
-                              cost:
-                                type: number
-                                format: float
-                                description: Итоговая стоимость
-                              amount:
-                                type: number
-                                description: Количество
-                              cost_per_unit:
-                                type: number
-                                format: float
-                                description: Цена за единицу
-                              first_cost:
-                                type: number
-                                format: float
-                                description: Первоначальная цена (до скидки)
-                              discount:
-                                type: number
-                                format: float
-                                description: Сумма скидки
-                            required:
-                              - id
-                              - title
-                              - cost
-                        comment:
-                          type: string
-                          description: Комментарий к записи
-                        created_user:
-                          type: object
-                          description: Пользователь, создавший запись
-                          properties:
-                            id:
-                              type: string
-                            title:
-                              type: string
-                          required:
-                            - id
-                            - title
-                        status:
-                          type: string
-                          description: Статус записи (например, confirmed, cancelled, completed)
-                          example: confirmed
-                      required:
-                        - id
-                        - clinic_id
-                        - start_date
-                        - client
-                        - staff
-                        - services
+                      $ref: "#/components/schemas/Records"
                   Errors:
-                    type: object
-                    description: Информация об ошибке
-                    properties:
-                      code:
-                        type: integer
-                        description: Код ошибки (0 — успех)
-                      message:
-                        type: string
-                        description: Сообщение об ошибке или пустая строка при успехе
-                    required:
-                      - code
-                      - message
+                    $ref: "#/components/schemas/Errors"
                   Meta:
-                    type: object
-                    description: Метаданные пагинации
-                    properties:
-                      items_count:
-                        type: integer
-                        description: Общее количество найденных записей
-                      pages_count:
-                        type: integer
-                        description: Общее количество страниц
-                      page_current:
-                        type: integer
-                        description: Текущая страница
-                      page_size:
-                        type: integer
-                        description: Размер страницы
-                    required:
-                      - items_count
-                      - pages_count
-                      - page_current
-                      - page_size
+                    $ref: "#/components/schemas/Meta"
                 required:
                   - Parameters
                   - Errors
@@ -2684,11 +2248,29 @@ paths:
                   pages_count: 2
                   page_current: 1
                   page_size: 5
-      summary: Получить список записей
-      operationId: Получить список записей
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Получить список записей {records}
+      operationId: get_records
       description: "Метод возвращает информацию о записях клиентов из базы данных согласно переданным параметрам. Поддерживает фильтрацию, выбор полей, сортировку и пагинацию."
       tags:
-        - Записи
+        - records
       parameters:
         - name: clinic_id
           in: path
@@ -2718,17 +2300,10 @@ paths:
           description: ID пациента
           schema:
             type: string
-        - name: apikey
-          in: header
-          description: Ключ приложения
-          required: true
-          schema:
-            type: string
-          example: 409265d1-a0af-4ce8-88ec-7e3435024111
         - name: usertoken
           in: header
-          description: Ключ клиента (либо secret key из внешней системы)
-          required: false
+          description: Ключ шифрования (secret key из внешней системы)
+          required: true
           schema:
             type: string
           example: YOUR_USER_TOKEN
@@ -2742,218 +2317,87 @@ paths:
                 type: object
                 properties:
                   Parameters:
-                    type: array
-                    description: Массив записей на приём
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          description: ID записи
-                        clinic_id:
-                          type: string
-                          format: uuid
-                          description: ID клиники
-                        start_date:
-                          type: string
-                          description: Дата и время начала записи в формате YYYY-MM-DD HH:MM:SS или YYYY
-                        end_date:
-                          type: string
-                          description: Дата и время окончания записи
-                        create_date:
-                          type: string
-                          description: Дата создания записи
-                        client:
-                          type: object
-                          description: Информация о пациенте
-                          properties:
-                            id:
-                              type: string
-                              format: uuid
-                            name:
-                              type: string
-                            surname:
-                              type: string
-                            patronymic:
-                              type: string
-                            display_name:
-                              type: string
-                              description: Полное отображаемое ФИО
-                            phone:
-                              type: string
-                            email:
-                              type: string
-                              nullable: true
-                          required:
-                            - id
-                            - display_name
-                            - phone
-                        staff:
-                          type: object
-                          description: Информация о сотруднике (враче)
-                          properties:
-                            id:
-                              type: string
-                              format: uuid
-                            name:
-                              type: string
-                              description: ФИО сотрудника
-                            specialization:
-                              type: object
-                              properties:
-                                id:
-                                  type: string
-                                  format: uuid
-                                title:
-                                  type: string
-                              required:
-                                - id
-                                - title
-                            weight:
-                              type: integer
-                              description: Вес для сортировки
-                            information:
-                              type: string
-                              description: Дополнительная информация (может содержать HTML)
-                            avatar:
-                              type: string
-                              nullable: true
-                              description: URL аватара или null
-                          required:
-                            - id
-                            - name
-                        services:
-                          type: array
-                          description: Массив оказываемых услуг в рамках записи
-                          items:
-                            type: object
-                            properties:
-                              id:
-                                type: string
-                                format: uuid
-                              title:
-                                type: string
-                              cost:
-                                type: number
-                                format: float
-                                description: Итоговая стоимость
-                              amount:
-                                type: number
-                                description: Количество
-                              cost_per_unit:
-                                type: number
-                                format: float
-                                description: Цена за единицу
-                              first_cost:
-                                type: number
-                                format: float
-                                description: Первоначальная цена (до скидки)
-                              discount:
-                                type: number
-                                format: float
-                                description: Сумма скидки
-                            required:
-                              - id
-                              - title
-                              - cost
-                        comment:
-                          type: string
-                          description: Комментарий к записи
-                        created_user:
-                          type: object
-                          description: Пользователь, создавший запись
-                          properties:
-                            id:
-                              type: string
-                            title:
-                              type: string
-                          required:
-                            - id
-                            - title
-                        status:
-                          type: string
-                          description: Статус записи (например, confirmed, cancelled, completed)
-                          example: confirmed
-                      required:
-                        - id
-                        - clinic_id
-                        - start_date
-                        - client
-                        - staff
-                        - services
+                    description: Данные записи на приём
+                    $ref: "#/components/schemas/Records"
                   Errors:
-                    type: object
-                    description: Информация об ошибке
-                    properties:
-                      code:
-                        type: integer
-                        description: Код ошибки (0 — успех)
-                      message:
-                        type: string
-                        description: Сообщение об ошибке или пустая строка при успехе
-                    required:
-                      - code
-                      - message
+                    $ref: "#/components/schemas/Errors"
                 required:
                   - Parameters
                   - Errors
               example:
                 Parameters:
-                  - id: 7c802c46
-                    clinic_id: 0d190fc8
-                    start_date: "2025"
-                    end_date: "2025"
-                    create_date: "2025"
-                    client:
-                      id: 401b3cea
-                      name: Савелий
-                      surname: Соновен
-                      patronymic: Васильевич
-                      display_name: Соновен Савелий Васильевич
-                      phone: "79211234567"
-                      email: 123456789@gmail.com
-                    staff:
-                      id: d39e5d29
-                      name: Врач
-                      specialization:
-                        id: a19ee94d
-                        title: Врач стоматолог
-                      weight: 0
-                      information: <img...>
-                      avatar: "null"
-                    services:
-                      - id: 6ad4c14f
-                        title: Услуга 2
-                        cost: 500
-                        amount: 1
-                        cost_per_unit: 500
-                        first_cost: 500
-                        discount: 0
-                    comment: Комментарий
-                    created_user:
-                      id: 0d191059
-                      title: Администратор
-                    status: confirmed
+                  id: 7c802c46
+                  clinic_id: 0d190fc8
+                  start_date: "2025"
+                  end_date: "2025"
+                  create_date: "2025"
+                  client:
+                    id: 401b3cea
+                    name: Савелий
+                    surname: Соновен
+                    patronymic: Васильевич
+                    display_name: Соновен Савелий Васильевич
+                    phone: "79211234567"
+                    email: 123456789@gmail.com
+                  staff:
+                    id: d39e5d29
+                    name: Врач
+                    specialization:
+                      id: a19ee94d
+                      title: Врач стоматолог
+                    weight: 0
+                    information: <img...>
+                    avatar: "null"
+                  services:
+                    - id: 6ad4c14f
+                      title: Услуга 2
+                      cost: 500
+                      amount: 1
+                      cost_per_unit: 500
+                      first_cost: 500
+                      discount: 0
+                  comment: Комментарий
+                  created_user:
+                    id: 0d191059
+                    title: Администратор
+                  status: confirmed
                 Errors:
                   code: 0
                   message: Описание ошибки
-      summary: Изменить запись
-      operationId: Изменить запись
-      description: ""
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Изменить запись {records}
+      operationId: put_records
+      description: "Метод изменяет запись"
       tags:
-        - Записи
+        - records
       parameters:
-        - name: apikey
-          in: header
-          description: Ключ приложения
+        - name: clinic_id
+          in: path
+          description: ID клиники
           required: true
           schema:
             type: string
-          example: 409265d1-a0af-4ce8-88ec-7e3435024111
         - name: usertoken
           in: header
-          description: Ключ клиента (либо secret key из внешней системы)
-          required: false
+          description: Ключ шифрования (secret key из внешней системы)
+          required: true
           schema:
             type: string
           example: YOUR_USER_TOKEN
@@ -2997,6 +2441,7 @@ paths:
               required:
                 - clinic_id
                 - id
+
   /hs/api/v1/services/{clinic_id}/:
     get:
       responses:
@@ -3032,17 +2477,8 @@ paths:
                           type: integer
                           description: Вес для сортировки (чем меньше — тем выше в списке)
                         category_id:
-                          type: object
+                          $ref: "#/components/schemas/IDTitle"
                           description: Категория услуги
-                          properties:
-                            id:
-                              type: string
-                              format: uuid
-                            title:
-                              type: string
-                          required:
-                            - id
-                            - title
                         comment:
                           type: string
                           description: Комментарий к услуге (может быть пустым)
@@ -3088,26 +2524,7 @@ paths:
                       - code
                       - message
                   Meta:
-                    type: object
-                    description: Метаданные пагинации
-                    properties:
-                      items_count:
-                        type: integer
-                        description: Общее количество найденных услуг
-                      pages_count:
-                        type: integer
-                        description: Общее количество страниц
-                      page_current:
-                        type: integer
-                        description: Текущая страница
-                      page_size:
-                        type: integer
-                        description: Размер страницы
-                    required:
-                      - items_count
-                      - pages_count
-                      - page_current
-                      - page_size
+                    $ref: "#/components/schemas/Meta"
                 required:
                   - Parameters
                   - Errors
@@ -3136,11 +2553,29 @@ paths:
                   pages_count: 2
                   page_current: 1
                   page_size: 5
-      summary: Получить список услуг
-      operationId: Получить список услуг
-      description: ""
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Получить список услуг {services}
+      operationId: services
+      description: "Метод возвращает список услуг"
       tags:
-        - Записи
+        - services
       parameters:
         - name: clinic_id
           in: path
@@ -3176,86 +2611,184 @@ paths:
           example: "20"
           schema:
             type: number
-        - name: apikey
+        - name: usertoken
           in: header
-          description: Ключ приложения
+          description: Ключ шифрования (secret key из внешней системы)
           required: true
           schema:
             type: string
-          example: ec02e377-fb52-4807-a625-39627d38f51b
-        - name: usertoken
-          in: header
-          description: Ключ клиента или secret-key
-          required: false
-          schema:
-            type: string
           example: C1DB8500345E8B9C25E98330D0B3266B
+
 components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: Использовать при отправке запросов напрямую в базу, т.е при отправке запросов по адресу http://cloud.stoma1c.ru/api/, авторизацию использовать не надо
+    apiKey:
+      type: apiKey
+      in: header
+      name: apikey
+      description: "Ключ приложения. Указан во внешней системе (Example: **110132e6-ba129-4120-ac33-fcd612380121**)"
   schemas:
-    AuthType:
+    BadRequest:
+      description: Некорректный запрос
       type: object
       properties:
-        type:
-          type: string
-          enum:
-            - sms
-            - whats_app
-            - email
-        title:
-          type: string
-          example: WhatsApp
-          description: Название варианта авторизации
-    cart:
-      type: object
+        Parameters:
+          type: [object, "null"]
+          description: Данные ответа
+        Errors:
+          $ref: "#/components/schemas/Errors"
       required:
-        - purchase_id
-        - count
-      properties:
-        purchase_id:
-          type: string
-          description: ID номенклатуры
-        count:
-          type: number
-          description: Количество номенклатуры
-        staff_id:
-          type: string
-          description: ID сотрудника
-    Payment:
+        - Parameters
+
+      example:
+        Parameters: null
+        Errors: { code: 1050, message: "Не найден объект" }
+    AuthorizationError:
+      description: Ошибка авторизации. Проверьте правильно ли переданы данные авторизации
+      type: string
+    InternalServerError:
+      description: Внутренняя ошибка сервера
       type: object
-      required:
-        - cash
-        - card
-        - deposit
       properties:
-        cash:
-          type: number
-          description: Сумма оплаты наличными
-        card:
-          type: number
-          description: Сумма оплаты картой
-        deposit:
-          type: number
-          description: Сумма оплаты лицевым счетом
-    PaymentList:
+        Parameters:
+          type: [object, "null"]
+          description: Данные ответа
+        Errors:
+          $ref: "#/components/schemas/Errors"
+      required:
+        - Parameters
+      example:
+        Parameters: null
+        Errors: { code: 1000, message: "Ошибка работы с базой данных." }
+    Errors:
+      description: Структура ошибки
       type: object
-      required:
-        - type
-        - amount
       properties:
-        type:
-          type: string
-          description: >-
-            Тип оплаты ("cash" - оплата наличными, "card" - оплата картой,
-            "deposit" - оплата с лицевого счета, "bonus" - оплата с бонусного
-            счета)
-        amount:
-          type: number
-          description: Сумма оплаты
+        code:
+          description: Код ошибки (см. Дополнительная информация)
+          type: [number, "null"]
+          example: 0
+        message:
+          description: Описание ошибки (см. Дополнительная информация)
+          type: [string, "null"]
+          example: "Описание ошибки"
+    ID:
+      description: "Идентификатор объекта"
+      type: string
+      format: uuid
+      example: "689c34d8-79ee-11ec-b13e-f02f7488d897"
+    Title:
+      type: string
+      example: "Наменование элемента"
+      description: "Наименование"
+    IDTitle:
+      type: object
+      properties:
         id:
-          type: string
-          description: >-
-            ID лицевого счета (необходимо передавать только при
-            оплате с лицевого/бонусного счета)
+          $ref: "#/components/schemas/ID"
+        title:
+          $ref: "#/components/schemas/Title"
+      required:
+        - id
+        - title
+    MayBePayment:
+      type: array
+      description: Массив структур возможных оплат (возвращается, если статус визита "TemporarilyReservedNeedPayment")
+      items:
+        type: object
+        properties:
+          id:
+            description: Идентификатор лицевого/бонусного счета
+            $ref: "#/components/schemas/ID"
+          title:
+            $ref: "#/components/schemas/Title"
+          type:
+            type: string
+            description: |
+              Тип счета:
+              - `deposit` - лицевой
+              - `bonus` - бонусный
+          payment_amount:
+            type: number
+            description: Возможная сумма оплаты лицевым/бонусным счетом
+    Promotions:
+      description: Массив применяемых скидок
+      type: array
+      items:
+        type: object
+        properties:
+          type:
+            description: |
+              Тип маркетинговой акции:
+              - `discount` - скидка
+              - `bonus` - бонус
+            type: string
+          title:
+            $ref: "#/components/schemas/Title"
+          amount:
+            type: number
+            description: Сумма скидки
+    Cart:
+      type: array
+      description: Массив номенклатур
+      items:
+        type: object
+        properties:
+          purchase:
+            description: Структура номенклатуры
+            type: object
+            properties:
+              id:
+                $ref: "#/components/schemas/ID"
+              title:
+                $ref: "#/components/schemas/Title"
+              type:
+                description: |
+                  Тип номенклатуры:
+                  - service - Услуга
+                  - product - Продукт
+                  - package - Пакет услуг
+                  - online_certificate - Подарочный онлайн-сертификат
+                  - gift_certificate - Подарочный сертификат
+                  - product_set - Набор услуг
+                type: string
+              description:
+                type: string
+                description: Описание номенклатуры
+          count:
+            description: Количество номенклатуры
+            type: number
+          price:
+            description: Цена
+            type: number
+          price_type:
+            description: Вид цен
+            $ref: "#/components/schemas/IDTitle"
+          nds:
+            description: |
+              НДС:
+              - 1	- Без НДС
+              - 2	- НДС по ставке 0%
+              - 3	- НДС по ставке 10%
+              - 4	- НДС чека по ставке 20%
+              - 5 - НДС чека по ставке 5%
+              - 6 - НДС чека по ставке 7%
+            type: number
+          nds_sum:
+            description: Сумма НДС
+            type: number
+          price_with_discount:
+            description: Сумма со скидкой
+            type: number
+          discount_sum:
+            description: Сумма скидки
+            type: number
+          payment_amount:
+            description: Сумма к оплате
+            type: number
     Record:
       type: object
       required:
@@ -3270,79 +2803,64 @@ components:
           description: ID услуги
         staff_id:
           type: string
-          description: >-
-            ID сотрудника. Если не передан, то в прием подставится
-            любой свободный сотрудник, способный оказать услугу
-    Filter:
-      type: object
-      required:
-        - type
-        - value
-      properties:
-        type:
-          type: string
-          example: id
-          description: >-
-            Тип фильтра (`id`, `name`, `surname`, `patronymic`, `phone`, `email`)
-        value:
-          type: array
-          items: {}
-          description: >-
-            Значение для фильтрации. Может быть как строкой, так и массивом
-            строк
+          description: ID сотрудника. Если не передан, то в прием подставится любой свободный сотрудник, способный оказать услугу
     Client:
+      description: Данные клиента
       type: object
       properties:
         id:
-          type: string
-          example: 47efc7f111104513a25b302e6712df59
+          $ref: "#/components/schemas/ID"
         clinic_id:
-          type: string
-          example: 0d190fc81c0111efb1bff02f7488d897'
+          description: Идентификатор салона
+          $ref: "#/components/schemas/ID"
         name:
-          type: string
-          example: Иван
+          description: Имя клиента
+          $ref: "#/components/schemas/Title"
         surname:
-          type: string
-          example: Петров
+          description: Фамилия клиента
+          $ref: "#/components/schemas/Title"
         patronymic:
-          type: string
-          example: Васильевич
+          description: Отчество клиента
+          $ref: "#/components/schemas/Title"
         birth_date:
-          type: string
-          example: 07.10.1987
-          nullable: true
+          description: Дата рождения клиента
+          type: [string, "null"]
         phone:
+          description: Номер телефона клиента
           type: string
-          example: "77777777777"
         email:
-          type: string
-          example: client21321@mail.ru
-          nullable: true
+          type: [string, "null"]
+          description: Email клиента
         sold_amount:
+          description: Сумма оплаченных услуг
           type: number
         visits_count:
+          description: Количество посещений
           type: number
-          example: 5
-    Error:
-      type: object
-      properties:
-        code:
-          type: number
-        message:
+        sex:
+          description: Пол клиента представление
           type: string
-          example: Описание ошибки
-    ErrorBadRequest:
-      type: object
-      properties:
-        code:
+        sex_id:
+          description: |
+            Пол клиента:
+            - 1 - мужской
+            - 2 - женский
+            - 0 - не известен
           type: number
-          example: 1001
-          description: Пример кода ошибки при неверных данных или заголовках
-        message:
+        status:
+          description: Статус представление
           type: string
-          example: Неверный формат данных или отсутствует apikey
+        status_id:
+          description: |
+            Статус клиента:
+            - 0 - Потенциальный
+            - 1 - Новый
+            - 2 - Невернувшийся
+            - 3 - Постоянный
+            - 4 - Отказ
+          type: number
     Meta:
+      description: Структура пагинации
       type: object
       properties:
         items_count:
@@ -3361,317 +2879,138 @@ components:
           type: number
           example: 5
           description: Размер страницы
-    ClientCreate:
+    Filter:
       type: object
       required:
-        - phone
+        - type
+        - value
       properties:
-        name:
+        type:
           type: string
-          example: Василий
-          description: Имя пациента
-        surname:
-          type: string
-          example: Соновен
-          description: Фамилия пациента
-        patronymic:
-          type: string
-          example: Васильевич
-          description: Отчество пациента
-        phone:
-          type: number
-          example: 79211234567
-          description: Номер телефона (только цифры)
-        email:
-          type: string
-          example: 123456789@gmail.com
-          description: Email пациента
-        sex:
-          type: number
-          example: 1
-          description: Пол (0 — не указан, 1 — мужчина, 2 — женщина)
-        birth_date:
-          type: string
-          example: "2011"
-          description: 01-01 (string, optional) - Дата рождения в формате `YYYY-MM-DD`
-    Clinic:
-      type: object
-      required:
-        - work_time
-      properties:
-        id:
-          type: string
-          example: 0d190fc8
-          description: >-
-            1c01-11ef-b1bf-f02f7488d897 (string) - ID клиники
-        title:
-          type: string
-          example: OOO "Стоматология"
-          description: Название клиники
-        work_time:
+          example: id
+          description: Тип фильтра (`id`, `name`, `surname`, `patronymic`, `phone`, `email`)
+        value:
           type: array
           items: {}
-          description: Расписание работы по дням недели
-        contact_information:
-          $ref: "#/components/schemas/ContactInformation"
-          description: Контактная информация клиники
-    WorkTime:
-      type: object
-      properties:
-        active:
-          type: boolean
-          example: true
-          description: Признак активности дня
-        day:
-          type: number
-          example: 1
-          description: День недели (1 = понедельник, 7 = воскресенье)
-        start:
-          type: string
-          example: "07:00"
-          description: Время начала работы (формат `HH:mm`)
-        end:
-          type: string
-          example: "22:00"
-          description: Время окончания работы (формат `HH:mm`)
-    ContactInformation:
-      type: object
-      properties:
-        phone:
-          type: string
-          example: "78945612233"
-          description: Телефон клиники
-        email:
-          type: string
-          example: test_clinic@mail.ru
-          description: Email клиники
-        address:
-          type: string
-          example: г.Москва
-          description: Адрес клиники
-        website:
-          type: string
-          example: www.website.ru
-          description: Сайт клиники
+          description: Значение для фильтрации. Может быть как строкой, так и массивом строк
     Records:
+      description: Данные визита
       type: object
-      required:
-        - client
-        - staff
-        - services
-        - created_user
       properties:
         id:
-          type: string
-          example: 7c802c46
-          description: a899-4da1-b87c-eb2d68254f0f (string) - Уникальный ID записи
-        clinic_id:
-          type: string
-          example: 0d190fc8
-          description: 1c01-11ef-b1bf-f02f7488d897 (string) - ID клиники
+          $ref: "#/components/schemas/ID"
+        salon_id:
+          description: Идентификатор салона
+          $ref: "#/components/schemas/ID"
         start_date:
+          description: Дата и время начала визита (ISO 8601)
           type: string
-          example: "2025"
-          description: 06-30T12:00:00 (string) - Дата и время начала приёма (ISO 8601)
         end_date:
+          description: Дата и время окончания визита (ISO 8601)
           type: string
-          example: "2025"
-          description: 06-30T12:15:00 (string) - Дата и время окончания приёма (ISO 8601)
         create_date:
+          description: Дата создания записи (ISO 8601)
           type: string
-          example: "2025"
-          description: 06-30T09:49:06 (string) - Дата создания записи (ISO 8601)
-        client:
-          $ref: "#/components/schemas/ClientInfo"
-          description: Данные пациента
-        staff:
-          $ref: "#/components/schemas/StaffInfo"
-          description: Данные сотрудника (врача)
-        services:
-          type: array
-          items: {}
-          description: Услуги, оказанные в рамках приёма
-        comment:
-          type: string
-          example: Комментарий
-          description: Комментарий к записи
-        created_user:
-          $ref: "#/components/schemas/UserInfo"
-          description: Пользователь, создавший запись
         status:
+          description: Статус записи (`waiting`, `started`, `not_happen`, `ended`, `canceled`)
           type: string
-          example: confirmed
-          description: >-
-            Статус записи (`confirmed`, `not_confirmed`, `waiting`, `started`,
-            `not_happen`, `ended`, `canceled`)
-    ClientInfo:
-      type: object
-      properties:
-        id:
-          type: string
-          example: 401b3cea
-          description: 4d34-4234-b1c0-f5f96551c984 (string)
-        name:
-          type: string
-          example: Савелий
-        surname:
-          type: string
-          example: Соновен
-        patronymic:
-          type: string
-          example: Васильевич
-        display_name:
-          type: string
-          example: Соновен Савелий Васильевич
-        phone:
-          type: string
-          example: "79211234567"
-        email:
-          type: string
-          example: 123456789@gmail.com
-    StaffInfo:
-      type: object
-      properties:
-        id:
-          type: string
-          example: d39e5d29
-          description: 740d-44a1-8c0d-9c873a43805c (string)
-        name:
-          type: string
-          example: Врач
-        specialization:
-          $ref: "#/components/schemas/Specialization"
-        weight:
-          type: number
-        information:
-          type: string
-          example: <img...>
-          description: HTML-строка с эмоджи/описанием
-        avatar:
-          type: string
-          example: "null"
-          description: Аватар врача
-          nullable: true
-    Specialization:
-      type: object
-      properties:
-        id:
-          type: string
-          example: a19ee94d
-          description: 1c00-11ef-b1bf-f02f7488d897 (string)
-        title:
-          type: string
-          example: Врач стоматолог
-    UserInfo:
-      type: object
-      properties:
-        id:
-          type: string
-          example: 0d191059
-          description: 1c01-11ef-b1bf-f02f7488d897 (string)
-        title:
-          type: string
-          example: Администратор
-    Service:
-      type: object
-      properties:
-        id:
-          type: string
-          example: 6ad4c14f
-          description: 1c03-11ef-b1bf-f02f7488d897 (string)
-        title:
-          type: string
-          example: Услуга 2
-        cost:
-          type: number
-          example: 500
-          description: Общая стоимость услуги
-        amount:
-          type: number
-          example: 1
-          description: Количество оказанных единиц
-        cost_per_unit:
-          type: number
-          example: 500
-          description: Стоимость за единицу
-        first_cost:
-          type: number
-          example: 500
-          description: Начальная стоимость (до скидки)
-        discount:
-          type: number
-          description: Скидка в процентах
-    Services:
-      type: object
-      properties:
-        id:
-          type: string
-          example: 6ad4c14f-1c03-11ef-b1bf-f02f7488d897
-          description: ID услуги
-        title:
-          type: string
-          example: Услуга 2
-          description: Название услуги
-        price_min:
-          type: number
-          example: 500
-          description: Минимальная цена
-        price_max:
-          type: number
-          example: 500
-          description: Максимальная цена
-        weight:
-          type: number
-          description: Вес/приоритет в сортировке
-        category_id:
-          oneOf:
-            - $ref: "#/components/schemas/Category"
-              description: Категория услуги
-            - nullable: true
         comment:
+          description: Комментарий визита
           type: string
-          description: Комментарий
-        seance_length:
-          type: number
-          example: 60
-          description: Продолжительность услуги в минутах
-        active:
-          type: boolean
-          example: true
-          description: Признак онлайн-записи услуги
-        staff:
+        client:
+          description: Клиент визита
+          type: object
+          properties:
+            id:
+              $ref: "#/components/schemas/ID"
+            name:
+              description: Имя клиента
+              $ref: "#/components/schemas/Title"
+            surname:
+              description: Фамилия клиента
+              $ref: "#/components/schemas/Title"
+            patronymic:
+              description: Отчество клиента
+              $ref: "#/components/schemas/Title"
+            display_name:
+              description: Наименование клиента
+              $ref: "#/components/schemas/Title"
+            phone:
+              description: Телефон клиента
+              type: string
+            email:
+              description: Электронная почта клиента
+              type: string
+        staffs:
+          description: Сотрудники визита
           type: array
           items:
-            $ref: "#/components/schemas/ServiceStaff"
-          description: Список врачей, выполняющих услугу
-          nullable: true
-    Category:
-      type: object
-      properties:
-        id:
-          type: string
-          example: a19ee948-1c00-11ef-b1bf-f02f7488d897
-        title:
-          type: string
-          example: Хирургия
-    ServiceStaff:
-      type: object
-      properties:
-        id:
-          type: string
-          example: ef0fd170-3c83-465d-836b-51d72d208831
-          description: ID сотрудника
-        seance_length:
-          type: number
-          example: 60
-          description: Индивидуальная длительность приёма
+            type: object
+            properties:
+              id:
+                $ref: "#/components/schemas/ID"
+              name:
+                description: Имя сотрудника
+                $ref: "#/components/schemas/Title"
+              weight:
+                description: Вес (приоритет)
+                type: number
+              information:
+                type: string
+                example: <img...>
+                description: HTML-строка с эмоджи/описанием
+              avatar:
+                type: string
+                example: "null"
+                description: Аватар врача
+              specialization:
+                description: Специализация сотрудника
+                $ref: "#/components/schemas/IDTitle"
+        created_user:
+          description: Структура автора визита
+          $ref: "#/components/schemas/IDTitle"
+        services:
+          description: Услуги визита
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                $ref: "#/components/schemas/ID"
+              title:
+                $ref: "#/components/schemas/Title"
+              cost:
+                type: number
+                description: Общая стоимость услуги
+              amount:
+                type: number
+                description: Кол-во единиц
+              cost_per_unit:
+                type: number
+                description: Цена за единицу
+              first_cost:
+                type: number
+                description: Исходная цена
+              discount:
+                type: number
+                description: Скидка в процентах
+
 tags:
-  - name: Авторизация
-  - name: Запись на прием
-  - name: Пациенты
-  - name: Клиники
-  - name: Записи
-  - name: Дополнительная информация
+  - name: authorization
+    description: В данном разделе описаны методы, необходимые для авторизации клиентов
+    x-displayName: Авторизация
+  - name: bookings
+    x-displayName: Запись на прием
+  - name: clients
+    x-displayName: Пациенты
+  - name: clinics
+    x-displayName: Клиники
+  - name: records
+    x-displayName: Записи
+  - name: services
+    x-displayName: Услуги
+  - name: additional-info
+    x-displayName: Дополнительная информация
     description: |-
       ## Коды ошибок
 
@@ -3720,6 +3059,8 @@ tags:
       | ....  |                                                                                            |
       | 1106  | Нет сотрудников, способных оказать услугу                                                  |
       | ....  |                                                                                            |
+      | 1108  | Клиент не имеет доступ к записям другого клиента                                           |
+      | 1109  | Запись недоступна для изменения                                                            |
       | 1110  | Не удалось отправить СМС-сообщение с кодом подтверждения                                   |
       | 1111  | Остатка на лицевом счете пациента недостаточно для оплаты                                  |
       | 1112  | Не удалось обновить информацию о пациенте                                                  |
@@ -3731,3 +3072,16 @@ tags:
       | 1118  | Строка поиска передана неверно                                                             |
       | 1119  | Строка поиска должна содержать хотя бы 3 символа                                           |
       | 1120  | Не удалось отправить сообщение в мессенджер с кодом подтверждения по причине: {причина}    |
+      | ....  |                                                                                            |
+      | 1130  | Не найдена причина записи                                                                  |
+      | 1131  | На данное время у сотрудника запланирован приём                                            |
+      | 1132  | Метка не найдена                                                                           |
+      | 1133  | Обязательные параметры не указаны                                                          |
+      | 1134  | Клиент уже создан                                                                          |
+      | 1135  | Клиент не имеет доступ к записям другого клиента                                           |
+      | 1136  | Запись отменена. Перенос запрещен                                                          |
+      | 1137  | Смена статуса запрещена                                                                    |
+      | 1138  | Невозможно перенести запись. Выбранное время занято                                        |
+      | 1139  | Клиент не найден                                                                           |
+      | 1140  | Не передан обязательный атрибут: {название}                                                |
+      | 1141  | Пользователь с таким номером телефона или электронной почтой не зарегистрирован в системе  |
