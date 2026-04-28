@@ -3255,6 +3255,9 @@ paths:
                 duration:
                   type: number
                   description: Новая длительность
+                record_array:
+                  $ref: "#/components/schemas/RecordArray"
+                  description: Массив записей. При передаче этого параметра, затираются все старые записи в визите.
               required:
                 - id
   /hs/api/v1/tickets/{salon_id}:
@@ -3427,6 +3430,104 @@ paths:
           example: bgsf102e6ba569gh20ac3hsad231ed80121
           schema:
             type: string
+        - name: salon_id
+          in: path
+          description: ID салона
+          required: true
+          schema:
+            type: string
+        - name: usertoken
+          in: header
+          description: Ключ клиента
+          required: true
+          schema:
+            type: string
+          example: 580392-e6ba49428-0ac67fcd-f2180121
+  /hs/api/v1/certificates/{salon_id}:
+    get:
+      responses:
+        "200":
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Parameters:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          $ref: "#/components/schemas/ID"
+                        title:
+                          description: Наименование сертификата
+                          $ref: "#/components/schemas/Title"
+                        type:
+                          description: |
+                            Тип:
+                            - `online_certificate` - Онлайн сертификат
+                          type: string
+                        status:
+                          description: |
+                            Статус:
+                            - `active` - Активно
+                            - `not_active` - Не активно
+                            - `closed` - Закрыто"
+                          type: string
+                        start_date:
+                          description: Дата начала действия
+                          type: string
+                        end_date:
+                          description: Дата окончания действия
+                          type: string
+                        total:
+                          description: Сумма сертификата
+                          type: string
+                        balance:
+                          description: Остаток по сертификату
+                          type: string
+                  Errors:
+                    $ref: "#/components/schemas/Errors"
+              example:
+                Parameters:
+                  - id: 745f78b9-b1ec-497b-b42e-961a9d9b610a
+                    title: Пакет 6 услуг
+                    type: online_certificate
+                    status: active
+                    start_date: "2025-10-29"
+                    end_date: "2025-10-30"
+                    total: 5000
+                    balance: 2000
+
+                Errors:
+                  code: 0
+                  message: ""
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Список приобретенных сертификатов {certificates}
+      operationId: certificates
+      description: Метод возвращает массив, содержащий информацию о сертификатах
+      tags:
+        - clients
+      parameters:
         - name: salon_id
           in: path
           description: ID салона
@@ -6218,6 +6319,253 @@ paths:
                 promocode:
                   type: string
                   description: Промокод
+  /hs/api/v1/sale/{salon_id}/:
+    post:
+      responses:
+        "200":
+          description: ОК
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Parameters:
+                    $ref: "#/components/schemas/Sale"
+                  Errors:
+                    $ref: "#/components/schemas/Errors"
+                required:
+                  - Parameters
+                  - Errors
+              example:
+                Parameters:
+                  id: 47efc7f111104513a25b302e6712df59
+                  total_amount: 100
+                  total_discount: 5
+                Errors:
+                  code: 0
+                  message: Описание ошибки
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Создание продажи {sale}
+      operationId: post_sale
+      description: Метод создаёт новую продажу.
+      tags:
+        - sales
+      parameters:
+        - name: salon_id
+          in: path
+          description: ID салона
+          required: true
+          schema:
+            type: string
+        - name: usertoken
+          in: header
+          description: Ключ клиента
+          required: true
+          schema:
+            type: string
+          example: 409265d1-a0af-4ce8-88ec-7e3435024111
+      requestBody:
+        content:
+          application/json:
+            example:
+              comment: Комментарий визита
+              commercial: "salon1c.ru"
+              record_array:
+                - datetime: 20230412T1115"
+                  service_id: "aca979fc-3e92-11ea-96b8-38d547b31ac0"
+                  staff_id: "933a9758-ed6f-4cb3-bffa-e7edcaa13e58"
+              fullname: "Иванов Иван Иванович"
+              promocode: Тест
+            schema:
+              type: object
+              properties:
+                record_array:
+                  $ref: "#/components/schemas/RecordArray"
+                  description: Массив записей. Дату визитов передавать не обязательно
+                fullname:
+                  type: string
+                  description: Фамилия, имя, отчество клиента, разделенные пробелами. Если передан данный параметр, то игнорируются параметры name, last_name и second_name
+                name:
+                  type: string
+                  description: Имя клиента
+                last_name:
+                  type: string
+                  description: Фамилия клиента
+                second_name:
+                  type: string
+                  description: Отчество клиента
+                birthday:
+                  type: string
+                  description: 'Дата рождения в формате: "31.12.1990".'
+                email:
+                  type: string
+                  description: Адрес электронной почты клиента
+                comment:
+                  type: string
+                  description: Комментарий к визиту
+                commercial:
+                  type: string
+                  description: Рекламный источник
+                promocode:
+                  type: string
+                  description: Промокод
+    put:
+      responses:
+        "200":
+          description: Ok
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Parameters:
+                    $ref: "#/components/schemas/Sale"
+                  Errors:
+                    $ref: "#/components/schemas/Errors"
+                required:
+                  - Parameters
+                  - Errors
+              example:
+                Parameters:
+                  id: 47efc7f111104513a25b302e6712df59
+                  total_amount: 100
+                  total_discount: 5
+                Errors:
+                  code: 0
+                  message: Описание ошибки
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Изменение продажу {sale}
+      operationId: put_sale
+      description: Метод изменения продажи на основе переданных данных.
+      tags:
+        - sales
+      parameters:
+        - name: usertoken
+          in: header
+          description: Ключ клиента
+          required: true
+          schema:
+            type: string
+          example: 409265d1-a0af-4ce8-88ec-7e3435024111
+      requestBody:
+        content:
+          application/json:
+            example:
+              record_array:
+                - service_id: "aca979fc-3e92-11ea-96b8-38d547b31ac0"
+                  count: 2
+              id: 0d190fc8-1c01-11ef-b1bf-f02f7488d897
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: Идентификатор продажи
+                record_array:
+                  $ref: "#/components/schemas/RecordArray"
+                  description: Массив товаров. Дату передавать не обязательно
+              required:
+                - id
+    delete:
+      responses:
+        "200":
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Parameters:
+                    type: object
+                    properties:
+                      Result:
+                        type: boolean
+                  Errors:
+                    $ref: "#/components/schemas/Errors"
+              example:
+                Parameters:
+                  Result: true
+                Errors: null
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Отмена продажи {sale}
+      operationId: delete_sale
+      description: Отменяет продажу.
+      tags:
+        - sales
+      parameters:
+        - name: salon_id
+          in: path
+          description: ID салона
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: query
+          description: ID продажи
+          required: true
+          schema:
+            type: string
+        - name: usertoken
+          in: header
+          description: Ключ клиента
+          required: true
+          schema:
+            type: string
+          example: 256D323401901DB2BD42405FA54509B0
 
 components:
   securitySchemes:
@@ -6758,7 +7106,7 @@ components:
       properties:
         datetime:
           type: string
-          description: Дата в формате iso8601. Дата и время занятия
+          description: Дата в формате iso8601. Дата и время занятия (Обязателен при записи). При продаже передавать не обязательно
         service_id:
           type: string
           description: Идентификатор услуги
@@ -6770,6 +7118,12 @@ components:
         duration:
           type: number
           description: Длительность записи (если не передавать берется из услуги)
+        discount:
+          type: number
+          description: Сумма ручной скидки
+        count:
+          type: number
+          description: Количество услуг (требуется для товаров)
     Ticket:
       type: object
       properties:
@@ -6991,7 +7345,17 @@ components:
         staff_id:
           type: string
           description: Идентификатор сотрудника. Необходимо передавать в терминалах самообслуживания.
-
+    Sale:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/ID"
+        total_amount:
+          type: number
+          description: Общая стоимость
+        total_discount:
+          type: number
+          description: Общая сумма скидки
 tags:
   - name: authorization
     description: В данном разделе описаны методы, необходимые для авторизации клиентов
@@ -7005,6 +7369,9 @@ tags:
   - name: payments
     description: Оплата визитов, создание платежей, проверка статуса оплаты
     x-displayName: Оплаты
+  - name: sales
+    description: Методы работы с продажами
+    x-displayName: Продажи
   - name: clients
     x-displayName: Клиенты
     description: Управление клиентами — создание, редактирование, история клиента
