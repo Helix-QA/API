@@ -5539,7 +5539,7 @@ paths:
       operationId: client_to_class
       description: |
         Метод осуществляет запись клиента на групповое занятие. Доступ к методу осуществляется
-        посредством ключа клиента `user_token``. В случае отстутствия основания оплаты (`ticket_id``),
+        посредством ключа клиента `user_token`. В случае отстутствия основания оплаты (`ticket_id`),
         будет взято первое возможное основание оплаты.
       tags:
         - group
@@ -14596,10 +14596,13 @@ components:
             - "pre_sale" - Предпродажа, будет активирован в момент открытия клуба
             - "not_active" - Договор будет активирован после активации членства
         payment_date:
-          type: string
-          description: Дата следующего платежа (yyyy-mm-dd). Если договор закрыт вернет null
+          type: [string, "null"]
+          description: Дата следующего платежа (yyyy-mm-dd). Если договор закрыт или указана дата расторжения вернет null
+        closing_date:
+          type: [string, "null"]
+          description: Дата расторжения договора (yyyy-mm-dd)
         payment_amount:
-          type: number
+          type: [number, "null"]
           description: Сумма следующего платежа. Если договор закрыт вернет null
 
     TicketObject:
