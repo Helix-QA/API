@@ -653,6 +653,13 @@ paths:
       description: Метод возвращает html код, содержащий форму согласия на обработку персональных данных.
       tags:
         - authorization
+      parameters:
+        - name: org_id
+          in: query
+          description: Идентификатор организации
+          example: 570acd27-2a89-11ed-b15d-f02f7488d897
+          schema:
+            type: string
   /hs/api/v3/public_offer/:
     get:
       responses:
@@ -688,6 +695,13 @@ paths:
       description: Метод возвращает html код, содержащий форму публичной оферты.
       tags:
         - authorization
+      parameters:
+        - name: org_id
+          in: query
+          description: Идентификатор организации
+          example: 570acd27-2a89-11ed-b15d-f02f7488d897
+          schema:
+            type: string
   /hs/api/v3/privacy_policy/:
     get:
       responses:
@@ -723,6 +737,13 @@ paths:
       description: Метод возвращает html код, содержащий форму описание политиики конфиденциальности.
       tags:
         - authorization
+      parameters:
+        - name: org_id
+          in: query
+          description: Идентификатор организации
+          example: 570acd27-2a89-11ed-b15d-f02f7488d897
+          schema:
+            type: string
   /hs/api/v3/site_rules/:
     get:
       responses:
@@ -758,6 +779,13 @@ paths:
       description: Метод возвращает html код, содержащий форму описание правил.
       tags:
         - authorization
+      parameters:
+        - name: org_id
+          in: query
+          description: Идентификатор организации
+          example: 570acd27-2a89-11ed-b15d-f02f7488d897
+          schema:
+            type: string
   /hs/api/v3/receive_promotional_messages/:
     get:
       responses:
@@ -795,6 +823,13 @@ paths:
         на получение сообщений рекламного характера.
       tags:
         - authorization
+      parameters:
+        - name: org_id
+          in: query
+          description: Идентификатор организации
+          example: 570acd27-2a89-11ed-b15d-f02f7488d897
+          schema:
+            type: string
   /hs/api/v3/pass_token/:
     get:
       responses:
@@ -9248,6 +9283,9 @@ paths:
                             photo:
                               type: string
                               description: Фото
+                        nomenclature_type:
+                          description: Верхняя папка номенклатуры
+                          $ref: "#/components/schemas/IDTitleSortOrder"
                         price:
                           type: string
                           description: Цена
