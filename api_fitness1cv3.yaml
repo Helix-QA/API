@@ -2736,6 +2736,8 @@ paths:
                               - freeze_period - Добавление срока заморозки
                               - cancel_subscription - Отмена подписки рекуррентного договора
                           items: {}
+                        available_freezings:
+                          $ref: "#/components/schemas/AvailableFreezings"
                         freeze_list:
                           type: array
                           description: Массив структур будущих заморозок. Возвращается только для членств и пакетов услуг
@@ -14784,6 +14786,8 @@ components:
               title:
                 type: string
                 description: Наименование клуба
+        available_freezings:
+          $ref: "#/components/schemas/AvailableFreezings"
         freeze_list:
           type: array
           description: Массив структур заморозок
@@ -14870,6 +14874,28 @@ components:
               status:
                 type: string
                 description: Статус членства, пакета услуг
+
+    AvailableFreezings:
+          type: array
+          description: Массив доступных оснований заморозки членства или пакета услуг
+          items:
+            type: object
+            properties:
+              id:
+                $ref: "#/components/schemas/ID"
+                description: Идентификатор основания заморозки
+              title:
+                $ref: "#/components/schemas/Title"
+                description: Наименование основания заморозки
+              total_frozen:
+                type: string
+                description: Общее количество заморозок по основанию
+              balance_frozen:
+                type: string
+                description: Остаток количества заморозок по основанию
+              min_frozen_count:
+                type: string
+                description: Минимальное количество дней заморозки по основанию
 
     RecordAppointmentObject:
       type: object
