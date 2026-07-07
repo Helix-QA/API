@@ -14888,13 +14888,13 @@ components:
                 $ref: "#/components/schemas/Title"
                 description: Наименование основания заморозки
               total_frozen:
-                type: string
+                type: number
                 description: Общее количество заморозок по основанию
               balance_frozen:
-                type: string
+                type: number
                 description: Остаток количества заморозок по основанию
               min_frozen_count:
-                type: string
+                type: number
                 description: Минимальное количество дней заморозки по основанию
 
     RecordAppointmentObject:
