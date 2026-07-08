@@ -2853,13 +2853,19 @@ paths:
                     status_date: null
                     count: -6
                     аvialable_аctions: []
-                    freeze_list: []
-                    service_list:
-                      - title: Групповой бокс
-                        count: null
                     available_clubs:
                       - id: 1a00a739-3d1b-11ea-96b5-38d547b31ac0
                         title: Фит1
+                    freeze_list: []
+                    available_freezings:
+                      - id: bgsf102e6-ba569-gh20-ac3h-sad231ed80121
+                        title: "Включено в членство"
+                        total_frozen: 15
+                        balance_frozen: 10
+                        min_frozen_count: 5
+                    service_list:
+                      - title: Групповой бокс
+                        count: null
                     total_frozen: 0
                     balance_frozen: 0
                     min_frozen_count: 0
@@ -3123,6 +3129,7 @@ paths:
           application/json:
             example:
               ticket_id: a001c5f0-f8c5-11e1-bd50-3860779088bc
+              basis_id: 05f5afff-e1661-1e6b-16f3-085a98f71a0
               date: "2017-07-14"
               count: 5
             schema:
@@ -3135,6 +3142,9 @@ paths:
                 ticket_id:
                   $ref: "#/components/schemas/ID"
                   description: Идентификатор ЧПУ
+                basis_id:
+                  $ref: "#/components/schemas/ID"
+                  description: Идентификатор основания заморозки
                 date:
                   type: string
                   description: "Дата заморозки (Формат: 2017-07-14)"
@@ -15116,9 +15126,9 @@ components:
           end_date: "2018-05-11"
           start_status_date: "2019-06-24"
           end_status_date: "2020-08-28"
-          total_frozen: "12"
-          balance_frozen: "14"
-          min_frozen_count: adsf102e6-ba569-gh20-ac3h-sad231ed80121
+          total_frozen: 20
+          balance_frozen: 14
+          min_frozen_count: 5
           total_guest_visit: "12"
           balance_guest_visit: "321"
           service_list:
@@ -15136,9 +15146,12 @@ components:
               end_date: "2018-09-10"
               status_date: "2018-11-23"
               count: "14"
-          аvialable_аctions:
-            - activation
-            - freezing
+          available_freezings:
+            - id: bgsf102e6-ba569-gh20-ac3h-sad231ed80121
+              title: "Включено в членство"
+              total_frozen: 15
+              balance_frozen: 10
+              min_frozen_count: 5
           available_clubs:
             - id: f2509711-6397-11e5-8ff2-00155d019d02
               title: Фитнес-клуб
