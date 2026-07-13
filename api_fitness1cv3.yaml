@@ -12965,6 +12965,305 @@ paths:
                 club_id:
                   type: string
                   description: Идентификатор клуба. Если не передавать возьмется автоматически из внешней системы
+  /hs/api/kerong/v1/free_locks_numbers:
+    get:
+      tags:
+        - kerong
+      operationId: kerong_free_locks_numbers
+      summary: Получить список зон со свободными ячейками
+      description: Возвращает список активных зон Kerong, к каждой зоне добавлен массив free_locks_numbers.
+      parameters:
+        - name: usertoken
+          in: header
+          description: Ключ клиента
+          required: true
+          schema:
+            type: string
+          example: 580392-e6ba49428-0ac67fcd-f2180121
+      responses:
+        "200":
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          format: int64
+                        name:
+                          type: string
+                        description:
+                          type: string
+                        active:
+                          type: boolean
+                        accessMode:
+                          type: string
+                          enum:
+                            - PUBLIC
+                            - PRIVATE
+                            - CORPORATE
+                        startLocksNumberIndex:
+                          type: integer
+                          format: int32
+                        locksCount:
+                          type: integer
+                          format: int32
+                        free_locks_numbers:
+                          type: array
+                          items:
+                            type: integer
+                            format: int32
+                          description: Свободные номера ячеек в зоне
+              example:
+                result: true
+                data:
+                  - id: 15674
+                    name: "СПА"
+                    description: "Зона СПА"
+                    active: true
+                    accessMode: "PUBLIC"
+                    startLocksNumberIndex: 1
+                    locksCount: 10
+                    free_locks_numbers:
+                      - 1
+                      - 2
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /hs/api/kerong/v1/booking:
+    post:
+      tags:
+        - kerong
+      operationId: kerong_booking
+      summary: Создать аренду ячейки
+      description: Создаёт аренду ячейки в Kerong на указанный период для клиента, найденного по user_token.
+      parameters:
+        - name: usertoken
+          in: header
+          description: Ключ клиента
+          required: true
+          schema:
+            type: string
+          example: 580392-e6ba49428-0ac67fcd-f2180121
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - zoneId
+                - lockNumber
+              properties:
+                zoneId:
+                  type: integer
+                  format: int64
+                  description: Id зоны в Kerong LCS
+                lockNumber:
+                  type: integer
+                  format: int32
+                  description: Виртуальный номер ячейки
+                startDate:
+                  type: string
+                  format: date-time
+                  description: Начало аренды. По умолчанию текущая дата/время.
+                endDate:
+                  type: string
+                  format: date-time
+                  description: Окончание аренды. По умолчанию равно startDate.
+                accessMode:
+                  type: string
+                  description: Присутствует в запросе, но не используется.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  data:
+                    type: object
+                    nullable: true
+                    properties:
+                      lockNumber:
+                        type: integer
+                      zoneId:
+                        type: integer
+                      publicIdentifierValue:
+                        type: string
+
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /hs/api/kerong/v1/open_lock:
+    post:
+      tags:
+        - kerong
+      operationId: kerong_open_lock
+      summary: Открыть ячейку
+      description: Открывает ячейку при наличии активной аренды клиента для указанной зоны и номера.
+      parameters:
+        - name: usertoken
+          in: header
+          description: Ключ клиента
+          required: true
+          schema:
+            type: string
+          example: 580392-e6ba49428-0ac67fcd-f2180121
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - zoneId
+                - lockNumber
+              properties:
+                zoneId:
+                  type: integer
+                  format: int64
+                  description: Id зоны в Kerong LCS
+                lockNumber:
+                  type: integer
+                  format: int32
+                  description: Виртуальный номер ячейки
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  data:
+                    type: "null"
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /hs/api/kerong/v1/booking/close:
+    post:
+      tags:
+        - kerong
+      operationId: kerong_booking_close
+      summary: Закрыть аренду ячейки
+      description: Завершает аренду ячейки для клиента при найденной активной аренде.
+      parameters:
+        - name: usertoken
+          in: header
+          description: Ключ клиента
+          required: true
+          schema:
+            type: string
+          example: 580392-e6ba49428-0ac67fcd-f2180121
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              LockingRequest:
+              type: object
+              required:
+                - zoneId
+                - lockNumber
+              properties:
+                zoneId:
+                  type: integer
+                  format: int64
+                  description: Id зоны в Kerong LCS
+                lockNumber:
+                  type: integer
+                  format: int32
+                  description: Виртуальный номер ячейки
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                  data:
+                    type: "null"
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
 components:
   securitySchemes:
     basicAuth:
@@ -15341,6 +15640,8 @@ tags:
     x-displayName: Достижения
   - name: other
     x-displayName: Прочее
+  - name: kerong
+    x-displayName: Kerong
   - name: information
     x-displayName: Дополнительная информация
     description: |-
