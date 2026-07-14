@@ -1771,7 +1771,7 @@ paths:
                         arrival_status:
                           type: string
                           description: |
-                            	Статус прибытия клиента:
+                              Статус прибытия клиента:
                               - "arrived" - прибыл
                               - "not_arrived" - не прибыл
                               - "canceled" - отменил
@@ -3727,7 +3727,7 @@ paths:
                         operation:
                           type: string
                           description: |
-                            	Тип операции
+                              Тип операции
                               - "debit" - списание
                               - "credit" - поступление
                         description:
@@ -12965,13 +12965,13 @@ paths:
                 club_id:
                   type: string
                   description: Идентификатор клуба. Если не передавать возьмется автоматически из внешней системы
-  /hs/api/kerong/v1/free_locks_numbers:
+  /hs/api/v3/kerong_locks_numbers:
     get:
       tags:
         - kerong
-      operationId: kerong_free_locks_numbers
+      operationId: kerong_locks_numbers
       summary: Получить список зон со свободными ячейками
-      description: Возвращает список активных зон Kerong, к каждой зоне добавлен массив free_locks_numbers.
+      description: Возвращает список активных зон Kerong, к каждой зоне добавлен массивы free_locks_numbers и booking_locks_numbers.
       parameters:
         - name: usertoken
           in: header
@@ -13023,6 +13023,12 @@ paths:
                             type: integer
                             format: int32
                           description: Свободные номера ячеек в зоне
+                        booking_locks_numbers:
+                          type: array
+                          items:
+                            type: integer
+                            format: int32
+                          description: Арендованные клиентом номера ячеек в зоне
               example:
                 result: true
                 data:
@@ -13036,6 +13042,9 @@ paths:
                     free_locks_numbers:
                       - 1
                       - 2
+                    booking_locks_numbers:
+                      - 3
+                      - 4
         "400":
           description: Некорректный запрос
           content:
@@ -13054,7 +13063,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/InternalServerError"
-  /hs/api/kerong/v1/booking:
+
+  /hs/api/v3/kerong_booking:
     post:
       tags:
         - kerong
@@ -13137,13 +13147,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/InternalServerError"
-  /hs/api/kerong/v1/open_lock:
+  /hs/api/v3/kerong_booking_close:
     post:
       tags:
         - kerong
-      operationId: kerong_open_lock
-      summary: Открыть ячейку
-      description: Открывает ячейку при наличии активной аренды клиента для указанной зоны и номера.
+      operationId: kerong_booking_close
+      summary: Закрыть аренду ячейки
+      description: Завершает аренду ячейки для клиента при найденной активной аренде.
       parameters:
         - name: usertoken
           in: header
@@ -13157,6 +13167,7 @@ paths:
         content:
           application/json:
             schema:
+              LockingRequest:
               type: object
               required:
                 - zoneId
@@ -13200,13 +13211,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/InternalServerError"
-  /hs/api/kerong/v1/booking/close:
+  /hs/api/v3/kerong_open_lock:
     post:
       tags:
         - kerong
-      operationId: kerong_booking_close
-      summary: Закрыть аренду ячейки
-      description: Завершает аренду ячейки для клиента при найденной активной аренде.
+      operationId: kerong_open_lock
+      summary: Открыть ячейку
+      description: Открывает ячейку при наличии активной аренды клиента для указанной зоны и номера.
       parameters:
         - name: usertoken
           in: header
@@ -13220,7 +13231,6 @@ paths:
         content:
           application/json:
             schema:
-              LockingRequest:
               type: object
               required:
                 - zoneId
