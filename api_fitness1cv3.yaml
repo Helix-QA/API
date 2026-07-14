@@ -12970,8 +12970,8 @@ paths:
       tags:
         - kerong
       operationId: kerong_locks_numbers
-      summary: Получить список зон со свободными ячейками
-      description: Возвращает список активных зон Kerong, к каждой зоне добавлен массивы free_locks_numbers и booking_locks_numbers.
+      summary: Получить список зон свободных и арендованных ячеек
+      description: Возвращает список активных зон Kerong, в каждой зоне есть массивы свободных free_locks_numbers и арендованных booking_locks_numbers ячеек
       parameters:
         - name: usertoken
           in: header
