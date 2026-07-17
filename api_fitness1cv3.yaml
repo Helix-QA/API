@@ -13104,9 +13104,14 @@ paths:
                 endDate:
                   type: string
                   format: date-time
-                  description: Окончание аренды. По умолчанию равно startDate.
+                  description: Окончание аренды. По умолчанию равно startDate + 1 день.
                 accessMode:
                   type: string
+                  enum:
+                    - PUBLIC
+                    - PRIVATE
+                    - CORPORATE
+                  example: PUBLIC
                   description: Присутствует в запросе, но не используется.
       responses:
         "200":
@@ -13126,8 +13131,6 @@ paths:
                         type: integer
                       zoneId:
                         type: integer
-                      publicIdentifierValue:
-                        type: string
 
         "400":
           description: Некорректный запрос
@@ -14938,6 +14941,9 @@ components:
         user_token:
           type: string
           description: Измененный ключ клиента, возвращается только в методе PUT
+        kerong:
+          type: boolean
+          description: Использование интеграции с Kerong, возвращается только в методе GET
 
     RecurrentDetails:
       type: [object, "null"]
