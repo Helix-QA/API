@@ -1771,10 +1771,10 @@ paths:
                         arrival_status:
                           type: string
                           description: |
-                              Статус прибытия клиента:
-                              - "arrived" - прибыл
-                              - "not_arrived" - не прибыл
-                              - "canceled" - отменил
+                            Статус прибытия клиента:
+                            - "arrived" - прибыл
+                            - "not_arrived" - не прибыл
+                            - "canceled" - отменил
                         reason_client:
                           x-nullable: true
                           description: Причина отмены занятия клиентом (Только в случае статуса "canceled")
@@ -3727,9 +3727,9 @@ paths:
                         operation:
                           type: string
                           description: |
-                              Тип операции
-                              - "debit" - списание
-                              - "credit" - поступление
+                            Тип операции
+                            - "debit" - списание
+                            - "credit" - поступление
                         description:
                           type: string
                           description: Описание операции
@@ -15201,26 +15201,26 @@ components:
                 description: Статус членства, пакета услуг
 
     AvailableFreezings:
-          type: array
-          description: Массив доступных оснований заморозки членства или пакета услуг
-          items:
-            type: object
-            properties:
-              id:
-                $ref: "#/components/schemas/ID"
-                description: Идентификатор основания заморозки
-              title:
-                $ref: "#/components/schemas/Title"
-                description: Наименование основания заморозки
-              total_frozen:
-                type: number
-                description: Общее количество заморозок по основанию
-              balance_frozen:
-                type: number
-                description: Остаток количества заморозок по основанию
-              min_frozen_count:
-                type: number
-                description: Минимальное количество дней заморозки по основанию
+      type: array
+      description: Массив доступных оснований заморозки членства или пакета услуг
+      items:
+        type: object
+        properties:
+          id:
+            $ref: "#/components/schemas/ID"
+            description: Идентификатор основания заморозки
+          title:
+            $ref: "#/components/schemas/Title"
+            description: Наименование основания заморозки
+          total_frozen:
+            type: number
+            description: Общее количество заморозок по основанию
+          balance_frozen:
+            type: number
+            description: Остаток количества заморозок по основанию
+          min_frozen_count:
+            type: number
+            description: Минимальное количество дней заморозки по основанию
 
     RecordAppointmentObject:
       type: object
@@ -15850,3 +15850,10 @@ tags:
       | ....  |                                                                                                                    |
       | 6001  | Измерение не найдено                                                                                               |
       | 6002  | Шаблон измерений не найден                                                                                         |
+      | ....  |                                                                                                                    |
+      | 7001  | В настройках личного кабинета отключена интеграция kerong.                                                         |
+      | 7002  | Не найдено аренд шкафов. Kerong                                                                                    |
+      | 7003  | Необходимо привязать набор замков к зоне. Kerong                                                                   |
+      | 7004  | BU плата не привязана к Kerong API. Синхронизируйте данные. Kerong                                                 |
+      | 7005  | Аренда не найдена шкафа. Kerong                                                                                    |
+      | 7006  | Номер ячейки выходит за пределы нумерации в зоне. Kerong                                                           |
