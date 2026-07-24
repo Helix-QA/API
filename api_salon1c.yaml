@@ -6566,6 +6566,160 @@ paths:
           schema:
             type: string
           example: 256D323401901DB2BD42405FA54509B0
+  /hs/api/v1/work_schedule/{salon_id}/:
+    get:
+      responses:
+        "200":
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Parameters:
+                    descriptions:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/WorkSchedule"
+                  Errors:
+                    $ref: "#/components/schemas/Errors"
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: График работы сотрудника {work_schedule}
+      operationId: get_work_schedule
+      description: |
+        Возвращается массив с интервалами графика работы сотрудника
+      tags:
+        - staff
+      parameters:
+        - name: usertoken
+          in: header
+          description: Секретный ключ из внешней системы
+          required: true
+          schema:
+            type: string
+          example: 409265d1-a0af-4ce8-88ec-7e3435024111
+        - name: staff_id
+          required: true
+          in: query
+          description: Идентификатор сотрудника
+          example: 6fd56cb2-c80e-11ea-96d4-38d547b31ac0
+          schema:
+            type: string
+        - name: start_date
+          required: true
+          in: query
+          description: Начало интервала
+          example: 20260701T0000
+          schema:
+            type: string
+        - name: end_date
+          required: true
+          in: query
+          description: Конец интервала
+          example: 20260730T2359
+          schema:
+            type: string
+    put:
+      responses:
+        "200":
+          description: Ok
+          headers: {}
+          content:
+            schema:
+              type: object
+              properties:
+                Parameters:
+                  descriptions:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/WorkSchedule"
+                Errors:
+                  $ref: "#/components/schemas/Errors"
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Редактирование графика работы {work_schedule}
+      operationId: put_work_schedule
+      description: Метод изменения графика работы сотрудника на основе переданных данных.
+      tags:
+        - staff
+      parameters:
+        - name: usertoken
+          in: header
+          description: Ключ клиента
+          required: true
+          schema:
+            type: string
+          example: 409265d1-a0af-4ce8-88ec-7e3435024111
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                staff_id:
+                  type: string
+                  description: Идентификатор сотрудника
+                items:
+                  description: Массив интервало. Дату передавать не обязательно
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      date:
+                        description: Дата интервала
+                        type: string
+                        example: "2026-07-01"
+                      times:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            begin:
+                              description: Время начала интервала
+                              type: string
+                              example: "00:00"
+                            end:
+                              description: Время окончание интервала
+                              type: string
+                              example: "23:59"
+                            type:
+                              description: Тип интервала "active" - "рабочее время", "break" - "нерабочее время"
+                              type: string
+                              example: "active"
 
 components:
   securitySchemes:
@@ -7356,6 +7510,22 @@ components:
         total_discount:
           type: number
           description: Общая сумма скидки
+    WorkSchedule:
+      type: object
+      properties:
+        start:
+          description: Начало интервала
+          type: string
+          example: "2026-07-01T00:00:00"
+        end:
+          description: Окончание интервала
+          type: string
+          example: "2026-07-01T23:59:00"
+        type:
+          description: Тип интервала
+          type: string
+          example: "active"
+
 tags:
   - name: authorization
     description: В данном разделе описаны методы, необходимые для авторизации клиентов
@@ -7388,6 +7558,9 @@ tags:
   - name: terminal
     x-displayName: Терминал самообслуживания
     description: API для терминала самообслуживания в салоне
+  - name: staff
+    description: Работа с сотрудниками
+    x-displayName: Сотрудники
   - name: additional-info
     x-displayName: Дополнительная информация
     description: |-
@@ -7498,3 +7671,8 @@ tags:
       | 1203  | Во внешней системе не заполнена структурная единица                                      |
       | 1204  | Следующие товары более не доступны для покупки: {описание товаров}                       |
       | 1205  | Пакет не найден                                                                          |
+      | 1206  | Сертификат не найден                                                                     |
+      | 1207  | Клиент не имеет доступ к продажам другого клиента                                        |
+      | 1208  | Продажа недоступна для изменения                                                         |
+      | 1209  | Не задано время работы салона                                                            |
+      | 1210  | В выбранное время салон не работает                                                      |
