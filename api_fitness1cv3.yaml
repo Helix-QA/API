@@ -11228,6 +11228,9 @@ paths:
                     items:
                       type: object
                       properties:
+                        id:
+                          type: string
+                          description: Идентификатор отзыва
                         staff:
                           type: object
                           description: Структура сотрудника
