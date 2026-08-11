@@ -12328,9 +12328,9 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/InternalServerError"
-      summary: Получить информацию о  дуступных клубах внешней системы {clubs}
+      summary: Получить информацию о  доступных клубах внешней системы {clubs}
       operationId: clubs
-      description: Метод возвращает информацию о дуступных клубах переданной внешней системы.
+      description: Метод возвращает информацию о доступных клубах переданной внешней системы.
       tags:
         - clubs
       parameters:
