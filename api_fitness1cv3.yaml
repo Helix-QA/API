@@ -1026,7 +1026,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/InternalServerError"
-      summary: Запрос на подтверджения номера телефона {auth_request}
+      summary: Запрос на подтверждение номера телефона {auth_request}
       operationId: auth_request
       description: Осуществляется подтверждение номера телефона клиента.
         При вызове метода будет сформирован запрос на подтверждения номера телефона.
@@ -1034,7 +1034,7 @@ paths:
         В параметре __link__ возвращается ссылка по которой необходимо перейти и подтвердить номер.
         Атрибут __method__ определяет каким именно способом будет происходить подтверждение.
         Варианты авторизации получаются в методе [Методы авторизации](#operation/auth_methods)
-        В ответе в `outgoing_id` в
+        В ответе `outgoing_id` в
         зависимости от переданого атрибута __method__ будет возвращаться номер телефона,
         либо идентификатор бота в telegtam
       tags:
@@ -11519,7 +11519,20 @@ paths:
                                 - "need_to_pay" - "необходимо оплатить"
                                 - "application_approval" - "одобрение заявки"
                                 - "recorded" - "вы записаны"
-
+                        parent:
+                          $ref: "#/components/schemas/IDTitle"
+                          description: Родительская группа
+                        club:
+                          type: object
+                          description: Структура родственников
+                          properties:
+                            id:
+                              $ref: "#/components/schemas/ID"
+                            title:
+                              $ref: "#/components/schemas/Title"
+                            parent:
+                              $ref: "#/components/schemas/IDTitle"
+                              description: Родительская группа
               example:
                 result: true
                 data:
@@ -12300,6 +12313,9 @@ paths:
                               title:
                                 type: string
                                 description: Наименование типа авторизации
+                        parent:
+                          description: Родительская группа
+                          $ref: "#/components/schemas/IDTitle"
               example:
                 result: true
                 data:
