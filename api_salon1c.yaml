@@ -6566,6 +6566,106 @@ paths:
           schema:
             type: string
           example: 256D323401901DB2BD42405FA54509B0
+  /hs/api/v1/payment_link/{salon_id}/:
+    post:
+      responses:
+        "200":
+          description: ОК
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Parameters:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Номер заказа
+                      link:
+                        type: string
+                        description: Ссылка на оплату
+                  Errors:
+                    $ref: "#/components/schemas/Errors"
+                required:
+                  - Parameters
+                  - Errors
+              example:
+                Parameters:
+                  id: 47efc7f111104513a25b302e6712df59
+                  link: "https://salon1c.ru/api/"
+                Errors:
+                  code: 0
+                  message: Описание ошибки
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Создание ссылки на оплату {payment_link}
+      operationId: payment_link
+      description: Метод создаёт ссылку на оплату. Для создания ссылки необходимо передавать либо идентификатор визита(record_id), либо массив записи (record_array)
+      tags:
+        - payments
+      parameters:
+        - name: salon_id
+          in: path
+          description: ID салона
+          required: true
+          schema:
+            type: string
+        - name: usertoken
+          in: header
+          description: Ключ клиента
+          required: true
+          schema:
+            type: string
+          example: 409265d1-a0af-4ce8-88ec-7e3435024111
+      requestBody:
+        content:
+          application/json:
+            example:
+              comment: Комментарий визита
+              commercial: "salon1c.ru"
+              record_array:
+                - datetime: 20230412T1115"
+                  service_id: "aca979fc-3e92-11ea-96b8-38d547b31ac0"
+                  staff_id: "933a9758-ed6f-4cb3-bffa-e7edcaa13e58"
+              fullname: "Иванов Иван Иванович"
+              promocode: Тест
+            schema:
+              type: object
+              properties:
+                record_id:
+                  type: string
+                  description: Идентификатор визита
+                record_array:
+                  $ref: "#/components/schemas/RecordArray"
+                  description: Массив записей. Дату визитов передавать не обязательно
+                comment:
+                  type: string
+                  description: Комментарий к визиту
+                commercial:
+                  type: string
+                  description: Рекламный источник
+                promocode:
+                  type: string
+                  description: Промокод
+
   /hs/api/v1/work_schedule/{salon_id}/:
     get:
       responses:
@@ -7212,6 +7312,9 @@ components:
                     $ref: "#/components/schemas/ID"
                   name:
                     $ref: "#/components/schemas/Title"
+                  length:
+                    description: Длительность услуги (в минутах)
+                    type: number
               staff:
                 description: Сотрудник
                 type: object
@@ -7220,6 +7323,12 @@ components:
                     $ref: "#/components/schemas/ID"
                   name:
                     $ref: "#/components/schemas/Title"
+                  avatar:
+                    description: Фото сотрудника
+                    type: string
+                  specialization:
+                    $ref: "#/components/schemas/IDTitle"
+                    description: Специализация сотрудника
               count:
                 description: Количество услуг
                 type: number
@@ -7238,6 +7347,9 @@ components:
           type: number
         sum_total:
           description: Всего сумма в визите
+          type: number
+        paid_total:
+          description: Оплаченная сумма визита
           type: number
         record_type:
           description: |
