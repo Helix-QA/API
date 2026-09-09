@@ -1406,6 +1406,9 @@ paths:
                 promocode:
                   type: string
                   description: Промокод
+                disable_busy_check:
+                  type: boolean
+                  description: Признак, который пропускает проверку занятости сотрудников
   /hs/api/v1/change_record/{salon_id}/:
     put:
       responses:
