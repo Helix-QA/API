@@ -2441,7 +2441,6 @@ paths:
               required:
                 - clinic_id
                 - id
-
   /hs/api/v1/services/{clinic_id}/:
     get:
       responses:
@@ -2618,6 +2617,307 @@ paths:
           schema:
             type: string
           example: C1DB8500345E8B9C25E98330D0B3266B
+  /hs/api/v1/rating/{clinic_id}/:
+    post:
+      summary: Добавить оценку приема
+      description: |
+        Создаёт оценку для приема.
+
+      operationId: post_rating
+      tags:
+        - appointments
+      parameters:
+        - name: clinic_id
+          in: path
+          description: ID клиники
+          required: true
+          example: 0d190fc8-1c01-11ef-b1bf-f02f7488d897
+          schema:
+            type: string
+        - name: usertoken
+          in: header
+          required: true
+          description: Токен авторизованного пользователя
+          schema:
+            type: string
+            examples:
+              - "9858A3C2FFCAE50BB8162A02A69C945D"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - appointment_id
+                - rating
+              properties:
+                appointment_id:
+                  type: string
+                  format: uuid
+                  description: UUID приёма
+                  examples:
+                    - "84916195-7439-11f0-b1f5-001a7dda7115"
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                  description: |
+                    Числовая оценка.
+                    Обычно используется шкала от 1 (плохо) до 5 (отлично).
+                  examples:
+                    - 5
+                comment:
+                  type:
+                    - string
+                    - "null"
+                  maxLength: 1000
+                  description: Текстовый комментарий к оценке (может быть пустой строкой или null)
+                  examples:
+                    - "Проверка оценок"
+      responses:
+        "200":
+          description: Оценка успешно сохранена
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Parameters:
+                    type: object
+                    description: Структура результата
+                    properties:
+                      Result:
+                        type: boolean
+                        description: Результат запроса
+                  Errors:
+                    type: object
+                    description: Информация об ошибке
+                    properties:
+                      code:
+                        type: integer
+                        description: Код ошибки (0 — успех)
+                      message:
+                        type: string
+                        description: Сообщение об ошибке или пустая строка при успехе
+                    required:
+                      - code
+                      - message
+              examples:
+                success:
+                  summary: Успешный ответ
+                  value:
+                    success: true
+                    message: "Оценка сохранена"
+                    rating_id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+    delete:
+      summary: Удалить оценку приема
+      description: |
+        Удаляет оценку для указанного приёма.
+
+        Параметр `appointment_id` передаётся в query.
+      operationId: delete_rating
+      tags:
+        - appointments
+      parameters:
+        - name: clinic_id
+          in: path
+          description: ID клиники
+          required: true
+          schema:
+            type: string
+            format: uuid
+          examples:
+            - "0d190fc8-1c01-11ef-b1bf-f02f7488d897"
+        - name: appointment_id
+          in: query
+          description: UUID приёма, оценку которого нужно удалить
+          required: true
+          schema:
+            type: string
+            format: uuid
+          examples:
+            - "84916195-7439-11f0-b1f5-001a7dda7115"
+        - name: usertoken
+          in: header
+          required: true
+          description: Токен авторизованного пользователя
+          schema:
+            type: string
+          examples:
+            - "9858A3C2FFCAE50BB8162A02A69C945D"
+      responses:
+        "200":
+          description: Оценка успешно удалена
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Parameters:
+                    type: object
+                    description: Структура результата
+                    properties:
+                      Result:
+                        type: boolean
+                        description: Результат запроса
+                  Errors:
+                    type: object
+                    description: Информация об ошибке
+                    properties:
+                      code:
+                        type: integer
+                        description: Код ошибки (0 — успех)
+                      message:
+                        type: string
+                        description: Сообщение об ошибке или пустая строка при успехе
+                    required:
+                      - code
+                      - message
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+    put:
+      summary: Изменить оценку приема
+      description: ""
+      operationId: put_rating
+      tags:
+        - appointments
+      parameters:
+        - name: clinic_id
+          in: path
+          description: ID клиники
+          required: true
+          example: 0d190fc8-1c01-11ef-b1bf-f02f7488d897
+          schema:
+            type: string
+        - name: usertoken
+          in: header
+          required: true
+          description: Токен авторизованного пользователя
+          schema:
+            type: string
+            examples:
+              - "9858A3C2FFCAE50BB8162A02A69C945D"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - appointment_id
+                - rating
+              properties:
+                appointment_id:
+                  type: string
+                  format: uuid
+                  description: UUID приёма
+                  examples:
+                    - "84916195-7439-11f0-b1f5-001a7dda7115"
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                  description: |
+                    Числовая оценка.
+                    Обычно используется шкала от 1 (плохо) до 5 (отлично).
+                  examples:
+                    - 4
+                comment:
+                  type:
+                    - string
+                    - "null"
+                  maxLength: 1000
+                  description: Текстовый комментарий к оценке (может быть пустой строкой или null)
+                  examples:
+                    - "Проверка оценок"
+      responses:
+        "200":
+          description: Оценка успешно изменена
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Parameters:
+                    type: object
+                    description: Структура результата
+                    properties:
+                      Result:
+                        type: boolean
+                        description: Результат запроса
+                  Errors:
+                    type: object
+                    description: Информация об ошибке
+                    properties:
+                      code:
+                        type: integer
+                        description: Код ошибки (0 — успех)
+                      message:
+                        type: string
+                        description: Сообщение об ошибке или пустая строка при успехе
+                    required:
+                      - code
+                      - message
+              examples:
+                success:
+                  summary: Успешный ответ
+                  value:
+                    success: true
+                    message: "Оценка изменена"
+                    rating_id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
 
 components:
   securitySchemes:
@@ -3009,6 +3309,8 @@ tags:
     x-displayName: Записи
   - name: services
     x-displayName: Услуги
+  - name: appointments
+    x-displayName: Приемы
   - name: additional-info
     x-displayName: Дополнительная информация
     description: |-

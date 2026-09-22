@@ -3258,6 +3258,9 @@ paths:
                 duration:
                   type: number
                   description: Новая длительность
+                confirmed:
+                  type: boolean
+                  description: Признак подтверждения записи
                 record_array:
                   $ref: "#/components/schemas/RecordArray"
                   description: Массив записей. При передаче этого параметра, затираются все старые записи в визите.
