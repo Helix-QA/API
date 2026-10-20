@@ -4008,7 +4008,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/InternalServerError"
       summary: Оценивание визита {record_rating}
-      operationId: record_rating
+      operationId: post_record_rating
       description: "Устанавливает оценку и комментарий к визиту. При успешном оценивании визита будет возвращен параметр 'Result': true."
       tags:
         - reviews
@@ -4054,6 +4054,160 @@ paths:
                 comment:
                   type: number
                   description: Комментарий к визиту.
+    put:
+      responses:
+        "200":
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Parameters:
+                    type: object
+                    properties:
+                      Result:
+                        type: boolean
+                  Error:
+                    $ref: "#/components/schemas/Errors"
+              example:
+                Parameters:
+                  Result: true
+                Error: null
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Редактирование оценки визита {record_rating}
+      operationId: put_record_rating
+      description: "Редактирует оценку и комментарий к визиту. При успешном редактировании оценки визита будет возвращен параметр 'Result': true."
+      tags:
+        - reviews
+      parameters:
+        - name: salon_id
+          in: path
+          description: ID салона
+          required: true
+          schema:
+            type: string
+        - name: usertoken
+          in: header
+          description: Ключ клиента
+          required: true
+          schema:
+            type: string
+          example: 256D323401901DB2BD42405FA54509B0
+      requestBody:
+        content:
+          application/json:
+            example:
+              record_id: 3daa8097-ff6a-11e7-b770-0050568b5c8d
+              staff_id: 222d3814-49f4-11e7-b491-0050568b5c8d
+              rating: 5
+              comment: Отличное обслуживание
+            schema:
+              type: object
+              required:
+                - record_id
+                - staff_id
+              properties:
+                record_id:
+                  type: string
+                  description: Идентификатор визита.
+                staff_id:
+                  type: string
+                  description: Идентификатор сотрудника.
+                rating:
+                  type: number
+                  description: Оценка визита (число от 0 до 10).
+                comment:
+                  type: number
+                  description: Комментарий к визиту.
+    delete:
+      responses:
+        "200":
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Parameters:
+                    type: object
+                    properties:
+                      Result:
+                        type: boolean
+                  Error:
+                    $ref: "#/components/schemas/Errors"
+              example:
+                Parameters:
+                  Result: true
+                Error: null
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Удаление оценки визита {record_rating}
+      operationId: delete_record_rating
+      description: "Удаляет оценку и комментарий к визиту. При успешном удалении оценки визита будет возвращен параметр 'Result': true."
+      tags:
+        - reviews
+      parameters:
+        - name: salon_id
+          in: path
+          description: ID салона
+          required: true
+          schema:
+            type: string
+        - name: usertoken
+          in: header
+          description: Ключ клиента
+          required: true
+          schema:
+            type: string
+          example: 256D323401901DB2BD42405FA54509B0
+        - name: record_id
+          in: query
+          description: ID визита
+          required: true
+          schema:
+            type: string
+        - name: staff_id
+          in: query
+          description: ID сотрудника
+          required: true
+          schema:
+            type: string
   /hs/api/v1/comments/{salon_id}/:
     get:
       responses:
@@ -6671,7 +6825,6 @@ paths:
                 promocode:
                   type: string
                   description: Промокод
-
   /hs/api/v1/work_schedule/{salon_id}/:
     get:
       responses:
