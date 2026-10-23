@@ -2551,6 +2551,57 @@ paths:
           schema:
             type: string
           example: 580392-e6ba49428-0ac67fcd-f2180121
+  /hs/api/v3/open_door:
+    get:
+      responses:
+        "200":
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access:
+                    type: boolean
+                    description: Флаг, указывающий разрешен ли проход клиенту
+                  text:
+                    type: string
+                    description: Описание, указывает причину по которой не пускает клиента
+                example:
+                  access: true
+                  description: "Доступ разрешен"
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Открыть дверь {open_door}
+      operationId: open_door
+      description: "Метод открывает дверь клинту. Работает через интеграцию Akuvox"
+      tags:
+        - clients
+      parameters:
+        - name: usertoken
+          in: header
+          description: Ключ клиента
+          required: true
+          schema:
+            type: string
+          example: 580392-e6ba49428-0ac67fcd-f2180121
   /hs/api/v3/lead/:
     post:
       responses:
