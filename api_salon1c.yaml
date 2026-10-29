@@ -3261,6 +3261,9 @@ paths:
                 confirmed:
                   type: boolean
                   description: Признак подтверждения записи
+                disable_busy_check:
+                  type: boolean
+                  description: Признак, который пропускает проверку занятости сотрудников
                 record_array:
                   $ref: "#/components/schemas/RecordArray"
                   description: Массив записей. При передаче этого параметра, затираются все старые записи в визите.
