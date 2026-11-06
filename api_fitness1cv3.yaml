@@ -2482,6 +2482,79 @@ paths:
           schema:
             type: string
           example: 580392-e6ba49428-0ac67fcd-f2180121
+  /hs/api/v3/medical_certificates:
+    get:
+      responses:
+        "200":
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    $ref: "#/components/schemas/ResultResponse"
+                  data:
+                    description: Массив данных
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Идентификатор медининской карты
+                        title:
+                          type: string
+                          description: Наименование мед.карты
+                        start_date:
+                          type: string
+                          description: Дата и время начала действия
+                        end_date:
+                          type: string
+                          description: Дата и время окончания действия
+                        active:
+                          type: boolean
+                          description: Флаг активности мед.карты
+                example:
+                  result: true
+                  data:
+                    - id: c08ea6c9-d1fe-4d0f-bd83-4979f344de8b
+                      title: "Мед карта №1"
+                      start_date: "2026-08-18"
+                      end_date: "2027-08-18"
+                      active: true
+        "400":
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        "401":
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/AuthorizationError"
+        "500":
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      summary: Получение медицинских карт клиента {medical_certificates}
+      operationId: medical_certificates
+      description: "Метод возвращает список медицинских карт клиента."
+      tags:
+        - clients
+      parameters:
+        - name: usertoken
+          in: header
+          description: Ключ клиента
+          required: true
+          schema:
+            type: string
+          example: 580392-e6ba49428-0ac67fcd-f2180121
   /hs/api/v3/pass:
     get:
       responses:
@@ -2562,12 +2635,18 @@ paths:
               schema:
                 type: object
                 properties:
-                  access:
-                    type: boolean
-                    description: Флаг, указывающий разрешен ли проход клиенту
-                  text:
-                    type: string
-                    description: Описание, указывает причину по которой не пускает клиента
+                  result:
+                    $ref: "#/components/schemas/ResultResponse"
+                  data:
+                    type: object
+                    description: Данные запроса
+                    properties:
+                      access:
+                        type: boolean
+                        description: Флаг, указывающий разрешен ли проход клиенту
+                      text:
+                        type: string
+                        description: Описание, указывает причину по которой не пускает клиента
                 example:
                   access: true
                   description: "Доступ разрешен"
@@ -11196,6 +11275,9 @@ paths:
                       can_train_personally:
                         type: boolean
                         description: Сотрудник проводит персональные тренировки
+                      can_train_services:
+                        type: boolean
+                        description: Сотруднику доступны номенклатуры для продажи
                     required:
                       - rating
                       - review
@@ -15014,6 +15096,9 @@ components:
         kerong:
           type: boolean
           description: Использование интеграции с Kerong, возвращается только в методе GET
+        akuvox:
+          type: boolean
+          description: Использование интеграции с Akuvox, возвращается только в методе GET
 
     RecurrentDetails:
       type: [object, "null"]
