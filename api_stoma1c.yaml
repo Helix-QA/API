@@ -2300,6 +2300,18 @@ paths:
           description: ID пациента
           schema:
             type: string
+        - name: start_date
+          in: query
+          description: Время начала интервала
+          example: "2026-11-19T00:00"
+          schema:
+            type: string
+        - name: end_date
+          in: query
+          description: Время окончания интервала
+          example: "2026-11-19T23:59"
+          schema:
+            type: string
         - name: usertoken
           in: header
           description: Ключ шифрования (secret key из внешней системы)
